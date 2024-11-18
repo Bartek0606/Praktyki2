@@ -1,13 +1,13 @@
 <?php
-$servername = "mysql";              // Musi być ustawione na nazwę serwisu z docker-compose.yml
-$username = "user";        // Upewnij się, że to jest zgodne z MYSQL_USER
-$password = "user123";        // Upewnij się, że to jest zgodne z MYSQL_PASSWORD
-$dbname = "hobbyhub";     // Upewnij się, że to jest zgodne z MYSQL_DATABASE
+$servername = "mysql";          // Nazwa usługi MySQL w docker-compose.yml
+$username = "user";             // Zaktualizowany użytkownik: "user"
+$password = "user123";          // Zaktualizowane hasło: "user123"
+$dbname = "hobbyhub";           // Zaktualizowana nazwa bazy danych: "hobbyhub"
 
-// Create connection
+// Tworzenie połączenia
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check connection
+// Sprawdzenie połączenia
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }

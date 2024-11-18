@@ -21,10 +21,10 @@ services:
   mysql:
     image: mysql:5.7
     environment:
-      - MYSQL_ROOT_PASSWORD=your_root_password
-      - MYSQL_DATABASE=your_database_name
-      - MYSQL_USER=your_username
-      - MYSQL_PASSWORD=your_password
+      - MYSQL_ROOT_PASSWORD=your_root_password    # Hasło root (możesz je zostawić bez zmian)
+      - MYSQL_DATABASE=hobbyhub                    # Zmiana nazwy bazy danych na "hobbyhub"
+      - MYSQL_USER=user                            # Zmiana użytkownika na "user"
+      - MYSQL_PASSWORD=user123                     # Zmiana hasła na "user123"
     ports:
       - "3306:3306"
     volumes:
