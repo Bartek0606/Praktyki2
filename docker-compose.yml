@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  app:
+    build:
+      context: https://github.com/Bartek0606/Praktyki2.git
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - ENV_VAR=value
