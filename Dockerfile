@@ -1,12 +1,14 @@
+# Dockerfile for PHP-Apache Web Service
 FROM php:7.4-apache
-# Instalacja modułu mysqli
+
+# Install mysqli extension
 RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
 
-# Kopiowanie plików aplikacji do katalogu docelowego w kontenerze
+# Copy application files to the container's web root
 COPY . /var/www/html
 
-# Ustawienie uprawnień
+# Set permissions
 RUN chown -R www-data:www-data /var/www/html
 
-# Rozpoczęcie serwera Apache
+# Start Apache server
 CMD ["apache2-foreground"]
