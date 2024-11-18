@@ -1,0 +1,42 @@
+name: Docker Compose CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Cache Docker layers
+      uses: actions/cache@v3
+      with:
+        path: /tmp/.buildx-cache
+        key: ${{ runner.os }}-buildx-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-buildx-
+
+    - name: Build and start Docker Compose
+      run: |
+        docker-compose -f docker-compose.yml up -d --build
+
+    - name: Run tests (if any)
+      run: |
+        # Tutaj można dodać komendy do testów, np. uruchamianie testów jednostkowych w aplikacji
+        # Przykład:
+        docker-compose exec web pytest
+
+    - name: Shutdown Docker Compose
+      run: |
+        docker-compose down
