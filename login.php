@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Logowanie</title>
+    <title>Logowaniee</title>
 </head>
 <body>
     <h2>Logowanie</h2>
