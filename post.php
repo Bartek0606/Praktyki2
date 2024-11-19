@@ -7,7 +7,7 @@ $post_id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
 if ($post_id > 0) {
     // Fetch the post from the database
-    $sql = "SELECT p.content, p.created_at, u.username, c.name AS category_name 
+    $sql = "SELECT p.content, p.created_at, u.username, c.name AS category_name, p.image_url 
             FROM posts p
             LEFT JOIN users u ON p.user_id = u.user_id
             LEFT JOIN categories c ON p.category_id = c.category_id
@@ -59,10 +59,19 @@ if ($post_id > 0) {
 
   <main class="container">
     <div class="post-details">
-        <h1><?php echo $row['content']; ?></h1>
-        <p><strong>Category:</strong> <?php echo $row['category_name']; ?></p>
-        <p><strong>By:</strong> <?php echo $row['username']; ?> | <?php echo $row['created_at']; ?></p>
-        <p><?php echo $row['content']; ?></p> <!-- Full post content -->
+        <h1><?php echo htmlspecialchars($row['content']); ?></h1>
+        <p><strong>Category:</strong> <?php echo htmlspecialchars($row['category_name']); ?></p>
+        <p><strong>By:</strong> <?php echo htmlspecialchars($row['username']); ?> | <?php echo htmlspecialchars($row['created_at']); ?></p>
+        
+        <!-- Display the image with alt text if it exists -->
+        <?php if (!empty($row['image_url'])): ?>
+            <?php $alt_text = "Image for post: " . htmlspecialchars($row['content']); ?>
+            <img src="<?php echo htmlspecialchars($row['image_url']); ?>" alt="<?php echo $alt_text; ?>">
+        <?php else: ?>
+            <img src="default-image.png" alt="Default image for the blog post"> <!-- Placeholder if no image exists -->
+        <?php endif; ?>
+
+        <p><?php echo nl2br(htmlspecialchars($row['content'])); ?></p> <!-- Full post content -->
     </div>
   </main>
 
