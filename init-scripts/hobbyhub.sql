@@ -63,9 +63,22 @@ CREATE TABLE `users` (
 
 -- Dumping data for table `users`
 INSERT INTO `users` (`user_id`, `username`, `full_name`, `email`, `password_hash`, `created_at`, `profile_picture_url`, `bio`) VALUES
-(7, 'john_doe123', 'John Doe', 'john.doe123@example.com', 'hashedpassword123', '2024-11-19 08:35:23', 'https://example.com/profiles/john.jpg', 'Tech enthusiast and gadget lover.'),
-(8, 'jane_smith456', 'Jane Smith', 'jane.smith456@example.com', 'hashedpassword456', '2024-11-19 08:35:23', 'https://example.com/profiles/jane.jpg', 'Travel blogger and health advocate.'),
-(9, 'mark_taylor789', 'Mark Taylor', 'mark.taylor789@example.com', 'hashedpassword789', '2024-11-19 08:35:23', 'https://example.com/profiles/mark.jpg', 'Fitness coach and wellness expert.');
+(1, 'john_doe123', 'John Doe', 'john.doe123@example.com', 'hashedpassword123', '2024-11-19 08:35:23', 'https://example.com/profiles/john.jpg', 'Tech enthusiast and gadget lover.'),
+(2, 'jane_smith456', 'Jane Smith', 'jane.smith456@example.com', 'hashedpassword456', '2024-11-19 08:35:23', 'https://example.com/profiles/jane.jpg', 'Travel blogger and health advocate.'),
+(3, 'mark_taylor789', 'Mark Taylor', 'mark.taylor789@example.com', 'hashedpassword789', '2024-11-19 08:35:23', 'https://example.com/profiles/mark.jpg', 'Fitness coach and wellness expert.'),
+(4, 'admin', 'admin', 'admin@example.com', 'admin', '2024-11-19 08:35:23', 'https://example.com/profiles/admin.jpg', 'Administrator of the platform.');
+
+-- Dumping data for table `posts`
+INSERT INTO `posts` (`post_id`, `user_id`, `category_id`, `content`, `created_at`, `title`, `is_question`, `image_url`) VALUES
+(1, 7, 1, 'Latest advancements in AI technology...', '2024-11-19 08:40:23', 'AI in Technology', 0, 'https://example.com/posts/ai.jpg'),
+(2, 8, 4, 'Exploring the beauty of Italy...', '2024-11-19 08:45:23', 'Travel in Italy', 0, 'https://example.com/posts/italy.jpg'),
+(3, 9, 3, 'Fitness routine for a healthy life...', '2024-11-19 08:50:23', 'Healthy Fitness Habits', 0, 'https://example.com/posts/fitness.jpg');
+
+-- Dumping data for table `comments`
+INSERT INTO `comments` (`comment_id`, `post_id`, `user_id`, `content`, `created_at`) VALUES
+(1, 1, 8, 'This article is great! I love AI discussions.', '2024-11-19 09:00:23'),
+(2, 2, 9, 'Italy is on my bucket list! Thanks for sharing your experience.', '2024-11-19 09:05:23'),
+(3, 3, 7, 'I need to try this workout routine. Looks amazing!', '2024-11-19 09:10:23');
 
 -- Constraints for dumped tables
 ALTER TABLE `comments`
@@ -77,4 +90,3 @@ ALTER TABLE `posts`
   ADD CONSTRAINT `posts_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`) ON DELETE SET NULL;
 
 COMMIT;
-
