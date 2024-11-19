@@ -1,40 +1,54 @@
 <?php
-// Zmienna przechowująca komunikaty o błędach
+// Error messages
 $emailError = '';
 $passwordError = '';
 $confirmPasswordError = '';
-$fieldsError = false; // Flaga, która wskazuje czy jakieś pole jest puste
+$fullnameError = '';
+$usernameError = '';
+$fieldsError = false; // Flag indicating if any field is empty
 
-// Sprawdzanie danych po wysłaniu formularza
+// Handling form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Sprawdzanie, czy pola nie są puste
-    if (empty($_POST['email']) || empty($_POST['fullname']) || empty($_POST['username']) || empty($_POST['password']) || empty($_POST['confirm_password'])) {
-        $fieldsError = true;
+    // Check if fields are empty
+    if (empty($_POST['email'])) {
+        $emailError = "Email is required.";
+    }
+    if (empty($_POST['fullname'])) {
+        $fullnameError = "Full name is required.";
+    }
+    if (empty($_POST['username'])) {
+        $usernameError = "Username is required.";
+    }
+    if (empty($_POST['password'])) {
+        $passwordError = "Password is required.";
+    }
+    if (empty($_POST['confirm_password'])) {
+        $confirmPasswordError = "Confirm password is required.";
     }
 
-    // Walidacja e-maila
-    if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-        $emailError = "Niepoprawny adres e-mail.";
+    // Email validation
+    if (!empty($_POST['email']) && !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+        $emailError = "Invalid email address.";
     }
 
-    // Walidacja haseł
+    // Password validation
     if ($_POST['password'] !== $_POST['confirm_password']) {
-        $passwordError = "Hasła nie pasują do siebie.";
+        $passwordError = "Passwords do not match.";
     }
 
-    // Jeśli nie ma błędów, przetwarzamy dane (np. zapisujemy do bazy)
-    if (!$fieldsError && empty($emailError) && empty($passwordError)) {
-        // Tutaj można zapisać użytkownika do bazy danych
-        // Na razie tylko komunikat sukcesu
-        echo "Rejestracja zakończona sukcesem!";
-        // Po poprawnej rejestracji, nie wyświetlamy nic, strona nie będzie odświeżana
+    // If there are no errors, process the data (e.g., save to the database)
+    if (empty($emailError) && empty($passwordError) && empty($fullnameError) && empty($usernameError) && empty($confirmPasswordError)) {
+        // Here you can save the user to the database
+        // For now, just show a success message
+        echo "Registration successful!";
+        // After successful registration, do not refresh the page
         exit;
     }
 }
 ?>
 
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -48,35 +62,51 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div id="logo">
         <h1>HobbyHub</h1>
     </div>
-    <div id="form_login">
+    <div id="form_register">
         <form id="registerForm" method="POST" action="register.php">
-            <input type="text" id="email" name="email" placeholder="Email" value="<?php echo isset($_POST['email']) ? $_POST['email'] : ''; ?>"><br>
+            <!-- E-mail -->
+            <input type="text" id="email" name="email" placeholder="Email" value="<?php echo isset($_POST['email']) ? $_POST['email'] : ''; ?>">
             <?php if ($emailError): ?>
                 <p class="error"><?php echo $emailError; ?></p>
             <?php endif; ?>
-            <input type="text" id="fullname" name="fullname" placeholder="Full Name" value="<?php echo isset($_POST['fullname']) ? $_POST['fullname'] : ''; ?>"><br>
-            <input type="text" id="username" name="username" placeholder="Username" value="<?php echo isset($_POST['username']) ? $_POST['username'] : ''; ?>"><br>
-            <input type="password" id="password" name="password" placeholder="Password"><br>
+
+            <!-- Full Name -->
+            <input type="text" id="fullname" name="fullname" placeholder="Full Name" value="<?php echo isset($_POST['fullname']) ? $_POST['fullname'] : ''; ?>">
+            <?php if ($fullnameError): ?>
+                <p class="error"><?php echo $fullnameError; ?></p>
+            <?php endif; ?>
+
+            <!-- Username -->
+            <input type="text" id="username" name="username" placeholder="Username" value="<?php echo isset($_POST['username']) ? $_POST['username'] : ''; ?>">
+            <?php if ($usernameError): ?>
+                <p class="error"><?php echo $usernameError; ?></p>
+            <?php endif; ?>
+
+            <!-- Password -->
+            <input type="password" id="password" name="password" placeholder="Password">
             <?php if ($passwordError): ?>
                 <p class="error"><?php echo $passwordError; ?></p>
             <?php endif; ?>
-            <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm Password"><br>
-            <?php if ($fieldsError): ?>
-                <p class="error">Wszystkie pola są wymagane.</p>
+
+            <!-- Confirm Password -->
+            <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm Password">
+            <?php if ($confirmPasswordError): ?>
+                <p class="error"><?php echo $confirmPasswordError; ?></p>
             <?php endif; ?>
+
             <button class="button-10" role="button" type="submit">Sign up</button>
         </form>
     </div>
 </div>
 
 <div id="container_register">
-    <p>Have an account? <a href="login.php">Log in</a></p>
+    <p>Already have an account? <a href="login.php">Log in</a></p>
 </div>
 
-<!-- Add JavaScript to handle validation and form submission -->
 <script>
 document.getElementById('registerForm').addEventListener('submit', function(event) {
-    // Get all the form fields
+    event.preventDefault(); // Prevent form from submitting (page refresh)
+    
     const email = document.getElementById('email').value;
     const fullname = document.getElementById('fullname').value;
     const username = document.getElementById('username').value;
@@ -91,26 +121,46 @@ document.getElementById('registerForm').addEventListener('submit', function(even
     });
 
     // Check if any field is empty
-    if (!email || !fullname || !username || !password || !confirmPassword) {
+    if (!email) {
         valid = false;
-        showError('Wszystkie pola są wymagane.');
+        showError('Email is required.', 'email');
+    }
+
+    if (!fullname) {
+        valid = false;
+        showError('Full name is required.', 'fullname');
+    }
+
+    if (!username) {
+        valid = false;
+        showError('Username is required.', 'username');
+    }
+
+    if (!password) {
+        valid = false;
+        showError('Password is required.', 'password');
+    }
+
+    if (!confirmPassword) {
+        valid = false;
+        showError('Confirm password is required.', 'confirm_password');
     }
 
     // Check if email is valid
-    if (!validateEmail(email)) {
+    if (email && !validateEmail(email)) {
         valid = false;
-        showError('Niepoprawny adres e-mail.', 'email');
+        showError('Invalid email address.', 'email');
     }
 
     // Check if passwords match
-    if (password !== confirmPassword) {
+    if (password && confirmPassword && password !== confirmPassword) {
         valid = false;
-        showError('Hasła nie pasują do siebie.', 'password');
+        showError('Passwords do not match.', 'password');
     }
 
-    // If not valid, prevent form submission
-    if (!valid) {
-        event.preventDefault();
+    // If everything is valid, submit the form via AJAX
+    if (valid) {
+        submitForm();
     }
 });
 
@@ -121,18 +171,31 @@ function validateEmail(email) {
 }
 
 // Function to display error messages
-function showError(message, fieldId = '') {
+function showError(message, fieldId) {
     const errorElement = document.createElement('p');
     errorElement.classList.add('error');
     errorElement.textContent = message;
+    const field = document.getElementById(fieldId);
+    field.insertAdjacentElement('afterend', errorElement);
+}
 
-    if (fieldId) {
-        const field = document.getElementById(fieldId);
-        field.insertAdjacentElement('afterend', errorElement);
-    } else {
-        const form = document.getElementById('registerForm');
-        form.insertAdjacentElement('afterbegin', errorElement);
-    }
+// Function to submit the form via AJAX
+function submitForm() {
+    const form = document.getElementById('registerForm');
+    const formData = new FormData(form);
+
+    fetch('register.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.text())
+    .then(data => {
+        // Redirect to index.php after successful registration
+        window.location.href = 'index.php'; // Redirect to homepage after registration
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 }
 </script>
 
