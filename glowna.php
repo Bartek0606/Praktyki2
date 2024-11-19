@@ -31,7 +31,7 @@
   </header>
 
 <main class="container">
-<div id="nagl">
+<div class="nagl">
       <h2>Nasze najnowsze wydarzenia</h2>
  <hr class="divider">
 </div>
@@ -62,6 +62,60 @@
     </div>
     <button class="arrow-btn right-btn">→</button>
   </div>
+
+
+  <div class="nagl">
+       <h2 class="tytul_kategorii">Ostatnie posty na blogu</h2>
+      <hr class="divider">
+</div>
+
+  <section class="blog-posts">
+ 
+    <div class="blog-grid">
+      <div class="blog-post">
+        <img src="zdjecie.png" alt="Post 1">
+        <div class="blog-post-info">
+          <h3>Nowa premiera w Sony, co nowego? </h3>
+       <a href="#">Więcej</a>
+        </div>
+      </div>
+      <div class="blog-post">
+         <img src="zdjecie.png" alt="Post 2">
+          <div class="blog-post-info">
+          <h3>Nowa premiera w Sony, co nowego? </h3>
+          <a href="#">Więcej</a>
+        </div>
+      </div>
+      <div class="blog-post">
+         <img src="zdjecie.png" alt="Post 3">
+         <div class="blog-post-info">
+          <h3>Nowa premiera w Sony, co nowego? </h3>
+          <a href="#">Więcej</a>
+        </div>
+      </div>
+      <div class="blog-post">
+         <img src="zdjecie.png" alt="Post 4">
+         <div class="blog-post-info">
+          <h3>Nowa premiera w Sony, co nowego? </h3>
+     <a href="#">Więcej</a>
+        </div>
+      </div>
+      <div class="blog-post">
+         <img src="zdjecie.png" alt="Post 5">
+        <div class="blog-post-info">
+          <h3>Nowa premiera w Sony, co nowego? </h3>
+     <a href="#">Więcej</a>
+        </div>
+      </div>
+      <div class="blog-post">
+          <img src="zdjecie.png" alt="Post 6">
+       <div class="blog-post-info">
+          <h3>Nowa premiera w Sony, co nowego? </h3>
+         <a href="#">Więcej</a>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
 
 </body>

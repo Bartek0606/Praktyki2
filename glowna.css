@@ -160,8 +160,11 @@ header {
   }
 }
 
-#nagl {
+.nagl {
   width: 35%;
+}
+.nagl h2 {
+  text-align: center;
 }
 
 /* Styl dla poziomej linii */
@@ -253,5 +256,76 @@ header {
     font-size: 16px;
     padding: 8px 12px;
     margin-left: 5px;
+  }
+}
+
+/* Styl dla sekcji bloga */
+.blog-posts {
+  margin-top: 50px;
+}
+
+.blog-posts h2 {
+  font-size: 24px;
+  text-align: center;
+}
+
+/* Siatka bloga */
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  max-width: 100%;
+}
+
+/* Styl pojedynczego posta */
+.blog-post {
+  display: flex;
+  align-items: center;
+  background-color: #333;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.blog-post img {
+  width: 50%;
+  height: 100%;
+  border-radius: 10px;
+  margin-right: 20px;
+}
+
+.blog-post-info {
+  flex: 1;
+}
+
+.blog-post-info h3 {
+  font-size: 20px;
+
+  color: white;
+}
+
+.blog-post-info a {
+  color: #f39c12;
+  font-size: 16px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.blog-post-info a:hover {
+  text-decoration: underline;
+}
+
+/* Responsywność dla małych ekranów */
+@media (max-width: 768px) {
+  .blog-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .blog-post-info h3 {
+    font-size: 18px;
+  }
+
+  .blog-post-info a {
+    font-size: 14px;
   }
 }
