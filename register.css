@@ -1,65 +1,145 @@
-#container{
-    margin-top: 50px;
-    border: 1px solid rgb(68, 68, 68);
-    border-radius: 2px;
-    width: fit-content;
-    min-width: 15%;
+/* Global Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #333;
+}
+
+/* Main Container */
+#container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    animation: fadeIn 1s ease-in-out;
+}
+
+#logo h1 {
+    font-weight: 600;
+    font-size: 2rem;
+    color: #ff7a7a;
+    margin-bottom: 20px;
+}
+
+/* Form */
+#form_login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Form Input */
+input[type="text"], input[type="password"] {
+    width: 100%;
     padding: 10px;
-    height: fit-content;
-    
-    margin-left: auto;
-    margin-right: auto;
-  
-      
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: box-shadow 0.3s ease;
 }
-#logo{
-    
-    text-align: center;
-}
-#form_login{
-    margin-bottom: 50px;
-    text-align: center;
-}
-#container_register{
-    margin-top: 10px;
-    min-width: 15%;
-    border-radius: 2px;
-    border: 1px solid rgb(68, 68, 68);
-    width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 10px;
-    text-align: center;
-}
-a{
-    text-decoration: none;
-    
+
+input[type="text"]:focus, input[type="password"]:focus {
+    box-shadow: 0 0 8px #ff7a7a;
 }
 
 .button-10 {
-    
-    flex-direction: column;
-    align-items: center;
-    padding: 6px 14px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
-    border-radius: 6px;
+    background: #ff7a7a;
+    color: white;
     border: none;
-    width: 70%;
-  
-    color: #fff;
-    background: linear-gradient(180deg, #4B91F7 0%, #367AF6 100%);
-     background-origin: border-box;
-    box-shadow: 0px 0.5px 1.5px rgba(54, 122, 246, 0.25), inset 0px 0.8px 0px -0.25px rgba(255, 255, 255, 0.2);
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: manipulation;
-  }
-  
-  .button-10:focus {
-    box-shadow: inset 0px 0.8px 0px -0.25px rgba(255, 255, 255, 0.2), 0px 0.5px 1.5px rgba(54, 122, 246, 0.25), 0px 0px 0px 3.5px rgba(58, 108, 217, 0.5);
-    outline: 0;
-  }
-  input{
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+    margin-top: 10px;
+}
+
+.button-10:hover {
+    background: #ff5151;
+    transform: scale(1.05);
+}
+
+/* Error Messages */
+.error {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: 5px;
     margin-bottom: 10px;
-    width: 70%;
-  }
+    width: 100%;
+    text-align: left;
+}
+
+/* Prevent Input Overlap */
+input[type="text"], input[type="password"] {
+    margin-bottom: 0;
+}
+
+/* Ensuring the form spacing remains consistent */
+#form_login p {
+    margin-top: 5px; /* Keep a fixed margin between inputs and errors */
+}
+
+#container_register {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    margin-top: 20px;
+    animation: fadeIn 1s ease-in-out;
+}
+
+#container_register p {
+    margin: 0;
+    color: #555;
+}
+
+#container_register a {
+    color: #ff7a7a;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+#container_register a:hover {
+    color: #ff5151;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+input:focus {
+    animation: inputFocus 0.2s ease;
+}
+
+@keyframes inputFocus {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(1.02);
+    }
+}
