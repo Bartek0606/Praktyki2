@@ -10,6 +10,7 @@ $passwordError = '';
 $fieldsError = false; // Flag for empty fields
 
 // Check if form is submitted
+// Check if form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get user input
     $username = $_POST['username']; // Email entered by the user
@@ -40,13 +41,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $user = mysqli_fetch_assoc($result);
 
             // Assuming the password is hashed in the database
-            if ($password == $user['password_hash']) {
+            if ($password == $user['password_hash']){
                 // Password is correct, log the user in
                 $_SESSION['user_id'] = $user['user_id'];
                 $_SESSION['username'] = $user['username'];
 
                 // Redirect to homepage or dashboard
-                echo "<script>window.location.href = 'dashboard.php';</script>";
+                header("Location: glowna.php");
                 exit;
             } else {
                 // Incorrect password
@@ -58,6 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 }
+
 ?>
 
 <!DOCTYPE html>
