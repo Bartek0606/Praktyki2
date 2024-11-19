@@ -14,9 +14,9 @@
     </div>
     <div id="form_login">
     <form method="POST" action="login.php">
-        <input type="text" id="username" name="username" placeholder="Email"  ><br><br>
+        <input type="text" id="username" name="username" placeholder="Email"  ><br>
         
-        <input type="password" id="password" name="password" placeholder="Password" ><br><br>
+        <input type="password" id="password" name="password" placeholder="Password" ><br>
         <button class="button-10" role="button">Log in</button>
     </form>
     </div>
