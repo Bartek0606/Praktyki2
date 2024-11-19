@@ -2,8 +2,8 @@
     margin-top: 50px;
     border: 1px solid rgb(68, 68, 68);
     border-radius: 2px;
-    width: fit-content;
-    min-width: 10%;
+    width: 15%;
+    min-width: 15%;
     padding: 10px;
     height: fit-content;
     
@@ -12,29 +12,39 @@
   
       
 }
+#logo{
+    
+    text-align: center;
+}
+#form_login{
+    margin-bottom: 50px;
+    text-align: center;
+}
 #container_register{
     margin-top: 10px;
-    min-width: 10%;
+    min-width: 15%;
     border-radius: 2px;
     border: 1px solid rgb(68, 68, 68);
     width: fit-content;
     margin-left: auto;
     margin-right: auto;
     padding: 10px;
+    text-align: center;
 }
 a{
     text-decoration: none;
     
 }
+
 .button-10 {
-    display: flex;
+    
     flex-direction: column;
     align-items: center;
     padding: 6px 14px;
     font-family: -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
     border-radius: 6px;
     border: none;
-    width: 100%;
+    width: 70%;
   
     color: #fff;
     background: linear-gradient(180deg, #4B91F7 0%, #367AF6 100%);
@@ -48,4 +58,8 @@ a{
   .button-10:focus {
     box-shadow: inset 0px 0.8px 0px -0.25px rgba(255, 255, 255, 0.2), 0px 0.5px 1.5px rgba(54, 122, 246, 0.25), 0px 0px 0px 3.5px rgba(58, 108, 217, 0.5);
     outline: 0;
+  }
+  input{
+    margin-bottom: 10px;
+    width: 70%;
   }
