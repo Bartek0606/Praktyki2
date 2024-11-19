@@ -1,3 +1,7 @@
+<?php
+session_start(); 
+include 'db_connection.php'; 
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,26 +12,44 @@
 </head>
 <body>
   <header>
-    <nav class="navbar">
-      <div class="logo">
-        <h1>Rozwijaj z nami swoje pasje!</h1>
-      </div>
-      <ul class="nav-links">
-        <li><a href="#">Fotografia</a></li>
-        <li><a href="#">Gaming</a></li>
-        <li><a href="#">Gotowanie</a></li>
-        <li><a href="#">Ogrodnictwo</a></li>
-        <li><a href="#">Sporty zimowe</a></li>
-         <li><a href="#">Sporty wodne</a></li>
-      </ul>
-
-      <div class="auth-buttons">    
-  <button class="btn register-btn">Register</button>
-  <button class="btn login-btn">Login</button>
-</div>
-
-     
-    </nav>
+  <nav class="navbar">
+      <?php if (isset($_SESSION['user_id'])): ?>
+          
+          <div class="logo">
+              <h1>Rozwijaj z nami swoje pasje!</h1>
+          </div>
+          <ul class="nav-links">
+              <li><a href="#">Fotografia</a></li>
+              <li><a href="#">Gaming</a></li>
+              <li><a href="#">Gotowanie</a></li>
+              <li><a href="#">Ogrodnictwo</a></li>
+              <li><a href="#">Sporty zimowe</a></li>
+              <li><a href="#">Sporty wodne</a></li>
+          </ul>
+          <div class="user-info">
+              <p>Welcome, User ID: <?php echo $_SESSION['user_id']; ?></p>
+          </div>
+          <div class="auth-buttons">
+              <!-- Here you could add a logout button -->
+              <button class="btn logout-btn">Logout</button>
+          </div>
+      <?php else: ?>
+            <div class="auth-buttons">
+            <div class="logo">
+                <h1>Rozwijaj z nami swoje pasje!</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#">Fotografia</a></li>
+                <li><a href="#">Gaming</a></li>
+                <li><a href="#">Gotowanie</a></li>
+                <li><a href="#">Ogrodnictwo</a></li>
+                <li><a href="#">Sporty zimowe</a></li>
+                <li><a href="#">Sporty wodne</a></li>
+            </ul>
+           
+          </div>
+      <?php endif; ?>
+  </nav>
   </header>
 
 <main class="container">
