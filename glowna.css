@@ -526,3 +526,13 @@ header {
       height: 120px;
   }
 }
+
+.question-badge {
+  background-color: #f9f1c0;
+  color: #856404;
+  border: 1px solid #ffeeba;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
