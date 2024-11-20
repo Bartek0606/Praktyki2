@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Nov 20, 2024 at 12:01 PM
+-- Generation Time: Nov 20, 2024 at 12:08 PM
 -- Server version: 5.7.44
 -- PHP Version: 8.2.8
 
@@ -71,7 +71,7 @@ INSERT INTO `comments` (`comment_id`, `post_id`, `user_id`, `content`, `created_
 (7, 1, 7, 'Great post! Looking forward to more tech articles.', '2024-11-19 09:30:23'),
 (8, 2, 8, 'Italy is stunning, hope to travel there soon!', '2024-11-19 09:35:23'),
 (9, 3, 9, 'I need to start focusing on my fitness. Thanks for the inspiration!', '2024-11-19 09:40:23'),
-(10, 1, 9, 'AI technology is growing so fast. ItÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s exciting to learn more.', '2024-11-19 09:45:23'),
+(10, 1, 9, 'AI technology is growing so fast. ItÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢s exciting to learn more.', '2024-11-19 09:45:23'),
 (11, 2, 7, 'Italy is such a beautiful destination. I love your travel blog!', '2024-11-19 09:50:23'),
 (12, 3, 8, 'This is a great fitness routine! Will try it this week!', '2024-11-19 09:55:23'),
 (13, 1, 8, 'AI is transforming everything! Exciting times ahead.', '2024-11-19 10:00:23');
@@ -142,17 +142,18 @@ CREATE TABLE `users` (
   `password_hash` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `bio` text,
-  `image` blob
+  `profile_picture` blob
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `username`, `full_name`, `email`, `password_hash`, `created_at`, `bio`, `image`) VALUES
+INSERT INTO `users` (`user_id`, `username`, `full_name`, `email`, `password_hash`, `created_at`, `bio`, `profile_picture`) VALUES
 (1, 'user1', 'Jan Kowalski', 'jan.kowalski@example.com', 'hashed_password_1', '2024-11-20 11:56:58', 'Bio for Jan Kowalski', NULL),
 (2, 'user2', 'Anna Nowak', 'anna.nowak@example.com', 'hashed_password_2', '2024-11-20 11:56:58', 'Bio for Anna Nowak', NULL),
-(3, 'user3', 'Piotr Wisniewski', 'piotr.wisniewski@example.com', 'hashed_password_3', '2024-11-20 11:56:58', 'Bio for Piotr Wisniewski', NULL);
+(3, 'user3', 'Piotr Wisniewski', 'piotr.wisniewski@example.com', 'hashed_password_3', '2024-11-20 11:56:58', 'Bio for Piotr Wisniewski', NULL),
+(4, 'user', 'user', 'user@gmail.com', '$2y$10$ASVPw2I4SegRLj.k2XGe5OBh5hsOKe1RNm3rTj7rU15tkhdWXebX.', '2024-11-20 12:03:29', 'a', NULL);
 
 --
 -- Indexes for dumped tables
@@ -178,11 +179,11 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `post_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `post_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 COMMIT;
