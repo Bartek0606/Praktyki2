@@ -86,7 +86,7 @@ $stmt->bind_param('ssss', $username, $email, $passwordHash, $fullname);
 
 <div id="container">
     <div id="logo">
-        <h1>HobbyHub</h1>
+    <h1><a href="index.php">HobbyHub</a></h1>
     </div>
     <div id="form_register">
         <form id="registerForm" method="POST" action="register.php">
