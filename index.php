@@ -50,6 +50,7 @@ $result = $conn->query($sql);
       <div class="auth-buttons">
         <?php if ($isLoggedIn): ?>
           <span class="welcome-message"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
+
             <form method="POST" style="display: inline;">
                 <button type="submit" name="logout" class="btn logout-btn">Log out</button>
             </form>
