@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Nov 20, 2024 at 11:57 AM
+-- Generation Time: Nov 20, 2024 at 12:01 PM
 -- Server version: 5.7.44
 -- PHP Version: 8.2.8
 
@@ -71,7 +71,7 @@ INSERT INTO `comments` (`comment_id`, `post_id`, `user_id`, `content`, `created_
 (7, 1, 7, 'Great post! Looking forward to more tech articles.', '2024-11-19 09:30:23'),
 (8, 2, 8, 'Italy is stunning, hope to travel there soon!', '2024-11-19 09:35:23'),
 (9, 3, 9, 'I need to start focusing on my fitness. Thanks for the inspiration!', '2024-11-19 09:40:23'),
-(10, 1, 9, 'AI technology is growing so fast. ItÃ¢â‚¬â„¢s exciting to learn more.', '2024-11-19 09:45:23'),
+(10, 1, 9, 'AI technology is growing so fast. ItÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s exciting to learn more.', '2024-11-19 09:45:23'),
 (11, 2, 7, 'Italy is such a beautiful destination. I love your travel blog!', '2024-11-19 09:50:23'),
 (12, 3, 8, 'This is a great fitness routine! Will try it this week!', '2024-11-19 09:55:23'),
 (13, 1, 8, 'AI is transforming everything! Exciting times ahead.', '2024-11-19 10:00:23');
@@ -116,7 +116,7 @@ CREATE TABLE `posts` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `title` varchar(255) NOT NULL,
   `is_question` tinyint(1) DEFAULT '0',
-  `image` blob NOT NULL
+  `image` blob
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -124,11 +124,9 @@ CREATE TABLE `posts` (
 --
 
 INSERT INTO `posts` (`post_id`, `user_id`, `category_id`, `content`, `created_at`, `title`, `is_question`, `image`) VALUES
-(1, 1, 1, 'Artificial intelligence is evolving at a rapid pace. Every year, we see new advancements in machine learning algorithms. AI is transforming industries across the globe, from healthcare to finance. In the future, AI will likely become more integrated into our daily lives. With self-driving cars and smart home devices, we are already seeing the benefits of AI. However, the ethical implications of AI remain a critical issue. As we develop more powerful AI, we must ensure it is used responsibly. This includes preventing biases in algorithms and ensuring transparency. The future of AI is exciting, but we must tread carefully to ensure it benefits all of humanity.', '2024-11-20 11:03:20', 'Exploring the Future of AI', 0, ''),
-(2, 2, 4, 'Italian food is loved by people all around the world. The rich flavors of pasta, pizza, and wine are just the beginning. Each region of Italy has its own unique take on traditional dishes. From the creamy risottos of Milan to the seafood in Sicily, the diversity of Italian cuisine is astounding. Italian food is often made with fresh, local ingredients. The simplicity of dishes like pasta with olive oil and garlic can be extraordinary when made with the best ingredients. No meal is complete without a good bottle of wine. Italian cuisine is not just about food; it\'s about a way of life. Sharing a meal with friends and family is an important part of Italian culture. Whether you\'re in Rome or a small village, the love for food is universal.', '2024-11-20 11:03:20', 'The Wonders of Italian Cuisine', 0, ''),
-(3, 3, 3, 'Exercise is one of the most important aspects of maintaining a healthy lifestyle. Regular physical activity has numerous benefits for both the body and the mind. It helps to reduce the risk of chronic diseases like heart disease, diabetes, and obesity. Exercise also improves mental health by reducing stress and anxiety. Whether it\'s running, swimming, or practicing yoga, all forms of exercise contribute to overall well-being. Additionally, exercise can improve sleep quality and boost energy levels. Strength training is especially beneficial for building muscle mass and improving bone density. For those who are just starting, even light exercise like walking can make a significant difference. The key is consistency, and making exercise a part of your daily routine. Remember, a healthy body leads to a healthy mind.', '2024-11-20 11:03:20', 'The Benefits of Regular Exercise', 0, ''),
-(4, 4, 2, 'Japan is one of the most fascinating countries to visit. From the bustling streets of Tokyo to the peaceful temples in Kyoto, Japan offers a perfect blend of modernity and tradition. The cherry blossoms in spring are a sight to behold, and the temples offer a peaceful retreat from the city life. Japan is also known for its exceptional cuisine, including sushi, ramen, and tempura. The transportation system is incredibly efficient, making it easy to travel between cities. Japanese culture is rich in history, from the samurai warriors to the ancient tea ceremonies. The people are incredibly polite and welcoming, making visitors feel at home. Traveling through Japan is a truly unique experience, and there is always something new to discover. Whether you\'re a nature lover or a history buff, Japan has something for everyone.', '2024-11-20 11:03:20', 'Traveling Through Japan: A Dream Come True', 0, ''),
-(5, 5, 7, 'Remote work has become increasingly popular in recent years, especially after the global pandemic. Many companies have realized the benefits of allowing employees to work from home. Remote work offers flexibility and saves time by eliminating the need for commuting. It also allows workers to create a more balanced lifestyle. With the right technology, remote work can be just as effective as working in an office. Virtual meetings, cloud-based file sharing, and project management tools have made remote work more efficient than ever. However, remote work comes with its own set of challenges. Staying productive without the structure of an office environment can be difficult for some people. It\'s important to set up a designated workspace and maintain a routine. Despite the challenges, remote work is likely here to stay and will continue to grow in the coming years.', '2024-11-20 11:03:20', 'The Rise of Remote Work', 0, '');
+(1, 1, 1, 'Artificial intelligence is evolving at a rapid pace. Every year, we see new advancements in machine learning algorithms. AI is transforming industries across the globe, from healthcare to finance. In the future, AI will likely become more integrated into our daily lives. With self-driving cars and smart home devices, we are already seeing the benefits of AI. However, the ethical implications of AI remain a critical issue. As we develop more powerful AI, we must ensure it is used responsibly. This includes preventing biases in algorithms and ensuring transparency. The future of AI is exciting, but we must tread carefully to ensure it benefits all of humanity.', '2024-11-20 11:03:20', 'Exploring the Future of AI', 0, NULL),
+(2, 2, 4, 'Italian food is loved by people all around the world. The rich flavors of pasta, pizza, and wine are just the beginning. Each region of Italy has its own unique take on traditional dishes. From the creamy risottos of Milan to the seafood in Sicily, the diversity of Italian cuisine is astounding. Italian food is often made with fresh, local ingredients. The simplicity of dishes like pasta with olive oil and garlic can be extraordinary when made with the best ingredients. No meal is complete without a good bottle of wine. Italian cuisine is not just about food; it\'s about a way of life. Sharing a meal with friends and family is an important part of Italian culture. Whether you\'re in Rome or a small village, the love for food is universal.', '2024-11-20 11:03:20', 'The Wonders of Italian Cuisine', 1, NULL),
+(3, 3, 3, 'Exercise is one of the most important aspects of maintaining a healthy lifestyle. Regular physical activity has numerous benefits for both the body and the mind. It helps to reduce the risk of chronic diseases like heart disease, diabetes, and obesity. Exercise also improves mental health by reducing stress and anxiety. Whether it\'s running, swimming, or practicing yoga, all forms of exercise contribute to overall well-being. Additionally, exercise can improve sleep quality and boost energy levels. Strength training is especially beneficial for building muscle mass and improving bone density. For those who are just starting, even light exercise like walking can make a significant difference. The key is consistency, and making exercise a part of your daily routine. Remember, a healthy body leads to a healthy mind.', '2024-11-20 11:03:20', 'The Benefits of Regular Exercise', 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -152,9 +150,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `username`, `full_name`, `email`, `password_hash`, `created_at`, `bio`, `image`) VALUES
-(7, 'user1', 'Jan Kowalski', 'jan.kowalski@example.com', 'hashed_password_1', '2024-11-20 11:56:58', 'Bio for Jan Kowalski', NULL),
-(8, 'user2', 'Anna Nowak', 'anna.nowak@example.com', 'hashed_password_2', '2024-11-20 11:56:58', 'Bio for Anna Nowak', NULL),
-(9, 'user3', 'Piotr Wisniewski', 'piotr.wisniewski@example.com', 'hashed_password_3', '2024-11-20 11:56:58', 'Bio for Piotr Wisniewski', NULL);
+(1, 'user1', 'Jan Kowalski', 'jan.kowalski@example.com', 'hashed_password_1', '2024-11-20 11:56:58', 'Bio for Jan Kowalski', NULL),
+(2, 'user2', 'Anna Nowak', 'anna.nowak@example.com', 'hashed_password_2', '2024-11-20 11:56:58', 'Bio for Anna Nowak', NULL),
+(3, 'user3', 'Piotr Wisniewski', 'piotr.wisniewski@example.com', 'hashed_password_3', '2024-11-20 11:56:58', 'Bio for Piotr Wisniewski', NULL);
 
 --
 -- Indexes for dumped tables
