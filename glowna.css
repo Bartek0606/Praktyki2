@@ -454,6 +454,7 @@ header {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 300px;
   flex-shrink: 0;
+  text-decoration: none;
 }
 
 .event-card h3 {
