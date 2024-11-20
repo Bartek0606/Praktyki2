@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Nov 20, 2024 at 10:45 AM
+-- Generation Time: Nov 20, 2024 at 11:39 AM
 -- Server version: 5.7.44
 -- PHP Version: 8.2.8
 
@@ -71,7 +71,7 @@ INSERT INTO `comments` (`comment_id`, `post_id`, `user_id`, `content`, `created_
 (7, 1, 7, 'Great post! Looking forward to more tech articles.', '2024-11-19 09:30:23'),
 (8, 2, 8, 'Italy is stunning, hope to travel there soon!', '2024-11-19 09:35:23'),
 (9, 3, 9, 'I need to start focusing on my fitness. Thanks for the inspiration!', '2024-11-19 09:40:23'),
-(10, 1, 9, 'AI technology is growing so fast. It’s exciting to learn more.', '2024-11-19 09:45:23'),
+(10, 1, 9, 'AI technology is growing so fast. Itâ€™s exciting to learn more.', '2024-11-19 09:45:23'),
 (11, 2, 7, 'Italy is such a beautiful destination. I love your travel blog!', '2024-11-19 09:50:23'),
 (12, 3, 8, 'This is a great fitness routine! Will try it this week!', '2024-11-19 09:55:23'),
 (13, 1, 8, 'AI is transforming everything! Exciting times ahead.', '2024-11-19 10:00:23');
@@ -115,28 +115,20 @@ CREATE TABLE `posts` (
   `content` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `title` varchar(255) NOT NULL,
-  `image_url` varchar(255) DEFAULT NULL,
-  `is_question` tinyint(1) DEFAULT '0'
+  `is_question` tinyint(1) DEFAULT '0',
+  `image` blob NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `posts`
 --
 
-INSERT INTO `posts` (`post_id`, `user_id`, `category_id`, `content`, `created_at`, `title`, `image_url`, `is_question`) VALUES
-(1, 7, 1, 'Latest advancements in AI technology are truly remarkable. Artificial intelligence is changing the world in profound ways. From automation to machine learning, AI is impacting every sector. The technology has already improved healthcare, education, and business operations. As AI becomes more advanced, its capabilities continue to expand. Researchers are exploring ways to make AI systems smarter and more intuitive. The future of AI holds incredible promise, particularly in areas like robotics and data analysis. However, there are also concerns about the ethical implications of AI. We must ensure AI is used responsibly and for the greater good. The potential for innovation in AI is limitless, and we are just getting started.', '2024-11-19 08:40:23', 'AI in Technology', 'https://example.com/posts/ai.jpg', 0),
-(2, 8, 4, 'Exploring the beauty of Italy is an unforgettable experience. The country is rich in history, art, and culture. Each city has its own unique charm and personality. In Rome, you can walk through ancient ruins like the Colosseum and Roman Forum. Venice is known for its canals, beautiful architecture, and romantic atmosphere. Florence is the birthplace of the Renaissance and home to iconic art museums. Italy’s food culture is unmatched, with pasta, pizza, and gelato being favorites. The vineyards of Tuscany offer some of the best wines in the world. Italy is also famous for its fashion, especially in Milan. Traveling through Italy is a journey through time, offering something for everyone.', '2024-11-19 08:45:23', 'Travel in Italy', 'https://example.com/posts/italy.jpg', 0),
-(3, 9, 3, 'Fitness routines are crucial for maintaining a healthy body and mind. Regular exercise boosts your cardiovascular health and strengthens your muscles. It helps to manage weight and increase energy levels. Incorporating strength training into your routine is vital for bone health. Cardio exercises, such as running or cycling, improve endurance and burn calories. Stretching enhances flexibility and reduces the risk of injury. A well-balanced diet works in harmony with exercise for optimal results. Hydration is key before, during, and after workouts. Consistency is essential to seeing progress over time. Remember, fitness is a journey, not a destination, and it’s important to enjoy the process.', '2024-11-19 08:50:23', 'Healthy Fitness Habits', 'https://example.com/posts/fitness.jpg', 0),
-(4, 7, 2, 'Living a minimalist lifestyle can bring many benefits. It encourages you to focus on what truly matters. By removing excess clutter, you create more space for things that add value to your life. Minimalism allows you to be more mindful about your possessions and your choices. It can reduce stress and make life feel less overwhelming. Living simply often leads to increased financial freedom as you stop buying unnecessary items. It also helps you prioritize experiences over material things. Minimalism is about being intentional with your time and energy. By embracing minimalism, you can live a more fulfilling and purposeful life. It’s about making room for the things that truly align with your values and goals.', '2024-11-19 10:05:23', 'Minimalism in Lifestyle', 'https://example.com/posts/minimalism.jpg', 0),
-(5, 8, 5, 'Health and fitness are crucial for a long, happy life. Regular exercise boosts both physical and mental health. It strengthens your heart, improves circulation, and supports a healthy weight. Fitness routines should include strength training, cardio, and flexibility exercises. Eating a balanced diet with plenty of fruits and vegetables is essential for overall health. Getting enough sleep each night allows your body to recover and function properly. Managing stress is equally important, as it can affect your physical well-being. Mental health plays a huge role in overall fitness, and practicing mindfulness can help. Fitness is not just about aesthetics but about feeling strong and confident in your body. When you prioritize health, you are investing in a better quality of life.', '2024-11-19 10:10:23', 'Health for Everyone', 'https://example.com/posts/health.jpg', 0),
-(6, 9, 6, 'The world of entertainment is ever-changing and exciting. Movies, music, and television shows have a significant impact on society. The entertainment industry has evolved with advancements in technology. Streaming services have changed the way we consume media, offering greater convenience and variety. Music is a universal language that brings people together, no matter where they are from. From pop to classical, there is a genre for everyone. Television has become an outlet for diverse stories and perspectives. Many films and series now reflect global issues, sparking important conversations. The rise of social media influencers has also created a new form of entertainment. The future of entertainment looks bright with the possibilities of virtual reality and immersive experiences.', '2024-11-19 10:15:23', 'The World of Entertainment', 'https://example.com/posts/entertainment.jpg', 0),
-(7, 7, 7, 'Business strategies are essential for entrepreneurs looking to succeed. Starting a business requires more than just a good idea—it takes planning and strategy. A clear vision, combined with a solid business model, sets the foundation for success. Networking is crucial, as building relationships with other professionals can open doors. Market research helps to understand your target audience and competition. Marketing and branding are key to standing out in a crowded market. Financial management is essential to ensure the longevity of a business. Entrepreneurs must also be adaptable and ready to pivot when needed. Learning from failure is a crucial part of the entrepreneurial journey. Success often comes down to persistence, resilience, and a passion for what you do.', '2024-11-19 10:20:23', 'Business Tips for Entrepreneurs', 'https://example.com/posts/business.jpg', 1),
-(8, 8, 8, 'Eating healthy is essential for living a long, fulfilling life. A balanced diet supports overall health and helps prevent chronic diseases. Fruits and vegetables provide essential vitamins and minerals that the body needs. Lean proteins and whole grains are important for building and repairing tissues. Healthy fats, like those found in avocados, support brain function and cell growth. Drinking plenty of water is crucial for hydration and maintaining healthy skin. Avoiding processed foods can reduce the risk of health problems like obesity and diabetes. Meal prepping can help you stick to a healthy eating plan. It’s important to listen to your body’s hunger cues and eat in moderation. A healthy lifestyle is not about restriction but about making nourishing choices every day.', '2024-11-19 10:25:23', 'Healthy Eating', 'https://example.com/posts/food.jpg', 1),
-(9, 9, 9, 'Sports play a vital role in maintaining physical fitness. Regular participation in sports improves cardiovascular health and builds strength. It also promotes teamwork and discipline. Sports can be a great way to stay active while having fun. Whether it’s running, swimming, or playing basketball, any form of physical activity is beneficial. Competitive sports encourage goal setting and perseverance. Watching sports can be a source of entertainment and motivation for many people. The importance of sports in schools cannot be understated, as they teach important life skills. Sports are also a great way to meet new people and form lasting friendships. Whether professional or recreational, sports bring people together in unique ways.', '2024-11-19 10:30:23', 'Sports and Fitness', 'https://example.com/posts/sports.jpg', 0),
-(10, 7, 10, 'Fashion trends change every season, but style is timeless. The fall season brings rich colors and cozy fabrics, perfect for layering. Popular trends for this season include oversized coats, leather jackets, and chunky boots. Plaid patterns are also making a comeback, offering a classic yet edgy look. Accessories like scarves, hats, and gloves add warmth and style. Sustainable fashion is becoming more important as people look for eco-friendly alternatives. Vintage clothing is gaining popularity as a way to embrace unique pieces from past decades. Fashion is also about self-expression, and everyone has their own personal style. Whether it’s bold prints or minimalist looks, fashion is a way to showcase who you are. Fall fashion allows for versatility and creativity in outfit choices.', '2024-11-19 10:35:23', 'Fashion Trends', 'https://example.com/posts/fashion.jpg', 0),
-(11, 8, 2, 'Finding the right work-life balance can be challenging in today’s fast-paced world. It’s easy to get caught up in work and neglect personal time. However, balancing your career and personal life is crucial for long-term happiness. Time management is a key factor in maintaining this balance. Setting boundaries between work and home life allows for more relaxation and time with family. Learning to delegate tasks at work can reduce stress and create more free time. Prioritizing self-care is equally important, as it allows you to recharge and avoid burnout. Taking breaks throughout the day can improve focus and productivity. Embracing a flexible work schedule can help you manage both work and personal responsibilities. Achieving work-life balance is a continuous journey that requires mindfulness and effort.', '2024-11-19 10:40:23', 'Work-Life Balance', 'https://example.com/posts/worklife.jpg', 0),
-(12, 9, 5, 'Creating a personalized fitness plan is crucial for achieving your goals. Everyone’s body is different, and so are their fitness needs. The first step is to determine your fitness goals—whether it’s weight loss, muscle gain, or improving endurance. Next, design a workout routine that targets those goals. Incorporating a mix of strength training, cardio, and flexibility exercises will provide a balanced plan. It’s also important to track your progress to stay motivated and make adjustments as needed. A personalized plan should include rest days to allow your body to recover. Nutrition plays a key role in fitness, so fueling your body with the right foods is essential. Don’t be afraid to ask for advice from fitness professionals to optimize your plan. A personalized fitness plan ensures that you’re training in a way that works best for your body and your lifestyle.', '2024-11-19 10:45:23', 'Personalized Fitness Plans', 'https://example.com/posts/workout.jpg', 0),
-(13, 7, 6, 'Music has evolved significantly over the years. From classical compositions to modern pop, music has always been an important part of culture. Advances in technology have made it easier for artists to create and share music. Streaming platforms have revolutionized the way people access music, giving artists a global reach. Music has the power to evoke emotions and bring people together. It has been used as a form of expression, resistance, and celebration throughout history. The diversity of music genres means there is something for everyone. Live music events allow fans to connect with their favorite artists. Music also has therapeutic benefits, helping to reduce stress and improve mental well-being. Whether you’re a listener or a musician, music is a universal language that transcends barriers.', '2024-11-19 10:50:23', 'Music and Culture', 'https://example.com/posts/music.jpg', 1),
+INSERT INTO `posts` (`post_id`, `user_id`, `category_id`, `content`, `created_at`, `title`, `is_question`, `image`) VALUES
+(1, 1, 1, 'Artificial intelligence is evolving at a rapid pace. Every year, we see new advancements in machine learning algorithms. AI is transforming industries across the globe, from healthcare to finance. In the future, AI will likely become more integrated into our daily lives. With self-driving cars and smart home devices, we are already seeing the benefits of AI. However, the ethical implications of AI remain a critical issue. As we develop more powerful AI, we must ensure it is used responsibly. This includes preventing biases in algorithms and ensuring transparency. The future of AI is exciting, but we must tread carefully to ensure it benefits all of humanity.', '2024-11-20 11:03:20', 'Exploring the Future of AI', 0, ''),
+(2, 2, 4, 'Italian food is loved by people all around the world. The rich flavors of pasta, pizza, and wine are just the beginning. Each region of Italy has its own unique take on traditional dishes. From the creamy risottos of Milan to the seafood in Sicily, the diversity of Italian cuisine is astounding. Italian food is often made with fresh, local ingredients. The simplicity of dishes like pasta with olive oil and garlic can be extraordinary when made with the best ingredients. No meal is complete without a good bottle of wine. Italian cuisine is not just about food; it\'s about a way of life. Sharing a meal with friends and family is an important part of Italian culture. Whether you\'re in Rome or a small village, the love for food is universal.', '2024-11-20 11:03:20', 'The Wonders of Italian Cuisine', 0, ''),
+(3, 3, 3, 'Exercise is one of the most important aspects of maintaining a healthy lifestyle. Regular physical activity has numerous benefits for both the body and the mind. It helps to reduce the risk of chronic diseases like heart disease, diabetes, and obesity. Exercise also improves mental health by reducing stress and anxiety. Whether it\'s running, swimming, or practicing yoga, all forms of exercise contribute to overall well-being. Additionally, exercise can improve sleep quality and boost energy levels. Strength training is especially beneficial for building muscle mass and improving bone density. For those who are just starting, even light exercise like walking can make a significant difference. The key is consistency, and making exercise a part of your daily routine. Remember, a healthy body leads to a healthy mind.', '2024-11-20 11:03:20', 'The Benefits of Regular Exercise', 0, ''),
+(4, 4, 2, 'Japan is one of the most fascinating countries to visit. From the bustling streets of Tokyo to the peaceful temples in Kyoto, Japan offers a perfect blend of modernity and tradition. The cherry blossoms in spring are a sight to behold, and the temples offer a peaceful retreat from the city life. Japan is also known for its exceptional cuisine, including sushi, ramen, and tempura. The transportation system is incredibly efficient, making it easy to travel between cities. Japanese culture is rich in history, from the samurai warriors to the ancient tea ceremonies. The people are incredibly polite and welcoming, making visitors feel at home. Traveling through Japan is a truly unique experience, and there is always something new to discover. Whether you\'re a nature lover or a history buff, Japan has something for everyone.', '2024-11-20 11:03:20', 'Traveling Through Japan: A Dream Come True', 0, ''),
+(5, 5, 7, 'Remote work has become increasingly popular in recent years, especially after the global pandemic. Many companies have realized the benefits of allowing employees to work from home. Remote work offers flexibility and saves time by eliminating the need for commuting. It also allows workers to create a more balanced lifestyle. With the right technology, remote work can be just as effective as working in an office. Virtual meetings, cloud-based file sharing, and project management tools have made remote work more efficient than ever. However, remote work comes with its own set of challenges. Staying productive without the structure of an office environment can be difficult for some people. It\'s important to set up a designated workspace and maintain a routine. Despite the challenges, remote work is likely here to stay and will continue to grow in the coming years.', '2024-11-20 11:03:20', 'The Rise of Remote Work', 0, '');
 
 -- --------------------------------------------------------
 
@@ -173,38 +165,25 @@ INSERT INTO `users` (`user_id`, `username`, `full_name`, `email`, `password_hash
 (11, 'grace_smith321', 'Grace Smith', 'grace.smith321@example.com', 'hashedpassword321', '2024-11-19 08:40:23', 'Fashion and beauty expert.', NULL),
 (12, 'henry_white678', 'Henry White', 'henry.white678@example.com', 'hashedpassword678', '2024-11-19 08:40:23', 'Tech and business blogger.', NULL),
 (13, 'irene_pink432', 'Irene Pink', 'irene.pink432@example.com', 'hashedpassword432', '2024-11-19 08:40:23', 'Lover of fashion and fitness trends.', NULL),
-(14, 'jack_purple876', 'Jack Purple', 'jack.purple876@example.com', 'hashedpassword876', '2024-11-19 08:40:23', 'Food blogger and traveler.', NULL),
-(15, 'bartol136', 'Bartek Kostrzewski', 'bartek@gmail.com', '$2y$10$nWm2ikzuwtWhvX8kFxqsBelAemVEtyqADsj/gWtPaB10LyDmRgkUO', '2024-11-20 09:30:46', NULL, NULL);
+(14, 'jack_purple876', 'Jack Purple', 'jack.purple876@example.com', 'hashedpassword876', '2024-11-19 08:40:23', 'Food blogger and traveler.', NULL);
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `events`
+-- Indexes for table `posts`
 --
-ALTER TABLE `events`
-  ADD PRIMARY KEY (`event_id`);
-
---
--- Indexes for table `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`user_id`);
+ALTER TABLE `posts`
+  ADD PRIMARY KEY (`post_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `events`
+-- AUTO_INCREMENT for table `posts`
 --
-ALTER TABLE `events`
-  MODIFY `event_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `users`
---
-ALTER TABLE `users`
-  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+ALTER TABLE `posts`
+  MODIFY `post_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 COMMIT;

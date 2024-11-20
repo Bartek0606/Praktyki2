@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
 }
 
 // Fetch blog posts from the database
-$sql = "SELECT p.post_id, p.title, p.created_at, u.username, c.name AS category_name 
+$sql = "SELECT p.post_id, p.title, p.created_at, u.username, c.name AS category_name, p.image 
         FROM posts p
         LEFT JOIN users u ON p.user_id = u.user_id
         LEFT JOIN categories c ON p.category_id = c.category_id
@@ -33,7 +33,7 @@ $result = $conn->query($sql);
     <title>HobbyHub</title>
 </head>
 <body>
-  <header>
+<header>
     <nav class="navbar">
       <div class="logo">
         <h1><a href="index.php">HobbyHub</a></h1>
@@ -61,7 +61,6 @@ $result = $conn->query($sql);
       </div>
     </nav>
   </header>
-
   <main class="container">
     <div class="nagl">
       <h2>Nasze najnowsze wydarzenia</h2>
@@ -87,10 +86,14 @@ $result = $conn->query($sql);
         if ($result->num_rows > 0) {
             // Output the data for each blog post
             while ($row = $result->fetch_assoc()) {
+                // Convert the image blob into a base64 string
+                $image_data = base64_encode($row['image']);
+                $image_src = 'data:image/jpeg;base64,' . $image_data; // Assuming the image is in JPEG format
+
                 echo "<div class='blog-post' onclick=\"location.href='post.php?id=" . $row['post_id'] . "'\">";
-                echo "<img src='zdjecie.png' alt='Post Image'>"; // Replace with actual image URL if available
+                echo "<img src='" . $image_src . "' alt='Post Image'>"; // Display image from the database
                 echo "<div class='blog-post-info'>";
-                echo "<h3>" . $row['title'] . "</h3>";  // Display title instead of content
+                echo "<h3>" . $row['title'] . "</h3>";  // Display title
                 echo "<p><strong>Category:</strong> " . $row['category_name'] . "</p>";
                 echo "<p><strong>By:</strong> " . $row['username'] . "</p>";
                 echo "<p><strong>Date:</strong> " . $row['created_at'] . "</p>"; // Date displayed below the username
