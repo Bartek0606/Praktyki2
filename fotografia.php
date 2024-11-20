@@ -1,3 +1,37 @@
+<?php
+session_start(); 
+include 'db_connection.php'; 
+$sql = "
+    SELECT DISTINCT  c.content, u.username, u.profile_picture_url 
+    FROM comments c
+    JOIN posts p ON c.post_id = p.post_id
+    JOIN users u ON c.user_id = u.user_id
+    WHERE p.category_id = 5"; 
+
+$result = $conn->query($sql);
+
+$sql1 = "
+    SELECT DISTINCT 
+    posts.title, 
+    posts.content, 
+    posts.image_url, 
+    posts.created_at, 
+    users.username, 
+    users.profile_picture_url, 
+    categories.name AS category_name 
+FROM 
+    posts 
+JOIN 
+    users ON posts.user_id = users.user_id
+JOIN 
+    categories ON posts.category_id = categories.category_id
+WHERE 
+    categories.name = 'Photography'
+ORDER BY 
+    posts.created_at DESC;
+";
+$result1 = $conn->query($sql1);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -69,18 +103,19 @@ To przestrzeń, w której pasja do fotografii spotyka się z historiami, emocjam
     <button class="reviews-prev-button">&larr;</button> <!-- Strzałka w lewo -->
     
     <div class="reviews-container">
-      <div class="review active">
-        <img src="zdjecie_foto.png" alt="Zdjęcie użytkownika" class="review-image">
-        <p class="review-text">"Jako fotograf amator, który dopiero zaczyna swoją przygodę z fotografią, ten blog był dla mnie prawdziwym odkryciem. Znajduję tutaj nie tylko teoretyczne porady, ale także bardzo praktyczne wskazówki, które od razu mogę zastosować w swojej pracy. Na szczególną uwagę zasługują poradniki o ustawieniach aparatu, które są napisane w sposób przystępny, nawet dla laików. Dzięki nim zrozumiałem, jak ważne są detale w fotografii, takie jak balans bieli, przysłona czy czas naświetlania. Artykuły o edycji zdjęć to absolutny hit – nauczyłem się, jak poprawić jakość moich zdjęć, korzystając z popularnych programów graficznych, a efekty są naprawdę imponujące. Zdecydowanie polecam każdemu, kto pragnie pogłębić swoją wiedzę o fotografii, zarówno początkującym, jak i bardziej zaawansowanym fotografom!"</p>
-      </div>
-      <div class="review">
-        <img src="zdjecie_foto.png" alt="Zdjęcie użytkownika" class="review-image">
-        <p class="review-text">"Ciekawy blog z wieloma praktycznymi wskazówkami. Jako początkujący fotograf znalazłem tu wiele inspiracji i nauczyłem się podstaw kompozycji."</p>
-      </div>
-      <div class="review">
-        <img src="zdjecie_foto.png" alt="Zdjęcie użytkownika" class="review-image">
-        <p class="review-text">"Świetne miejsce dla każdego, kto interesuje się fotografią. Autor wyjaśnia wszystko w przystępny sposób, nawet dla laików. Polecam serdecznie!"</p>
-      </div>
+        <?php
+        if ($result->num_rows > 0) {
+            while($row = $result->fetch_assoc()) {
+                echo '<div class="review">';
+                echo '<img src="' . $row['profile_picture_url'] . '" alt="Zdjęcie użytkownika" class="review-image">';
+                echo '<p class="review-username">' . $row['username'] . '</p>';
+                echo '<p class="review-text">"' . $row['content'] . '"</p>';
+                echo '</div>';
+            }
+        } else {
+            echo "Brak recenzji dotyczących fotografii.";
+        }
+        ?>
     </div>
     
     <button class="reviews-next-button">&rarr;</button> <!-- Strzałka w prawo -->
@@ -94,36 +129,21 @@ To przestrzeń, w której pasja do fotografii spotyka się z historiami, emocjam
   <a href="#" class="see-more">Zobacz więcej postów</a>
 
   <div class="posts-container">
-    <div class="post">
-      <img src="post1.png" alt="Post 1" class="post-image">
-      <h3 class="post-title">Poznaj podstawy fotografii z aparatem Sony</h3>
-      <a href="#" class="read-more">Czytaj więcej</a>
-    </div>
-    <div class="post">
-      <img src="post1.png" alt="Post 2" class="post-image">
-      <h3 class="post-title">Jak zrobić dobre zdjęcia? Poznaj dobre obiektywy</h3>
-      <a href="#" class="read-more">Czytaj więcej</a>
-    </div>
-    <div class="post">
-      <img src="post1.png" alt="Post 3" class="post-image">
-      <h3 class="post-title">Jak poprawnie obrabiać zdjęcia?</h3>
-      <a href="#" class="read-more">Czytaj więcej</a>
-    </div>
-    <div class="post">
-      <img src="post2.png" alt="Post 4" class="post-image">
-      <h3 class="post-title">Poznaj podstawy fotografii z aparatem Canon</h3>
-      <a href="#" class="read-more">Czytaj więcej</a>
-    </div>
-    <div class="post">
-      <img src="post2.png" alt="Post 5" class="post-image">
-      <h3 class="post-title">Co jest ważne przy zdjęciach w plenerze?</h3>
-      <a href="#" class="read-more">Czytaj więcej</a>
-    </div>
-    <div class="post">
-      <img src="post2.png" alt="Post 6" class="post-image">
-      <h3 class="post-title">Na co zwracać uwagę przy wyborze akcesoriów?</h3>
-      <a href="#" class="read-more">Czytaj więcej</a>
-    </div>
+    <?php
+      if ($result1->num_rows > 0) {
+      while($row1 = $result1->fetch_assoc()) {
+          echo "<div class='post'>";
+          echo "<img src='" . $row1["image_url"] . "' alt='" . $row1["title"] . "' class='post-image'>";
+          echo "<h3 class='post-title'>" . $row1["title"] . "</h3>";
+          echo "<p><strong>Autor:</strong> " . $row1["username"] . " | <strong>Data:</strong> " . $row1["created_at"] . "</p>";
+          echo "<a href='#' class='read-more'>Czytaj więcej</a>";
+          echo "</div>";
+        }
+      } else {
+          echo "Brak postów o fotografii.";
+      }
+    ?>
+    
   </div>
 </section>
 </div>
