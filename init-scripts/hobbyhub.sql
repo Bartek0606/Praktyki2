@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Nov 20, 2024 at 11:39 AM
+-- Generation Time: Nov 20, 2024 at 11:57 AM
 -- Server version: 5.7.44
 -- PHP Version: 8.2.8
 
@@ -71,7 +71,7 @@ INSERT INTO `comments` (`comment_id`, `post_id`, `user_id`, `content`, `created_
 (7, 1, 7, 'Great post! Looking forward to more tech articles.', '2024-11-19 09:30:23'),
 (8, 2, 8, 'Italy is stunning, hope to travel there soon!', '2024-11-19 09:35:23'),
 (9, 3, 9, 'I need to start focusing on my fitness. Thanks for the inspiration!', '2024-11-19 09:40:23'),
-(10, 1, 9, 'AI technology is growing so fast. Itâ€™s exciting to learn more.', '2024-11-19 09:45:23'),
+(10, 1, 9, 'AI technology is growing so fast. ItÃ¢â‚¬â„¢s exciting to learn more.', '2024-11-19 09:45:23'),
 (11, 2, 7, 'Italy is such a beautiful destination. I love your travel blog!', '2024-11-19 09:50:23'),
 (12, 3, 8, 'This is a great fitness routine! Will try it this week!', '2024-11-19 09:55:23'),
 (13, 1, 8, 'AI is transforming everything! Exciting times ahead.', '2024-11-19 10:00:23');
@@ -152,20 +152,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `username`, `full_name`, `email`, `password_hash`, `created_at`, `bio`, `image`) VALUES
-(1, 'john_doe123', 'John Doe', 'john.doe123@example.com', 'hashedpassword123', '2024-11-19 08:35:23', 'Tech enthusiast and gadget lover.', NULL),
-(2, 'jane_smith456', 'Jane Smith', 'jane.smith456@example.com', 'hashedpassword456', '2024-11-19 08:35:23', 'Travel blogger and health advocate.', NULL),
-(3, 'mark_taylor789', 'Mark Taylor', 'mark.taylor789@example.com', 'hashedpassword789', '2024-11-19 08:35:23', 'Fitness coach and wellness expert.', NULL),
-(4, 'admin', 'admin', 'admin@example.com', 'admin', '2024-11-19 08:35:23', 'Administrator of the platform.', NULL),
-(5, 'alice_jones321', 'Alice Jones', 'alice.jones321@example.com', 'hashedpassword321', '2024-11-19 08:40:23', 'Passionate about tech and wellness.', NULL),
-(6, 'bob_brown654', 'Bob Brown', 'bob.brown654@example.com', 'hashedpassword654', '2024-11-19 08:40:23', 'Travel enthusiast and foodie.', NULL),
-(7, 'carol_white987', 'Carol White', 'carol.white987@example.com', 'hashedpassword987', '2024-11-19 08:40:23', 'Love to read and write about fitness and health.', NULL),
-(8, 'david_green543', 'David Green', 'david.green543@example.com', 'hashedpassword543', '2024-11-19 08:40:23', 'Entrepreneur and tech innovator.', NULL),
-(9, 'eva_black234', 'Eva Black', 'eva.black234@example.com', 'hashedpassword234', '2024-11-19 08:40:23', 'Avid traveler and food critic.', NULL),
-(10, 'frank_young876', 'Frank Young', 'frank.young876@example.com', 'hashedpassword876', '2024-11-19 08:40:23', 'Sports fan and fitness coach.', NULL),
-(11, 'grace_smith321', 'Grace Smith', 'grace.smith321@example.com', 'hashedpassword321', '2024-11-19 08:40:23', 'Fashion and beauty expert.', NULL),
-(12, 'henry_white678', 'Henry White', 'henry.white678@example.com', 'hashedpassword678', '2024-11-19 08:40:23', 'Tech and business blogger.', NULL),
-(13, 'irene_pink432', 'Irene Pink', 'irene.pink432@example.com', 'hashedpassword432', '2024-11-19 08:40:23', 'Lover of fashion and fitness trends.', NULL),
-(14, 'jack_purple876', 'Jack Purple', 'jack.purple876@example.com', 'hashedpassword876', '2024-11-19 08:40:23', 'Food blogger and traveler.', NULL);
+(7, 'user1', 'Jan Kowalski', 'jan.kowalski@example.com', 'hashed_password_1', '2024-11-20 11:56:58', 'Bio for Jan Kowalski', NULL),
+(8, 'user2', 'Anna Nowak', 'anna.nowak@example.com', 'hashed_password_2', '2024-11-20 11:56:58', 'Bio for Anna Nowak', NULL),
+(9, 'user3', 'Piotr Wisniewski', 'piotr.wisniewski@example.com', 'hashed_password_3', '2024-11-20 11:56:58', 'Bio for Piotr Wisniewski', NULL);
 
 --
 -- Indexes for dumped tables
@@ -178,6 +167,12 @@ ALTER TABLE `posts`
   ADD PRIMARY KEY (`post_id`);
 
 --
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`user_id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -186,4 +181,10 @@ ALTER TABLE `posts`
 --
 ALTER TABLE `posts`
   MODIFY `post_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 COMMIT;
