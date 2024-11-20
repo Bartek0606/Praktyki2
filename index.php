@@ -1,6 +1,18 @@
 <?php
+session_start(); // Start session to check login status
+
 // Include the database connection
 include 'db_connection.php';
+
+// Check if user is logged in
+$isLoggedIn = isset($_SESSION['user_id']);
+
+// Handle logout
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
+    session_destroy(); // Destroy the session
+    header("Location: index.php"); // Redirect to homepage
+    exit;
+}
 
 // Fetch blog posts from the database
 $sql = "SELECT p.post_id, p.title, p.created_at, u.username, c.name AS category_name 
@@ -24,7 +36,7 @@ $result = $conn->query($sql);
   <header>
     <nav class="navbar">
       <div class="logo">
-        <h1><a href="index.php">HobbyHub</a></h1> <!-- Zmieniony link do index.php -->
+        <h1><a href="index.php">HobbyHub</a></h1>
       </div>
       <ul class="nav-links">
         <li><a href="#">Fotografia</a></li>
@@ -35,9 +47,17 @@ $result = $conn->query($sql);
         <li><a href="#">Sporty wodne</a></li>
       </ul>
 
-      <div class="auth-buttons">    
-        <button class="btn register-btn" onclick="window.location.href='register.php'">Register</button>
-        <button class="btn login-btn" onclick="window.location.href='login.php'">Login</button>
+      <div class="auth-buttons">
+        <?php if ($isLoggedIn): ?>
+          <span class="welcome-message"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
+            <form method="POST" style="display: inline;">
+                <button type="submit" name="logout" class="btn logout-btn">Log out</button>
+            </form>
+            
+        <?php else: ?>
+            <button class="btn register-btn" onclick="window.location.href='register.php'">Register</button>
+            <button class="btn login-btn" onclick="window.location.href='login.php'">Login</button>
+        <?php endif; ?>
       </div>
     </nav>
   </header>

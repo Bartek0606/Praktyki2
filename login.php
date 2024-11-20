@@ -1,15 +1,14 @@
 <?php
-session_start(); // Start the session to store user data
+session_start(); // Start the session to manage user authentication
 
 // Include database connection
-include 'db_connection.php'; // Assuming you have the connection set up in this file
+include 'db_connection.php';
 
 // Initialize error messages
 $emailError = '';
 $passwordError = '';
 $fieldsError = false; // Flag for empty fields
 
-// Check if form is submitted
 // Check if form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get user input
@@ -40,14 +39,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // User found, now verify password
             $user = mysqli_fetch_assoc($result);
 
-            // Assuming the password is hashed in the database
-            if ($password == $user['password_hash']){
+            // Verify the hashed password
+            if (password_verify($password, $user['password_hash'])) {
                 // Password is correct, log the user in
                 $_SESSION['user_id'] = $user['user_id'];
                 $_SESSION['username'] = $user['username'];
 
-                // Redirect to homepage or dashboard
-                header("Location: glowna.php");
+                // Redirect to homepage
+                header("Location: index.php");
                 exit;
             } else {
                 // Incorrect password
@@ -59,11 +58,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 }
-
 ?>
 
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -74,7 +72,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <div id="container">
     <div id="logo">
-        <h1>HobbyHub</h1>
+        <h1><a href="index.php">HobbyHub</a></h1>
     </div>
     <div id="form_login">
         <form id="loginForm" method="POST" action="login.php">
@@ -106,60 +104,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <a href="register.php">Sign up</a>        
     </p>
 </div>
-
-<!-- JavaScript to handle form validation and prevent page refresh -->
-<script>
-document.getElementById('loginForm').addEventListener('submit', function(event) {
-    // Get all the form fields
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-
-    let valid = true;
-
-    // Reset error messages
-    document.querySelectorAll('.error').forEach(function(error) {
-        error.remove();
-    });
-
-    // Check if any field is empty
-    if (!username || !password) {
-        valid = false;
-        if (!username) {
-            showError('Email is required.', 'username');
-        }
-        if (!password) {
-            showError('Password is required.', 'password');
-        }
-    }
-
-    // Check if email is valid
-    if (username && !validateEmail(username)) {
-        valid = false;
-        showError('Invalid email format.', 'username');
-    }
-
-    // If not valid, prevent form submission
-    if (!valid) {
-        event.preventDefault();
-    }
-});
-
-// Email validation function
-function validateEmail(email) {
-    const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-    return regex.test(email);
-}
-
-// Function to display error messages under specific field
-function showError(message, fieldId) {
-    const errorElement = document.createElement('p');
-    errorElement.classList.add('error');
-    errorElement.textContent = message;
-    
-    const field = document.getElementById(fieldId);
-    field.insertAdjacentElement('afterend', errorElement);
-}
-</script>
 
 </body>
 </html>

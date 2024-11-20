@@ -135,3 +135,13 @@ input:focus {
         transform: scale(1.02);
     }
 }
+    /* Nagłówek z linkiem */
+#logo h1 a {
+    color: #ff7a7a;  /* Kolor jak wcześniej, możesz dostosować według potrzeb */
+    text-decoration: none;  /* Usunięcie podkreślenia */
+}
+
+#logo h1 a:hover {
+    color: #f39c12;  /* Kolor zmieniający się na złoty podczas najechania */
+    text-decoration: none;  /* Utrzymanie braku podkreślenia */
+}
