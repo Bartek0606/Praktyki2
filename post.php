@@ -61,21 +61,25 @@ WHERE p.post_id = $post_id";
   </header>
 
   <main class="container">
-  <div class="post-details">
-    <h1><?php echo htmlspecialchars($row['title'], ENT_QUOTES, 'UTF-8'); ?></h1>
-    <p><strong>Category:</strong> <?php echo htmlspecialchars($row['category_name'], ENT_QUOTES, 'UTF-8'); ?></p>
-    <p><strong>By:</strong> <?php echo htmlspecialchars($row['username'], ENT_QUOTES, 'UTF-8'); ?></p>
-    <p><strong>Date:</strong> <?php echo htmlspecialchars($row['created_at'], ENT_QUOTES, 'UTF-8'); ?></p>
+    <div class="post-details">
+        <h1><?php echo htmlspecialchars($row['title'], ENT_QUOTES, 'UTF-8'); ?></h1> <!-- Tytuł posta -->
+        <p><strong>Category:</strong> <?php echo htmlspecialchars($row['category_name'], ENT_QUOTES, 'UTF-8'); ?></p>
+        <p><strong>By:</strong> <?php echo htmlspecialchars($row['username'], ENT_QUOTES, 'UTF-8'); ?></p>
+        <p><strong>Date:</strong> <?php echo htmlspecialchars($row['created_at'], ENT_QUOTES, 'UTF-8'); ?></p>
 
-    <br />
+        <br />
+        <!-- Jeśli post to pytanie, wyróżnij go -->
+        <?php if ($row['is_question']): ?>
+            <div class="question-highlight">
+                <strong>Question:</strong>
+            </div>
+        <?php endif; ?>
 
-    <?php if ($row['is_question']): ?>
-        <div class="question-badge">Question</div>
-    <?php endif; ?>
+        <!-- Wyświetl zawartość posta -->
+        <p><?php echo nl2br(htmlspecialchars($row['content'], ENT_QUOTES, 'UTF-8')); ?></p>
+    </div>
+</main>
 
-    <br>
-    <p><?php echo nl2br(htmlspecialchars($row['content'], ENT_QUOTES, 'UTF-8')); ?></p>
-</div>
 
   </main>
 
