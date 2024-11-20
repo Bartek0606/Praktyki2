@@ -1,0 +1,399 @@
+/* Sekcja Hero */
+.hero-section {
+  background-color: #f7f7f7; /* Dopasowanie do wcześniejszej strony */
+  color: #333; /* Kolor tekstu */
+  padding: 50px 20px;
+}
+
+.hero-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70%;
+  margin: 0 auto;
+  gap: 20px;
+}
+
+.hero-image {
+  width: 400px;
+  height: 400px;
+  border-radius: 10px;
+  object-fit: cover;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.hero-content {
+  max-width: 600px;
+}
+
+.hero-content h1 {
+  font-size: 36px;
+  color: #f39c12; /* Akcent kolorystyczny */
+  margin-bottom: 10px;
+}
+
+.hero-content h3 {
+  font-size: 24px;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.hero-divider {
+  border: none;
+  border-top: 3px solid #f39c12; /* Akcent kolorystyczny */
+  width: 80%;
+  margin: 20px 0;
+}
+
+.hero-content p {
+  font-size: 18px;
+  line-height: 1.6;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.social-links {
+  display: flex;
+  gap: 10px;
+}
+
+.social-icon {
+  display: inline-block;
+  text-decoration: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 14px;
+  color: #fff;
+}
+
+.social-icon.instagram {
+  background-color: #e1306c;
+}
+
+.social-icon.youtube {
+  background-color: #ff0000;
+}
+
+.social-icon.facebook {
+  background-color: #4267b2;
+}
+
+/* Sekcja Wyszukiwania */
+.search-section {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.search-section h2 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.search-form {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.search-form input {
+  padding: 10px 15px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  flex: 1;
+  max-width: 400px;
+}
+
+.search-form button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #f39c12;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-form button:hover {
+  background-color: #d0870b;
+}
+
+/* Sekcja opinii */
+.reviews-section {
+  background-color: #ffffff;
+  padding: 50px 20px;
+  text-align: center;
+  color: #333;
+}
+
+.reviews-title {
+  font-size: 28px;
+  color: #f39c12;
+  margin-bottom: 30px;
+}
+
+.reviews-slider {
+  position: relative;
+  width: 80%;
+  max-width: 800px; /* Zwiększyłem szerokość, aby było więcej miejsca */
+  margin: 0 auto;
+  overflow: hidden; /* Ukrywa nieaktywne opinie */
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+/* Kontener dla opinii */
+.reviews-container {
+  display: flex; /* Flexbox dla poziomego ułożenia opinii */
+  transition: transform 0.5s ease; /* Płynne przejście między opiniami */
+}
+
+/* Pojedyncza opinia */
+.review {
+  min-width: 100%; /* Opinie wypełniają całą szerokość kontenera */
+  box-sizing: border-box; /* Zapewnia, że padding nie zaburzy szerokości */
+  padding: 20px;
+  text-align: center; /* Centrowanie tekstu */
+}
+
+.review-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin-bottom: 20px;
+  object-fit: cover;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.review-text {
+  font-size: 18px;
+  color: #555;
+  line-height: 1.6;
+  max-width: 650px; /* Ograniczamy szerokość tekstu */
+  margin: 0 auto; /* Centrujemy tekst */
+}
+
+/* Strzałki */
+.reviews-prev-button,
+.reviews-next-button {
+  background-color: transparent;
+  border: none;
+  font-size: 30px;
+  color: #f39c12;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.reviews-prev-button {
+  left: 10px;
+}
+
+.reviews-next-button {
+  right: 10px;
+}
+
+/* Sekcja postów */
+.tlo_posty {
+  width: 100%;
+  background-color: #f7f7f7;
+}
+
+.posts-section {
+  width: 80%;
+  margin: auto;
+  background-color: #f7f7f7;
+  padding: 50px 20px;
+  text-align: center;
+  color: #333;
+}
+
+.posts-title {
+  font-size: 28px;
+  color: #f39c12;
+  margin-bottom: 20px;
+}
+
+.see-more {
+  font-size: 18px;
+  color: #f39c12;
+  text-decoration: none;
+  margin-bottom: 30px;
+  display: inline-block;
+}
+
+.see-more:hover {
+  text-decoration: underline;
+}
+
+/* Kontener postów */
+.posts-container {
+  display: flex;
+  flex-wrap: wrap; /* Pozwala na zawijanie postów w kolejne linie */
+  justify-content: space-between;
+  gap: 30px; /* Odstęp między postami */
+}
+
+/* Pojedynczy post */
+.post {
+  width: 30%; /* Każdy post zajmuje 30% szerokości kontenera */
+  box-sizing: border-box; /* Uwzględnia padding i marginesy w obliczeniach szerokości */
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.post-image {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  object-fit: cover;
+  margin-bottom: 15px;
+}
+
+.post-title {
+  font-size: 22px;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.read-more {
+  font-size: 16px;
+  color: #f39c12;
+  text-decoration: none;
+}
+
+.read-more:hover {
+  text-decoration: underline;
+}
+
+/* Responsywność - na mniejszych ekranach */
+@media (max-width: 768px) {
+  .post {
+    width: 48%; /* Na małych ekranach dwa posty w linii */
+  }
+}
+
+@media (max-width: 480px) {
+  .post {
+    width: 100%; /* Na bardzo małych ekranach posty w jednej kolumnie */
+  }
+}
+
+/* Sekcja postów popularnych */
+
+.tlo_posty_popularne {
+  width: 100%;
+  background-color: #ffffff;
+}
+
+.most-liked-posts-section {
+  width: 80%;
+  margin: auto;
+  background-color: #f7f7f7;
+  padding: 50px 20px;
+  text-align: center;
+  color: #333;
+}
+
+.most-liked-posts-title {
+  font-size: 28px;
+  color: #f39c12;
+  margin-bottom: 20px;
+}
+
+.see-more-posts {
+  font-size: 18px;
+  color: #f39c12;
+  text-decoration: none;
+  margin-bottom: 30px;
+  display: inline-block;
+}
+
+.see-more-posts:hover {
+  text-decoration: underline;
+}
+
+/* Kontener postów */
+.most-liked-posts-container {
+  display: flex;
+  flex-wrap: wrap; /* Pozwala na zawijanie postów w kolejne linie */
+  justify-content: space-between;
+  gap: 30px; /* Odstęp między postami */
+}
+
+/* Pojedynczy post */
+.most-liked-post {
+  width: 30%; /* Każdy post zajmuje 30% szerokości kontenera */
+  box-sizing: border-box; /* Uwzględnia padding i marginesy w obliczeniach szerokości */
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.most-liked-post-image {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  object-fit: cover;
+  margin-bottom: 15px;
+}
+
+.most-liked-post-title {
+  font-size: 22px;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.most-liked-read-more {
+  font-size: 16px;
+  color: #f39c12;
+  text-decoration: none;
+}
+
+.most-liked-read-more:hover {
+  text-decoration: underline;
+}
+
+.like-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.like-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  margin-right: 10px;
+  font-size: 24px;
+  color: #1d12f3; /* Kolor serca */
+}
+
+.like-count {
+  font-size: 18px;
+  color: #555;
+}
+
+/* Responsywność - na mniejszych ekranach */
+@media (max-width: 768px) {
+  .most-liked-post {
+    width: 48%; /* Na małych ekranach dwa posty w linii */
+  }
+}
+
+@media (max-width: 480px) {
+  .most-liked-post {
+    width: 100%; /* Na bardzo małych ekranach posty w jednej kolumnie */
+  }
+}
