@@ -55,7 +55,7 @@ $result = $conn->query($sql);
             </form>
             
         <?php else: ?>
-            <button class="btn register-btn" onclick="window.location.href='register.php'">Register</button>
+            <button class="btn register-btn" onclick="window.location.href='register.php'">Sign up</button>
             <button class="btn login-btn" onclick="window.location.href='login.php'">Login</button>
         <?php endif; ?>
       </div>
