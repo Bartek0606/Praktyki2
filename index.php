@@ -3,11 +3,11 @@
 include 'db_connection.php';
 
 // Fetch blog posts from the database
-$sql = "SELECT p.post_id, p.content, p.created_at, u.username, c.name AS category_name 
+$sql = "SELECT p.post_id, p.title, p.created_at, u.username, c.name AS category_name 
         FROM posts p
         LEFT JOIN users u ON p.user_id = u.user_id
         LEFT JOIN categories c ON p.category_id = c.category_id
-        ORDER BY p.created_at DESC LIMIT 3"; // Limit to the latest 3 posts
+        ORDER BY p.created_at DESC"; // Sort by date, showing latest first
 
 $result = $conn->query($sql);
 ?>
@@ -18,13 +18,13 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <link rel="stylesheet" href="glowna.css">
     <script src="glowna.js" defer></script>
-    <title>Strona główna</title>
+    <title>HobbyHub</title>
 </head>
 <body>
   <header>
     <nav class="navbar">
       <div class="logo">
-        <h1>Rozwijaj z nami swoje pasje!</h1>
+        <h1><a href="index.php">HobbyHub</a></h1> <!-- Zmieniony link do index.php -->
       </div>
       <ul class="nav-links">
         <li><a href="#">Fotografia</a></li>
@@ -36,8 +36,8 @@ $result = $conn->query($sql);
       </ul>
 
       <div class="auth-buttons">    
-        <button class="btn register-btn">Register</button>
-        <button class="btn login-btn">Login</button>
+        <button class="btn register-btn" onclick="window.location.href='register.php'">Register</button>
+        <button class="btn login-btn" onclick="window.location.href='login.php'">Login</button>
       </div>
     </nav>
   </header>
@@ -67,13 +67,13 @@ $result = $conn->query($sql);
         if ($result->num_rows > 0) {
             // Output the data for each blog post
             while ($row = $result->fetch_assoc()) {
-                echo "<div class='blog-post'>";
+                echo "<div class='blog-post' onclick=\"location.href='post.php?id=" . $row['post_id'] . "'\">";
                 echo "<img src='zdjecie.png' alt='Post Image'>"; // Replace with actual image URL if available
                 echo "<div class='blog-post-info'>";
-                echo "<h3>" . $row['content'] . "</h3>";  // Short excerpt or title
+                echo "<h3>" . $row['title'] . "</h3>";  // Display title instead of content
                 echo "<p><strong>Category:</strong> " . $row['category_name'] . "</p>";
-                echo "<p><strong>By:</strong> " . $row['username'] . " | " . $row['created_at'] . "</p>";
-                echo "<a href='post.php?id=" . $row['post_id'] . "'>Więcej</a>"; // Link to the full post page
+                echo "<p><strong>By:</strong> " . $row['username'] . "</p>";
+                echo "<p><strong>Date:</strong> " . $row['created_at'] . "</p>"; // Date displayed below the username
                 echo "</div></div>";
             }
         } else {
