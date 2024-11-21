@@ -47,8 +47,8 @@ $categories_result = $conn->query($sql_categories);
     <nav class="navbar">
       <div class="logo">
         <h1><a href="index.php">HobbyHub</a></h1>
-      </div>
-      <!-- Kod do menu rozwijanego -->
+
+            <!-- Kod do menu rozwijanego -->
     <div class="dropdown">
         <button class="dropdown-button" onclick="toggleDropdown()">Wybierz kategorię</button>
         <div class="dropdown-menu" id="dropdownMenu">
@@ -63,6 +63,8 @@ $categories_result = $conn->query($sql_categories);
             ?>
         </div>
     </div>
+      </div>
+  
 
       <div class="auth-buttons">
         <?php if ($isLoggedIn): ?>
