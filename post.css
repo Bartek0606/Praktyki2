@@ -96,5 +96,16 @@ cursor: pointer; /* Add pointer cursor on hover */
 background-color: #45a049; /* Optional: button hover effect */
 }
 
+/* Success message style */
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 15px;
+  border: 1px solid #c3e6cb;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: bold;
+}
 
 
