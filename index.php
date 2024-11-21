@@ -18,6 +18,8 @@ $sql_events = "SELECT event_id, event_name, event_description, event_date, locat
                FROM events 
                ORDER BY event_date ASC";  // Możesz zmienić kolejność, np. DESC jeśli chcesz pokazać najnowsze wydarzenia jako pierwsze
 
+
+
 $events_result = $conn->query($sql_events);
 
 
@@ -28,8 +30,14 @@ $sql = "SELECT p.post_id, p.title, p.created_at, u.username, c.name AS category_
         LEFT JOIN categories c ON p.category_id = c.category_id
         ORDER BY p.created_at DESC"; // Sort by date, showing latest first
 
+
 $result = $conn->query($sql);
+
+// Kod do pobierania kategorii z bazy
+$sql_categories = "SELECT category_id, name FROM categories ORDER BY name ASC"; 
+$categories_result = $conn->query($sql_categories);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -45,14 +53,21 @@ $result = $conn->query($sql);
       <div class="logo">
         <h1><a href="index.php">HobbyHub</a></h1>
       </div>
-      <ul class="nav-links">
-        <li><a href="#">Fotografia</a></li>
-        <li><a href="#">Gaming</a></li>
-        <li><a href="#">Gotowanie</a></li>
-        <li><a href="#">Ogrodnictwo</a></li>
-        <li><a href="#">Sporty zimowe</a></li>
-        <li><a href="#">Sporty wodne</a></li>
-      </ul>
+<!-- Kod do menu rozwijanego -->
+    <div class="dropdown">
+        <button class="dropdown-button" onclick="toggleDropdown()">Wybierz kategorię</button>
+        <div class="dropdown-menu" id="dropdownMenu">
+            <?php
+            if ($categories_result->num_rows > 0) {
+                while ($row = $categories_result->fetch_assoc()) {
+                    echo '<a href="category.php?id=' . $row['category_id'] . '">' . htmlspecialchars($row['name']) . '</a>';
+                }
+            } else {
+                echo '<a>Brak kategorii</a>';
+            }
+            ?>
+        </div>
+    </div>
 
       <div class="auth-buttons">
         <?php if ($isLoggedIn): ?>
