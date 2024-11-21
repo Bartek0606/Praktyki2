@@ -9,6 +9,27 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     die('Nieprawidłowe ID kategorii');
 }
 
+// Zapytanie o nazwę kategorii
+$sql_category = "
+    SELECT name 
+    FROM categories 
+    WHERE category_id = ?;
+";
+$stmt_category = $conn->prepare($sql_category);
+$stmt_category->bind_param("i", $category_id);
+$stmt_category->execute();
+$result_category = $stmt_category->get_result();
+
+// Sprawdzenie, czy kategoria istnieje
+if ($result_category->num_rows > 0) {
+    $category = $result_category->fetch_assoc();
+    $category_name = htmlspecialchars($category['name']); // Nazwa kategorii
+} else {
+    die('Kategoria o podanym ID nie istnieje.');
+}
+
+
+
 $sql_posts = "
     SELECT 
         posts.title, 
@@ -64,7 +85,7 @@ $result_posts = $stmt_posts->get_result();
     <meta charset="UTF-8">
     <link rel="stylesheet" href="fotografia.css">
     <link rel="stylesheet" href="glowna.css">
-    <script src="fotografia.js" defer></script>
+    <script src="fotografia.js"></script>
     <title>Blog o fotografii</title>
 </head>
 <body>
@@ -72,27 +93,42 @@ $result_posts = $stmt_posts->get_result();
 <header>
     <nav class="navbar">
         <div class="logo">
-            <h1>Odkrywaj Fotografię z nami!</h1>
+            <h1>Explore <?php echo $category_name; ?> with us!</h1>
+        </div>
+        <div id="search_form">
+            <form class="search-form">
+                <input type="text" placeholder="Search what you need">
+                <button type="submit">Search</button>
+            </form>
         </div>
         <ul class="nav-links">
-            <li><a href="#podstawy-fotografii">Podstawy fotografii</a></li>
-            <li><a href="#posty">Posty</a></li>
-            <li><a href="#opinie">Opinie</a></li>
-            <li><a href="#o-nas">O nas</a></li>
-            <li><a href="#najpopularniejsze-posty">Najpopularniejsze posty</a></li>
+            <li><a href="#posty">Posts about <?php echo $category_name; ?></a></li>
+            <li><a href="#opinie">Opinions</a></li>
+            <li><a href="#o-nas">About Blog</a></li>
+            <li><a href="#najpopularniejsze-posty">Most popular posts</a></li>
         </ul>
         <div class="auth-buttons">
-            <button class="btn register-btn">Zarejestruj się</button>
-            <button class="btn login-btn">Zaloguj się</button>
+            <button class="btn register-btn">Register</button>
+            <button class="btn login-btn">Log In</button>
         </div>
     </nav>
 </header>
 
+<!-- <div class="search-section">
+        <h2>Search what you need</h2>
+        <form class="search-form">
+            <input type="text" placeholder="Search what you need">
+            <button type="submit">Search</button>
+        </form>
+    </div> -->
+
 <section id="podstawy-fotografii" class="hero-section">
+            <div class="hero-container">
+                <img src="zdjecie_foto.png">
             <?php 
               if ($result_category->num_rows > 0) {
                 while ($category = $result_category->fetch_assoc()) {
-                    echo "<img src='".htmlspecialchars($category['image'])."'>";
+                    // echo "<img src='".htmlspecialchars($category['image'])."'>";
                     echo "<div class='hero-content'>";
                     echo "<h1>". htmlspecialchars($category['title']) ."</h1> ";
                     echo "<hr class='hero-divider'>";
@@ -103,45 +139,19 @@ $result_posts = $stmt_posts->get_result();
                 echo "<p>Brak postów w tej kategorii.</p>";
             }
             ?>
-            <p>Zaczynajmy wspólną przygodę!</p>
+            <p>Let's start our adventure together!</p>
             <hr class="hero-divider">
+
+            </div>
     </div>
-    <div class="search-section">
-        <h2>Znajdź to, czego potrzebujesz</h2>
-        <form class="search-form">
-            <input type="text" placeholder="Napisz, czego chcesz się dowiedzieć">
-            <button type="submit">Szukaj</button>
-        </form>
-    </div>
+  
 </section>
 
-<section id="opinie" class="reviews-section">
-    <h2 class="reviews-title">Opinie użytkowników o blogu</h2>
-    <div class="reviews-slider">
-        <button class="reviews-prev-button">&larr;</button> <!-- Strzałka w lewo -->
-        <div class="reviews-container">
-            <?php
-            if ($result->num_rows > 0) {
-                while($row = $result->fetch_assoc()) {
-                    echo '<div class="review">';
-                    echo '<img src="' . $row['profile_picture_url'] . '" alt="Zdjęcie użytkownika" class="review-image">';
-                    echo '<p class="review-username">' . $row['username'] . '</p>';
-                    echo '<p class="review-text">"' . $row['content'] . '"</p>';
-                    echo '</div>';
-                }
-            } else {
-                echo "Brak recenzji dotyczących fotografii.";
-            }
-            ?>
-        </div>
-        <button class="reviews-next-button">&rarr;</button> <!-- Strzałka w prawo -->
-    </div>
-</section>
 
 <div class="tlo_posty">
     <section id="posty" class="posts-section">
-        <h2 class="posts-title">Posty o podstawach fotografii</h2>
-        <a href="#" class="see-more">Zobacz więcej postów</a>
+    <h1 class="posts-title">Posts about <?php echo $category_name; ?></h1>
+        <a href="#" class="see-more">See more posts</a>
 
         <div class="posts-container">
             <?php
@@ -150,9 +160,11 @@ $result_posts = $stmt_posts->get_result();
                     echo "<div class='post'>";
                     echo "<img src='" . htmlspecialchars($post['image_url']) . "' alt='" . htmlspecialchars($post['title']) . "'>";
                     echo "<h3>" . htmlspecialchars($post['title']) . "</h3>";
+                    echo "<br />";
                     echo "<p>" . htmlspecialchars($post['content']) . "</p>";
-                    echo "<p>Dodane przez: <strong>" . htmlspecialchars($post['username']) . "</strong></p>";
-                    echo "<p>Kategoria: <strong>" . htmlspecialchars($post['category_name']) . "</strong></p>";
+                    echo "<br />";
+                    echo "<p>Add by: <strong>" . htmlspecialchars($post['username']) . "</strong></p>";
+                    echo "<p>Category: <strong>" . htmlspecialchars($post['category_name']) . "</strong></p>";
                     echo "</div>";
                 }
             } else {
@@ -164,7 +176,7 @@ $result_posts = $stmt_posts->get_result();
     </section>
 </div>
 
-<div class="tlo_posty_popularne">
+<!-- <div class="tlo_posty_popularne">
     <section id="najpopularniejsze-posty" class="most-liked-posts-section">
         <h2 class="most-liked-posts-title">Najczęściej polubiane posty</h2>
         <a href="#" class="see-more-posts">Zobacz więcej postów</a>
@@ -197,34 +209,33 @@ $result_posts = $stmt_posts->get_result();
             </div>
         </div>
     </section>
-</div>
-<script>
-    // Skrypt do przewijania do odpowiednich sekcji
+</div> -->
 
-    document.addEventListener("DOMContentLoaded", function() {
-        // Znajdź wszystkie linki nawigacyjne
-        const navLinks = document.querySelectorAll('.nav-links a');
-
-        // Funkcja do przewijania do odpowiedniej sekcji
-        navLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();  // Zapobiegamy standardowemu działaniu linku
-
-                // Pobieramy nazwę sekcji z href (np. #popular-posts)
-                const targetId = link.getAttribute('href').substring(1);  // Usuwamy "#" z href
-                const targetSection = document.getElementById(targetId);
-
-                if (targetSection) {
-                    // Przewijamy stronę do tej sekcji
-                    targetSection.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
+<section id="opinie" class="reviews-section">
+    <h2 class="reviews-title">User opinions about the blog</h2>
+    <div class="reviews-slider">
+        <button class="reviews-prev-button">&larr;</button> <!-- Strzałka w lewo -->
+        <div class="reviews-container">
+            <?php
+            if ($result->num_rows > 0) {
+                while($row = $result->fetch_assoc()) {
+                    echo '<div class="review">';
+                    echo '<img src="' . $row['profile_picture_url'] . '" alt="Zdjęcie użytkownika" class="review-image">';
+                    echo '<p class="review-username">' . $row['username'] . '</p>';
+                    echo '<p class="review-text">"' . $row['content'] . '"</p>';
+                    echo '</div>';
                 }
-            });
-        });
-    });
-</script>
+            } else {
+                echo "Brak recenzji dotyczących fotografii.";
+            }
+            ?>
+        </div>
+        <button class="reviews-next-button">&rarr;</button> <!-- Strzałka w prawo -->
+    </div>
+</section>
+
+
+
 
 </body>
 </html>

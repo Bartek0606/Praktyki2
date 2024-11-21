@@ -30,3 +30,29 @@ document.addEventListener("DOMContentLoaded", () => {
   // Ustawienie początkowej opinii
   updateReview();
 });
+
+// Skrypt do przewijania do odpowiednich sekcji
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Znajdź wszystkie linki nawigacyjne
+  const navLinks = document.querySelectorAll(".nav-links a");
+
+  // Funkcja do przewijania do odpowiedniej sekcji
+  navLinks.forEach((link) => {
+    link.addEventListener("click", function (e) {
+      e.preventDefault(); // Zapobiegamy standardowemu działaniu linku
+
+      // Pobieramy nazwę sekcji z href (np. #popular-posts)
+      const targetId = link.getAttribute("href").substring(1); // Usuwamy "#" z href
+      const targetSection = document.getElementById(targetId);
+
+      if (targetSection) {
+        // Przewijamy stronę do tej sekcji
+        targetSection.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+    });
+  });
+});

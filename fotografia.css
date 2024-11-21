@@ -1,6 +1,7 @@
 /* Sekcja Hero */
 .hero-section {
-  background-color: #f7f7f7; /* Dopasowanie do wcześniejszej strony */
+  width: 100%;
+  background-color: #ffffff; /* Dopasowanie do wcześniejszej strony */
   color: #333; /* Kolor tekstu */
   padding: 50px 20px;
 }
@@ -23,7 +24,8 @@
 }
 
 .hero-content {
-  max-width: 600px;
+  margin: auto;
+  width: 80%;
 }
 
 .hero-content h1 {
@@ -52,40 +54,16 @@
   margin-bottom: 15px;
 }
 
-.social-links {
-  display: flex;
-  gap: 10px;
-}
-
-.social-icon {
-  display: inline-block;
-  text-decoration: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  font-size: 14px;
-  color: #fff;
-}
-
-.social-icon.instagram {
-  background-color: #e1306c;
-}
-
-.social-icon.youtube {
-  background-color: #ff0000;
-}
-
-.social-icon.facebook {
-  background-color: #4267b2;
-}
-
 /* Sekcja Wyszukiwania */
 .search-section {
+  background-color: #f7f7f7;
+  height: 200px;
   text-align: center;
-  margin-top: 50px;
 }
 
 .search-section h2 {
   font-size: 24px;
+  padding-top: 40px;
   color: #333;
   margin-bottom: 20px;
 }
