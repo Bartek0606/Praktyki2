@@ -78,14 +78,21 @@ if ($conn->query($insert_sql) === TRUE) {
       <div class="logo">
         <h1><a href="index.php">HobbyHub</a></h1>
       </div>
-      <ul class="nav-links">
-        <li><a href="#">Fotografia</a></li>
-        <li><a href="#">Gaming</a></li>
-        <li><a href="#">Gotowanie</a></li>
-        <li><a href="#">Ogrodnictwo</a></li>
-        <li><a href="#">Sporty zimowe</a></li>
-        <li><a href="#">Sporty wodne</a></li>
-      </ul>
+<!-- Kod do menu rozwijanego -->
+    <div class="dropdown">
+        <button class="dropdown-button" onclick="toggleDropdown()">Wybierz kategorię</button>
+        <div class="dropdown-menu" id="dropdownMenu">
+            <?php
+            if ($categories_result->num_rows > 0) {
+                while ($row = $categories_result->fetch_assoc()) {
+                    echo '<a href="subpage.php?id=' . $row['category_id'] . '">' . htmlspecialchars($row['name']) . '</a>';
+                }
+            } else {
+                echo '<a>Brak kategorii</a>';
+            }
+            ?>
+        </div>
+    </div>
 
       <div class="auth-buttons">
         <?php if ($isLoggedIn): ?>
@@ -101,7 +108,7 @@ if ($conn->query($insert_sql) === TRUE) {
         <?php endif; ?>
       </div>
     </nav>
-  </header>
+  </header> 
 
   <main class="container">
     <div class="post-details">
