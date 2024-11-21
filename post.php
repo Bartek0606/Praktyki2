@@ -155,7 +155,7 @@ if ($conn->query($insert_sql) === TRUE) {
 
         <?php if (!$isLoggedIn): ?>
             <!-- Display message if not logged in -->
-            <p id="login-prompt" class="login-prompt"><strong>You must be logged in to post a comment</strong></p>
+            <p id="error-message" class="error-message"><strong>You must be logged in to post a comment</strong></p>
         <?php endif; ?>
 
         <br>  
