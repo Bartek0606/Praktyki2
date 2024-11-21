@@ -20,26 +20,53 @@ header {
 /* Navbar */
 .navbar {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   padding: 10px 20px;
 }
 
-.logo-link {
+/* Logo */
+.logo {
+  display: flex;
+  align-items: center;
+  margin-right: 20px; /* Dodanie odstępu po prawej stronie logo */
+}
+
+.posts-title {
+  font-size: 30px;
   color: #f39c12;
-  text-decoration: none;
-  font-size: 36px;
   font-weight: bold;
-  font-family: "Arial", sans-serif;
-  transition: color 0.3s ease, transform 0.3s ease;
 }
 
-.logo-link:hover {
-  color: #d87d0d;
-  transform: scale(1.05);
-  text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+/* Pole wyszukiwania */
+#search_form {
+  display: flex;
+  gap: 10px;
+  margin-left: 20px; /* Mniejszy odstęp między logo a polem wyszukiwania */
 }
 
+.search-form input {
+  padding: 8px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.search-form button {
+  padding: 8px 16px;
+  background-color: #f39c12;
+  color: #fff;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.search-form button:hover {
+  background-color: #d87d0d;
+}
+
+/* Lista nawigacyjna */
 .nav-links {
   list-style: none;
   display: flex;
@@ -76,45 +103,7 @@ header {
   width: 100%;
 }
 
-/* Kontener */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.container h2 {
-  font-size: 28px;
-  margin-bottom: 10px;
-  color: #333;
-}
-
-.container p {
-  font-size: 18px;
-  line-height: 1.8;
-}
-
-/* Responsywność */
-@media (max-width: 768px) {
-  .navbar {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .nav-links {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .container h2 {
-    font-size: 24px;
-  }
-
-  .container p {
-    font-size: 16px;
-  }
-}
-
+/* Przyciski */
 .auth-buttons {
   display: flex;
   gap: 10px;
@@ -174,6 +163,10 @@ header {
   border-top: 4px solid #f39c12;
   width: 100%;
 }
+.container {
+  width: 70%;
+  margin: auto;
+}
 
 .event-slider-container {
   display: flex;
@@ -181,7 +174,7 @@ header {
   justify-content: center;
   margin: 30px auto;
   position: relative;
-  max-width: 100%;
+  max-width: 80%;
   overflow: hidden;
   color: white;
   background-color: #333;
