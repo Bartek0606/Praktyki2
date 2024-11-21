@@ -1,37 +1,48 @@
 <?php
-session_start(); 
-include 'db_connection.php'; 
+session_start();
+include 'db_connection.php';
 
-$sql = "
-    SELECT DISTINCT c.content, u.username, u.profile_picture_url 
-    FROM comments c
-    JOIN posts p ON c.post_id = p.post_id
-    JOIN users u ON c.user_id = u.user_id
-    WHERE p.category_id = 5"; 
+// Sprawdzenie ID kategorii w URL
+if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+    $category_id = intval($_GET['id']); // Zabezpieczenie danych wejściowych
+} else {
+    die('Nieprawidłowe ID kategorii');
+}
 
-$result = $conn->query($sql);
-
-$sql1 = "
-    SELECT DISTINCT 
-    posts.title, 
-    posts.content, 
-    posts.image_url, 
-    posts.created_at, 
-    users.username, 
-    users.profile_picture_url, 
-    categories.name AS category_name 
-FROM 
-    posts 
-JOIN 
-    users ON posts.user_id = users.user_id
-JOIN 
-    categories ON posts.category_id = categories.category_id
-WHERE 
-    categories.name = 'Photography'
-ORDER BY 
-    posts.created_at DESC;
+$sql_posts = "
+    SELECT 
+        posts.title, 
+        posts.content, 
+        posts.image, 
+        posts.created_at, 
+        users.username, 
+        users.profile_picture, 
+        categories.name AS category_name 
+    FROM 
+        posts 
+    JOIN 
+        users ON posts.user_id = users.user_id
+    JOIN 
+        categories ON posts.category_id = categories.category_id
+    WHERE 
+        categories.category_id = ? 
+    ORDER BY 
+        posts.created_at DESC;
 ";
-$result1 = $conn->query($sql1);
+
+// Przygotowanie zapytania SQL
+$stmt_posts = $conn->prepare($sql_posts);
+
+// Podłączenie parametru do zapytania
+$stmt_posts->bind_param("i", $category_id);
+
+// Wykonanie zapytania
+$stmt_posts->execute();
+
+// Pobranie wyników
+$result_posts = $stmt_posts->get_result();
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -124,18 +135,20 @@ $result1 = $conn->query($sql1);
 
         <div class="posts-container">
             <?php
-            if ($result1->num_rows > 0) {
-                while($row1 = $result1->fetch_assoc()) {
+            if ($result_posts->num_rows > 0) {
+                while ($post = $result_posts->fetch_assoc()) {
                     echo "<div class='post'>";
-                    echo "<img src='" . $row1["image_url"] . "' alt='" . $row1["title"] . "' class='post-image'>";
-                    echo "<h3 class='post-title'>" . $row1["title"] . "</h3>";
-                    echo "<p><strong>Autor:</strong> " . $row1["username"] . " | <strong>Data:</strong> " . $row1["created_at"] . "</p>";
-                    echo "<a href='#' class='read-more'>Czytaj więcej</a>";
+                    echo "<img src='" . htmlspecialchars($post['image_url']) . "' alt='" . htmlspecialchars($post['title']) . "'>";
+                    echo "<h3>" . htmlspecialchars($post['title']) . "</h3>";
+                    echo "<p>" . htmlspecialchars($post['content']) . "</p>";
+                    echo "<p>Dodane przez: <strong>" . htmlspecialchars($post['username']) . "</strong></p>";
+                    echo "<p>Kategoria: <strong>" . htmlspecialchars($post['category_name']) . "</strong></p>";
                     echo "</div>";
                 }
             } else {
-                echo "Brak postów o fotografii.";
+                echo "<p>Brak postów w tej kategorii.</p>";
             }
+
             ?>
         </div>
     </section>
