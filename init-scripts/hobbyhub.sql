@@ -3,19 +3,13 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Lis 21, 2024 at 12:06 PM
--- Wersja serwera: 5.7.44
--- Wersja PHP: 8.2.8
+-- Generation Time: Nov 21, 2024 at 12:46 PM
+-- Server version: 5.7.44
+-- PHP Version: 8.2.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Database: `hobbyhub`
@@ -24,7 +18,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struktura tabeli dla tabeli `blog_information`
+-- Table structure for table `blog_information`
 --
 
 CREATE TABLE `blog_information` (
@@ -52,7 +46,7 @@ INSERT INTO `blog_information` (`id`, `title`, `content`, `image`, `category_id`
 -- --------------------------------------------------------
 
 --
--- Struktura tabeli dla tabeli `categories`
+-- Table structure for table `categories`
 --
 
 CREATE TABLE `categories` (
@@ -80,7 +74,7 @@ INSERT INTO `categories` (`category_id`, `name`, `description`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktura tabeli dla tabeli `comments`
+-- Table structure for table `comments`
 --
 
 CREATE TABLE `comments` (
@@ -113,7 +107,7 @@ INSERT INTO `comments` (`comment_id`, `post_id`, `user_id`, `content`, `created_
 -- --------------------------------------------------------
 
 --
--- Struktura tabeli dla tabeli `events`
+-- Table structure for table `events`
 --
 
 CREATE TABLE `events` (
@@ -139,7 +133,7 @@ INSERT INTO `events` (`event_id`, `event_name`, `event_description`, `event_date
 -- --------------------------------------------------------
 
 --
--- Struktura tabeli dla tabeli `posts`
+-- Table structure for table `posts`
 --
 
 CREATE TABLE `posts` (
@@ -183,7 +177,7 @@ INSERT INTO `posts` (`post_id`, `user_id`, `category_id`, `content`, `created_at
 -- --------------------------------------------------------
 
 --
--- Struktura tabeli dla tabeli `users`
+-- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
@@ -205,33 +199,39 @@ INSERT INTO `users` (`user_id`, `username`, `full_name`, `email`, `password_hash
 (1, 'user1', 'Jan Kowalski', 'jan.kowalski@example.com', 'hashed_password_1', '2024-11-20 11:56:58', 'Bio for Jan Kowalski', NULL),
 (2, 'user2', 'Anna Nowak', 'anna.nowak@example.com', 'hashed_password_2', '2024-11-20 11:56:58', 'Bio for Anna Nowak', NULL),
 (3, 'user3', 'Piotr Wisniewski', 'piotr.wisniewski@example.com', 'hashed_password_3', '2024-11-20 11:56:58', 'Bio for Piotr Wisniewski', NULL),
-(4, 'user', 'user', 'user@gmail.com', '$2y$10$ASVPw2I4SegRLj.k2XGe5OBh5hsOKe1RNm3rTj7rU15tkhdWXebX.', '2024-11-20 12:03:29', 'a', NULL);
+(4, 'user4', 'Bartosz Gnacinski', 'user@example.com', '$2y$10$ASVPw2I4SegRLj.k2XGe5OBh5hsOKe1RNm3rTj7rU15tkhdWXebX.', '2024-11-20 12:03:29', NULL, NULL),
+(5, 'user5', 'John Smith', 'john.smith@example.com', 'hashed_password_5', '2024-11-20 12:10:00', 'Bio for John Smith', NULL),
+(6, 'user6', 'Jane Doe', 'jane.doe@example.com', 'hashed_password_6', '2024-11-20 12:12:00', 'Bio for Jane Doe', NULL),
+(7, 'user7', 'Michael Brown', 'michael.brown@example.com', 'hashed_password_7', '2024-11-20 12:14:00', 'Bio for Michael Brown', NULL),
+(8, 'user8', 'Emily White', 'emily.white@example.com', 'hashed_password_8', '2024-11-20 12:16:00', 'Bio for Emily White', NULL),
+(9, 'user9', 'David Green', 'david.green@example.com', 'hashed_password_9', '2024-11-20 12:18:00', 'Bio for David Green', NULL),
+(10, 'user10', 'Sophia Black', 'sophia.black@example.com', 'hashed_password_10', '2024-11-20 12:20:00', 'Bio for Sophia Black', NULL);
 
 --
--- Indeksy dla zrzutów tabel
+-- Indexes for dumped tables
 --
 
 --
--- Indeksy dla tabeli `blog_information`
+-- Indexes for table `blog_information`
 --
 ALTER TABLE `blog_information`
   ADD PRIMARY KEY (`id`),
   ADD KEY `category_id` (`category_id`);
 
 --
--- Indeksy dla tabeli `categories`
+-- Indexes for table `categories`
 --
 ALTER TABLE `categories`
   ADD PRIMARY KEY (`category_id`);
 
 --
--- Indeksy dla tabeli `posts`
+-- Indexes for table `posts`
 --
 ALTER TABLE `posts`
   ADD PRIMARY KEY (`post_id`);
 
 --
--- Indeksy dla tabeli `users`
+-- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`user_id`);
@@ -256,7 +256,7 @@ ALTER TABLE `posts`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Constraints for dumped tables
@@ -268,7 +268,3 @@ ALTER TABLE `users`
 ALTER TABLE `blog_information`
   ADD CONSTRAINT `blog_information_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
