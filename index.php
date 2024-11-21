@@ -60,7 +60,7 @@ $categories_result = $conn->query($sql_categories);
             <?php
             if ($categories_result->num_rows > 0) {
                 while ($row = $categories_result->fetch_assoc()) {
-                    echo '<a href="category.php?id=' . $row['category_id'] . '">' . htmlspecialchars($row['name']) . '</a>';
+                    echo '<a href="subpage.php?id=' . $row['category_id'] . '">' . htmlspecialchars($row['name']) . '</a>';
                 }
             } else {
                 echo '<a>Brak kategorii</a>';
