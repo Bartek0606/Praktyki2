@@ -14,6 +14,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
     exit;
 }
 
+$sql_events = "SELECT event_id, event_name, event_description, event_date, location 
+               FROM events 
+               ORDER BY event_date ASC";  // Możesz zmienić kolejność, np. DESC jeśli chcesz pokazać najnowsze wydarzenia jako pierwsze
+
+$events_result = $conn->query($sql_events);
+
+
 // Fetch blog posts from the database
 $sql = "SELECT p.post_id, p.title, p.created_at, u.username, c.name AS category_name, p.image 
         FROM posts p
@@ -64,20 +71,40 @@ $result = $conn->query($sql);
   </header>
   <main class="container">
     <div class="nagl">
-      <h2>Nasze najnowsze wydarzenia</h2>
+      <h2>Events</h2>
       <hr class="divider">
     </div>
 
     <div class="event-slider-container">
-      <button class="arrow-btn left-btn">←</button>
-      <div class="event-slider">
-        <!-- Add event cards dynamically here if needed -->
-      </div>
-      <button class="arrow-btn right-btn">→</button>
+    <button class="arrow-btn left-btn">←</button>
+    <div class="event-slider">
+        <?php
+        if ($events_result->num_rows > 0) {
+            while ($event = $events_result->fetch_assoc()) {
+                // Formatowanie daty
+                $formatted_date = date("F j, Y, g:i a", strtotime($event['event_date']));
+
+                // Create the link to the event page
+                $event_url = 'event.php?id=' . $event['event_id'];
+
+                // Wrap the event card in an anchor tag for navigation
+                echo "<a href='$event_url' class='event-card'>";
+                echo "<h3>" . htmlspecialchars($event['event_name']) . "</h3>";
+                echo "<p><strong>Date:</strong> " . $formatted_date . "</p>";
+                echo "<p><strong>Location:</strong> " . htmlspecialchars($event['location']) . "</p>";
+                echo "</a>";  // Close the anchor tag
+            }
+        } else {
+            echo "<p>No events available.</p>";
+        }
+        ?>
     </div>
+    <button class="arrow-btn right-btn">→</button>
+</div>
+
 
     <div class="nagl">
-      <h2 class="tytul_kategorii">Ostatnie posty na blogu</h2>
+      <h2>Latest posts</h2>
       <hr class="divider">
     </div>
 
