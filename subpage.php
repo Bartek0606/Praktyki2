@@ -29,6 +29,20 @@ $sql_posts = "
     ORDER BY 
         posts.created_at DESC;
 ";
+$sql_category = "
+    SELECT blog_information.title, blog_information.content, blog_information.image FROM blog_information JOIN categories ON blog_information.category_id = categories.category_id WHERE  categories.category_id = ?;
+";
+// Przygotowanie zapytania SQL
+$stmt_category = $conn->prepare($sql_category);
+
+// Podłączenie parametru do zapytania
+$stmt_category->bind_param("i", $category_id);
+
+// Wykonanie zapytania
+$stmt_category->execute();
+
+// Pobranie wyników
+$result_category = $stmt_category->get_result();
 
 // Przygotowanie zapytania SQL
 $stmt_posts = $conn->prepare($sql_posts);
@@ -75,26 +89,22 @@ $result_posts = $stmt_posts->get_result();
 </header>
 
 <section id="podstawy-fotografii" class="hero-section">
-    <div class="hero-container">
-        <img src="zdjecie_foto.png">
-        <div class="hero-content">
-            <h1>Dowiedz się wszystkiego o fotografii!</h1> 
-            <hr class="hero-divider">
-            <p>
-                <strong>Witaj na blogu fotograficznym!</strong> 🌍📸 - To przestrzeń, w której pasja do fotografii spotyka się z historiami, emocjami i inspiracjami. Niezależnie od tego, czy jesteś profesjonalistą, początkującym fotografem, czy po prostu miłośnikiem pięknych obrazów – znajdziesz tutaj coś dla siebie.
-            </p>
-            <p>
-                Na blogu znajdziesz:
-                <br>
-                <strong>Poradniki fotograficzne</strong> – Praktyczne wskazówki dotyczące kompozycji, oświetlenia, wyboru sprzętu i postprodukcji.
-                <br>
-                <strong>Historie zza obiektywu</strong> – Opowieści o wyjątkowych miejscach, wydarzeniach i ludziach, którzy stali się tematem moich zdjęć.
-                <br>
-                <strong>Galerie tematyczne</strong> – Od majestatycznych krajobrazów, przez dynamiczne ujęcia z miast, aż po intymne portrety.
-            </p>
+            <?php 
+              if ($result_category->num_rows > 0) {
+                while ($category = $result_category->fetch_assoc()) {
+                    echo "<img src='".htmlspecialchars($category['image'])."'>";
+                    echo "<div class='hero-content'>";
+                    echo "<h1>". htmlspecialchars($category['title']) ."</h1> ";
+                    echo "<hr class='hero-divider'>";
+                    echo "<p>". $category['content'] ."</p>";
+                    
+                }
+            } else {
+                echo "<p>Brak postów w tej kategorii.</p>";
+            }
+            ?>
             <p>Zaczynajmy wspólną przygodę!</p>
             <hr class="hero-divider">
-        </div>
     </div>
     <div class="search-section">
         <h2>Znajdź to, czego potrzebujesz</h2>
