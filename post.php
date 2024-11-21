@@ -1,17 +1,20 @@
 <?php
-session_start(); // Start session to check login status
+session_start(); 
 
-// Include the database connection
 include 'db_connection.php';
 
-// Check if user is logged in
 $isLoggedIn = isset($_SESSION['user_id']);
 
-// Get the post ID from the URL
+// Handle logout
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
+  session_destroy(); // Destroy the session
+  header("Location: index.php"); // Redirect to homepage
+  exit;
+}
+
 $post_id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
 if ($post_id > 0) {
-    // Fetch the post from the database, including the image
     $sql = "SELECT p.post_id, p.title, p.created_at, p.content, p.image, u.username, c.name AS category_name, p.is_question 
             FROM posts p
             LEFT JOIN users u ON p.user_id = u.user_id
@@ -27,7 +30,6 @@ if ($post_id > 0) {
         exit;
     }
 
-    // Fetch comments for the post
     $comments_sql = "SELECT c.content, c.created_at, u.username 
                      FROM comments c
                      LEFT JOIN users u ON c.user_id = u.user_id
@@ -39,11 +41,25 @@ if ($post_id > 0) {
     exit;
 }
 
-// Handle comment submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment']) && !$isLoggedIn) {
-    // Redirect to login page if user is not logged in
-    header('Location: login.php');
-    exit;
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment']) && $isLoggedIn) {
+  $user_id = $_SESSION['user_id']; // Zakładając, że ID użytkownika jest przechowywane w sesji
+  $content = $conn->real_escape_string($_POST['comment_content']);
+  
+  // Pobierz maksymalny comment_id
+  $max_comment_id_sql = "SELECT MAX(comment_id) AS max_comment_id FROM comments";
+  $max_result = $conn->query($max_comment_id_sql);
+  $max_row = $max_result->fetch_assoc();
+  $next_comment_id = $max_row['max_comment_id'] + 1; // Zwiększ maksymalny ID
+  
+  // Dodaj komentarz do bazy danych
+  $insert_sql = "INSERT INTO comments (comment_id, post_id, user_id, content) VALUES ($next_comment_id, $post_id, $user_id, '$content')";
+  if ($conn->query($insert_sql) === TRUE) {
+      // Przekierowanie po dodaniu komentarza
+      header('Location: ' . $_SERVER['REQUEST_URI']);
+      exit();
+  } else {
+      echo "<p>Error: " . $conn->error . "</p>";
+  }
 }
 ?>
 
@@ -54,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment']) && 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="glowna.css">
     <link rel="stylesheet" href="post.css">
-    <script src="glowna.js" defer></script>
+    <script src="post.js" defer></script>
     <title><?php echo htmlspecialchars($row['title'], ENT_QUOTES, 'UTF-8'); ?></title> <!-- Dynamic title -->
 </head>
 <body>
@@ -121,39 +137,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment']) && 
     </div>
 
     <!-- Display comments section -->
-<div class="comments-section">
-  <h2>Comments</h2>
+    <div class="comments-section">
+      <h2>Comments</h2>
 
-  <!-- Display the comment form only if the user is logged in -->
+      <!-- Display the comment form only if the user is logged in -->
+      <form method="POST" class="comment-form" onsubmit="checkLoginStatus(event)">
+        <textarea name="comment_content" placeholder="Write your comment..." required class="comment-input"></textarea>
+        <button type="submit" name="submit_comment" class="btn comment-btn">Post Comment</button>
+      </form>
 
-    <form method="POST" class="comment-form">
-      <textarea name="comment_content" placeholder="Write your comment..." required class="comment-input"></textarea>
-      <button type="submit" name="submit_comment" class="btn comment-btn">Post Comment</button>
-    </form>
+      <?php if (!$isLoggedIn): ?>
+        <!-- Display message if not logged in -->
+        <p id="login-prompt" class="login-prompt"><strong>You must be logged in to post a comment</strong></p>
+      <?php endif; ?>
 
-  <?php if (!$isLoggedIn): ?>
-    <!-- Display message if not logged in -->
-    <p class="login-prompt"><strong>You must be logged in to post a comment</strong></p>
-  <?php endif; ?>
+      <br>  
 
-  <br>  
-
-  <!-- Display existing comments -->
-  <?php if ($comments_result->num_rows > 0): ?>
-    <?php while ($comment = $comments_result->fetch_assoc()): ?>
-      <div class="comment">
-        <p><strong><?php echo htmlspecialchars($comment['username'], ENT_QUOTES, 'UTF-8'); ?></strong> <?php echo htmlspecialchars($comment['created_at'], ENT_QUOTES, 'UTF-8'); ?></p>
-        <p><?php echo nl2br(htmlspecialchars($comment['content'], ENT_QUOTES, 'UTF-8')); ?></p>
-      </div>
-      <br>
-    <?php endwhile; ?>
-  <?php else: ?>
-    <p>No comments yet. Be the first to comment!</p>
-  <?php endif; ?>
-</div>
-
+      <!-- Display existing comments -->
+      <?php if ($comments_result->num_rows > 0): ?>
+        <?php while ($comment = $comments_result->fetch_assoc()): ?>
+          <div class="comment">
+            <p><strong><?php echo htmlspecialchars($comment['username'], ENT_QUOTES, 'UTF-8'); ?></strong> <?php echo htmlspecialchars($comment['created_at'], ENT_QUOTES, 'UTF-8'); ?></p>
+            <p><?php echo nl2br(htmlspecialchars($comment['content'], ENT_QUOTES, 'UTF-8')); ?></p>
+          </div>
+          <br>
+        <?php endwhile; ?>
+      <?php else: ?>
+        <p>No comments yet. Be the first to comment!</p>
+      <?php endif; ?>
+    </div>
 
   </main>
+
+  <!-- Hidden input to pass login status to JS -->
+  <input type="hidden" id="isLoggedIn" value="<?php echo $isLoggedIn ? 'true' : 'false'; ?>" />
 </body>
 </html>
 
