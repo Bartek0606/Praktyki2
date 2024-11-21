@@ -18,10 +18,7 @@ $sql_events = "SELECT event_id, event_name, event_description, event_date, locat
                FROM events 
                ORDER BY event_date ASC";  // Możesz zmienić kolejność, np. DESC jeśli chcesz pokazać najnowsze wydarzenia jako pierwsze
 
-
-
 $events_result = $conn->query($sql_events);
-
 
 // Fetch blog posts from the database
 $sql = "SELECT p.post_id, p.title, p.created_at, u.username, c.name AS category_name, p.image 
@@ -30,14 +27,12 @@ $sql = "SELECT p.post_id, p.title, p.created_at, u.username, c.name AS category_
         LEFT JOIN categories c ON p.category_id = c.category_id
         ORDER BY p.created_at DESC"; // Sort by date, showing latest first
 
-
 $result = $conn->query($sql);
 
 // Kod do pobierania kategorii z bazy
 $sql_categories = "SELECT category_id, name FROM categories ORDER BY name ASC"; 
 $categories_result = $conn->query($sql_categories);
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -53,7 +48,7 @@ $categories_result = $conn->query($sql_categories);
       <div class="logo">
         <h1><a href="index.php">HobbyHub</a></h1>
       </div>
-<!-- Kod do menu rozwijanego -->
+      <!-- Kod do menu rozwijanego -->
     <div class="dropdown">
         <button class="dropdown-button" onclick="toggleDropdown()">Wybierz kategorię</button>
         <div class="dropdown-menu" id="dropdownMenu">
@@ -71,8 +66,27 @@ $categories_result = $conn->query($sql_categories);
 
       <div class="auth-buttons">
         <?php if ($isLoggedIn): ?>
-          <span class="welcome-message"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
-
+          <div class="auth-info">
+            <a href="profile.php" class="profile-link">
+              <?php
+                // Pobranie ścieżki do zdjęcia profilowego z bazy danych (założenie, że zdjęcie jest w tabeli 'users')
+                $user_id = $_SESSION['user_id'];
+                $sql_image = "SELECT profile_picture FROM users WHERE user_id = '$user_id'";
+                $result_image = $conn->query($sql_image);
+                $image_src = 'default.png'; // Default image
+                if ($result_image->num_rows > 0) {
+                    $row = $result_image->fetch_assoc();
+                    if (!empty($row['profile_picture'])) {
+                        // If there's a profile picture, use it
+                        $image_src = 'data:image/jpeg;base64,' . base64_encode($row['profile_picture']);
+                    }
+                }
+              ?>
+              <img src="<?php echo $image_src; ?>" alt="Profile Picture" class="profile-img">
+              <span class="username"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
+            </a>
+          </div>
+          
             <form method="POST" style="display: inline;">
                 <button type="submit" name="logout" class="btn logout-btn">Log out</button>
             </form>
@@ -83,8 +97,8 @@ $categories_result = $conn->query($sql_categories);
         <?php endif; ?>
       </div>
     </nav>
-  </header>
-  <main class="container">
+</header>
+<main class="container">
     <div class="nagl">
       <h2>Events</h2>
       <hr class="divider">
@@ -116,7 +130,6 @@ $categories_result = $conn->query($sql_categories);
     </div>
     <button class="arrow-btn right-btn">→</button>
 </div>
-
 
     <div class="nagl">
       <h2>Latest posts</h2>

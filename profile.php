@@ -26,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
+    // Update the profile data
     $username = $_POST['username'];
     $email = $_POST['email'];
     $full_name = $_POST['full_name'];
@@ -76,9 +77,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="auth-buttons">
             <?php if (isset($_SESSION['user_id'])): ?>
-                <span class="welcome-message"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
-                <!-- Log out form -->
-                <form method="POST" style="display: inline;">
+                <div class="profile-info">
+                    <a href="profile.php" class="profile-link">
+                        <?php
+                        // Fetch profile picture
+                        $sql_image = "SELECT profile_picture FROM users WHERE user_id = '$user_id'";
+                        $result_image = $conn->query($sql_image);
+                        $image_src = 'default.png'; // Default image
+                        if ($result_image->num_rows > 0) {
+                            $row = $result_image->fetch_assoc();
+                            if (!empty($row['profile_picture'])) {
+                                // If there's a profile picture, use it
+                                $image_src = 'data:image/jpeg;base64,' . base64_encode($row['profile_picture']);
+                            }
+                        }
+                        ?>
+                        <img src="<?php echo $image_src; ?>" alt="Profile Picture" class="profile-img">
+                        <span class="username"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
+                    </a>
+                </div>
+                <form method="POST" class="logout-form" style="display: inline;">
                     <button type="submit" name="logout" class="btn logout-btn">Log out</button>
                 </form>
             <?php endif; ?>

@@ -218,3 +218,53 @@ h2 {
         font-size: 14px;
     }
 }
+
+
+
+
+/* Stylizacja dla linku */
+.profile-picture-navbar a {
+    display: inline-block; /* Link jako blokowy element w navbarze */
+}
+/* Stylizacja dla kontenera z profilem i logowaniem */
+.auth-buttons {
+    display: flex;
+    align-items: center; /* Wyrównanie elementów w pionie */
+    justify-content: flex-end; /* Przesunięcie do prawej strony */
+}
+
+/* Wyśrodkowanie przycisku logowania względem innych elementów */
+.logout-form {
+    display: flex;
+    align-items: center; /* Wyrównanie w pionie */
+    justify-content: center;
+}
+
+/* Stylizacja miniaturki profilowego zdjęcia w navbarze */
+.profile-info {
+    display: flex;
+    align-items: center; /* Ustawienie zdjęcia i nickname obok siebie */
+}
+
+.profile-picture-navbar {
+    margin-right: 10px; /* Przestrzeń między zdjęciem a nickname */
+}
+
+.profile-picture-navbar img {
+    width: 40px; /* Zmniejszenie rozmiaru zdjęcia */
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    text-decoration: none; /* Usunięcie podkreślenia z linku */
+}
+
+.welcome-message {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Stylizacja dla linku */
+.profile-picture-navbar a {
+    display: inline-block; /* Link jako blokowy element w navbarze */
+}
+
