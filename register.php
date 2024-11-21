@@ -54,10 +54,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($result->num_rows > 0) {
             $emailError = "Email or username is already taken.";
         } else {
-            // Insert the user into the database
-            $stmt = $conn->prepare("INSERT INTO users (username, email, password_hash, full_name, created_at) VALUES (?, ?, ?, ?, NOW())");
-$stmt->bind_param('ssss', $username, $email, $passwordHash, $fullname);
+            // Set the default profile picture
+            $defaultProfilePicture = file_get_contents('default.png'); // Load the default image as a binary string
 
+            // Insert the user into the database
+            $stmt = $conn->prepare("INSERT INTO users (username, email, password_hash, full_name, created_at, profile_picture) VALUES (?, ?, ?, ?, NOW(), ?)");
+            $stmt->bind_param('sssss', $username, $email, $passwordHash, $fullname, $defaultProfilePicture);
 
             if ($stmt->execute()) {
                 $successMessage = "<b>Registration successful! You can now log in.</b>";
