@@ -1,0 +1,122 @@
+/* Post Details */
+.post-details {
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.post-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.post-info h1 {
+  font-size: 32px;
+  color: #333;
+}
+
+.post-info p {
+  font-size: 18px;
+  color: #555;
+}
+
+/* Question Highlight */
+.question-highlight {
+  background-color: #f9f1c0;
+  color: #856404;
+  border: 1px solid #ffeeba;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+/* Post Image */
+.post-image {
+  width: 500px;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+  margin: 25px;
+}
+
+/* Responsive Styles for Post */
+@media (max-width: 768px) {
+  .post-header {
+    flex-direction: column;
+  }
+
+  .post-image {
+    width: 100%;
+  }
+}
+
+/* Comment Username */
+.comment p strong {
+  font-size: 20px; /* Adjust the size of the username */
+  font-weight: bold;
+  color: #333; /* Ensure the username stands out */
+}
+
+.comment-form {
+display: flex; /* Use flexbox to arrange elements horizontally */
+justify-content: space-between; /* Space out the input and button */
+align-items: center; /* Vertically center align the input and button */
+gap: 10px; /* Optional: adds a small gap between the input and the button */
+}
+
+.comment-form .comment-input {
+width: 100%; /* Make the textarea take up all available width */
+max-width: calc(100% - 120px); /* Allow the textarea to fill most of the space, but leave space for the button */
+padding: 10px;
+font-size: 16px;
+box-sizing: border-box;
+height: 100px; /* Set height for the textarea */
+resize: vertical; /* Allow vertical resizing if needed */
+text-align: left; /* Align text to the left */
+vertical-align: top; /* Ensure text starts from the top */
+line-height: 1.5; /* Adjust line height for better readability */
+border: 1px solid #ccc; /* Optional: Add border for clarity */
+border-radius: 5px; /* Optional: Rounded corners */
+}
+
+
+
+
+.comment-form .comment-btn {
+padding: 10px 15px; /* Adjust padding to fit the button */
+font-size: 16px; /* Optional: adjust font size */
+background-color: #4CAF50; /* Optional: customize the button color */
+color: white; /* Button text color */
+border: none; /* Remove border */
+cursor: pointer; /* Add pointer cursor on hover */
+}
+
+.comment-form .comment-btn:hover {
+background-color: #45a049; /* Optional: button hover effect */
+}
+
+/* Success message style */
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 15px;
+  border: 1px solid #c3e6cb;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.error-message {
+  background-color: #f8d7da;  /* Jasny różowy dla tła */
+  color: #721c24;  /* Ciemny czerwony dla tekstu */
+  padding: 15px;
+  border: 1px solid #f5c6cb;  /* Jasno czerwony brzeg */
+  border-radius: 5px;
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+
