@@ -22,7 +22,7 @@ $category_name = isset($_GET['category']) ? $conn->real_escape_string($_GET['cat
 if (!empty($category_name)) {
     // Gdy użytkownik wprowadzi nazwę kategorii, dołączamy `categories` do `posts`
     $sql_search = "
-        SELECT posts.post_id, posts.title, posts.content, posts.created_at, categories.name AS category_name
+        SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.image, categories.name AS category_name
         FROM posts
         JOIN categories ON posts.category_id = categories.category_id
         WHERE categories.name LIKE '%$category_name%'
@@ -31,7 +31,7 @@ if (!empty($category_name)) {
 } else {
     // Wyświetlenie wszystkich postów
     $sql_search = "
-        SELECT posts.post_id, posts.title, posts.content, posts.created_at, categories.name AS category_name
+        SELECT posts.post_id, posts.title, posts.content, posts.created_at,posts.image, categories.name AS category_name
         FROM posts
         JOIN categories ON posts.category_id = categories.category_id
         ORDER BY posts.created_at DESC
@@ -175,7 +175,7 @@ $categories_result = $conn->query($sql_categories);
             // Wrap the entire post div inside the anchor tag
             echo '<a href="' . $post_url . '" class="post-link">';  // Start the anchor tag here
             echo '<div class="post">';
-            echo "<img src='zlota.png' alt='Post Image'>";
+            echo "<img src='".'data:image/jpeg;base64,' . base64_encode($row['image']) ."' alt='Post Image'>";
             echo '<div>';
             echo '<h2>' . htmlspecialchars($row['title']) . '</h2>';
             echo '<p>Category: ' . htmlspecialchars($row['category_name']) . '</p>';
