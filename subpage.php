@@ -114,13 +114,6 @@ $result_posts = $stmt_posts->get_result();
     </nav>
 </header>
 
-<!-- <div class="search-section">
-        <h2>Search what you need</h2>
-        <form class="search-form">
-            <input type="text" placeholder="Search what you need">
-            <button type="submit">Search</button>
-        </form>
-    </div> -->
 
 <section id="podstawy-fotografii" class="hero-section">
             <div class="hero-container">

@@ -14,24 +14,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
     exit;
 }
 
+
+// Pobieranie nazwy kategorii z pola wyszukiwania
+$category_name = isset($_GET['category']) ? $conn->real_escape_string($_GET['category']) : '';
+
+// SQL do filtrowania lub wyświetlania wszystkich postów
+if (!empty($category_name)) {
+    // Gdy użytkownik wprowadzi nazwę kategorii, dołączamy `categories` do `posts`
+    $sql_search = "
+        SELECT posts.post_id, posts.title, posts.content, posts.created_at, categories.name AS category_name
+        FROM posts
+        JOIN categories ON posts.category_id = categories.category_id
+        WHERE categories.name LIKE '%$category_name%'
+        ORDER BY posts.created_at DESC
+    ";
+} else {
+    // Wyświetlenie wszystkich postów
+    $sql_search = "
+        SELECT posts.post_id, posts.title, posts.content, posts.created_at, categories.name AS category_name
+        FROM posts
+        JOIN categories ON posts.category_id = categories.category_id
+        ORDER BY posts.created_at DESC
+    ";
+}
+
+$result = $conn->query($sql_search);
+
 $sql_events = "SELECT event_id, event_name, event_description, event_date, location 
                FROM events 
                ORDER BY event_date ASC";  // Możesz zmienić kolejność, np. DESC jeśli chcesz pokazać najnowsze wydarzenia jako pierwsze
 
 $events_result = $conn->query($sql_events);
 
-// Fetch blog posts from the database
-$sql = "SELECT p.post_id, p.title, p.created_at, u.username, c.name AS category_name, p.image 
-        FROM posts p
-        LEFT JOIN users u ON p.user_id = u.user_id
-        LEFT JOIN categories c ON p.category_id = c.category_id
-        ORDER BY p.created_at DESC"; // Sort by date, showing latest first
-
-$result = $conn->query($sql);
-
 // Kod do pobierania kategorii z bazy
 $sql_categories = "SELECT category_id, name FROM categories ORDER BY name ASC"; 
 $categories_result = $conn->query($sql_categories);
+?>
 ?>
 
 <!DOCTYPE html>
@@ -64,6 +82,13 @@ $categories_result = $conn->query($sql_categories);
         </div>
     </div>
       </div>
+
+      <form class="search-form" method="GET" action="">
+    <input type="text" name="category" placeholder="Search by category" value="<?php echo htmlspecialchars($search_category ?? ''); ?>">
+    <button type="submit">Search</button>
+</form>
+
+  
   
 
       <div class="auth-buttons">
@@ -139,30 +164,27 @@ $categories_result = $conn->query($sql_categories);
     </div>
 
     <section class="blog-posts">
-      <div class="blog-grid">
-        <?php
-        if ($result->num_rows > 0) {
-            // Output the data for each blog post
-            while ($row = $result->fetch_assoc()) {
-                // Convert the image blob into a base64 string
-                $image_data = base64_encode($row['image']);
-                $image_src = 'data:image/jpeg;base64,' . $image_data; // Assuming the image is in JPEG format
-
-                echo "<div class='blog-post' onclick=\"location.href='post.php?id=" . $row['post_id'] . "'\">";
-                echo "<img src='" . $image_src . "' alt='Post Image'>"; // Display image from the database
-                echo "<div class='blog-post-info'>";
-                echo "<h3>" . $row['title'] . "</h3>";  // Display title
-                echo "<p><strong>Category:</strong> " . $row['category_name'] . "</p>";
-                echo "<p><strong>By:</strong> " . $row['username'] . "</p>";
-                echo "<p><strong>Date:</strong> " . $row['created_at'] . "</p>"; // Date displayed below the username
-                echo "</div></div>";
-            }
-        } else {
-            echo "<p>No blog posts available.</p>";
+    <div class="posts">
+    <?php
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            echo '<div class="post">';
+            echo "<img src='zlota.png' alt='Post Image'>";
+            echo '<div>';
+            echo '<h2>' . htmlspecialchars($row['title']) . '</h2>';
+            echo '<p>Category: ' . htmlspecialchars($row['category_name']) . '</p>';
+            echo '<p>' . htmlspecialchars($row['content']) . '</p>';
+            echo '<p>Date: ' . htmlspecialchars($row['created_at']) . '</p>';
+            echo '</div>';
+            echo '</div>';
         }
-        ?>
-      </div>
-    </section>
+    } else {
+        echo '<p>No posts found.</p>';
+    }
+    ?>
+    </div>
+</section>
+
   </main>
 
 </body>
