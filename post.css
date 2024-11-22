@@ -37,8 +37,12 @@
   height: auto;
   border-radius: 8px;
   object-fit: cover;
-  margin: 25px;
+  margin-left: 200px; /* Add left margin for spacing */
+  margin-right: 0;   /* Remove or reduce right margin */
+  float: right;      /* This will make the image align to the right */
+  clear: both;       /* Ensures the image doesn't overlap with content */
 }
+
 
 /* Responsive Styles for Post */
 @media (max-width: 768px) {
@@ -120,3 +124,17 @@ background-color: #45a049; /* Optional: button hover effect */
 }
 
 
+.new-post-btn {
+    background-color: #28a745; /* Green color */
+    color: white; /* White text color */
+    border: none; /* Remove default border */
+    padding: 10px 15px; /* Padding for the button */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-size: 16px; /* Font size */
+    margin-right: 50px;
+}
+
+.new-post-btn:hover {
+    background-color: #218838; /* Darker green on hover */
+}

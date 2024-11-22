@@ -164,11 +164,16 @@ $categories_result = $conn->query($sql_categories);
       <hr class="divider">
     </div>
 
-    <section class="blog-posts">
+   <section class="blog-posts">
     <div class="posts">
     <?php
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
+            // Create the link to the post page
+            $post_url = 'post.php?id=' . $row['post_id'];
+
+            // Wrap the entire post div inside the anchor tag
+            echo '<a href="' . $post_url . '" class="post-link">';  // Start the anchor tag here
             echo '<div class="post">';
             echo "<img src='zlota.png' alt='Post Image'>";
             echo '<div>';
@@ -178,6 +183,7 @@ $categories_result = $conn->query($sql_categories);
             echo '<p>Date: ' . htmlspecialchars($row['created_at']) . '</p>';
             echo '</div>';
             echo '</div>';
+            echo '</a>';  // Close the anchor tag here
         }
     } else {
         echo '<p>No posts found.</p>';
@@ -185,6 +191,8 @@ $categories_result = $conn->query($sql_categories);
     ?>
     </div>
 </section>
+
+
 
   </main>
 

@@ -434,3 +434,13 @@ body {
 .event-card p {
   margin-bottom: 8px;
 }
+
+.post-link {
+    display: block;
+    text-decoration: none;  /* Remove underline */
+    color: inherit;         /* Inherit color from parent (the text color) */
+}
+
+.post-link:hover {
+    background-color: #f0f0f0; /* Optional: add a hover effect */
+}
