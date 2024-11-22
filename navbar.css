@@ -278,3 +278,20 @@ header {
     transform: translateY(0);
   }
 }
+
+
+
+.new-post-btn {
+    background-color: #28a745; /* Green color */
+    color: white; /* White text color */
+    border: none; /* Remove default border */
+    padding: 10px 15px; /* Padding for the button */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-size: 16px; /* Font size */
+    margin-right: 50px;
+}
+
+.new-post-btn:hover {
+    background-color: #218838; /* Darker green on hover */
+}

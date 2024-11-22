@@ -1,297 +1,60 @@
-header {
-  width: 100%;
-  background-color: #333;
-  color: #fff;
-}
-/* Sekcja Wyszukiwania */
-.search-section {
-  background-color: #f7f7f7;
-  height: 200px;
-  text-align: center;
-}
-
-.search-section h2 {
-  font-size: 24px;
-  padding-top: 40px;
-  color: #333;
-  margin-bottom: 20px;
-}
-
-.search-form {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-}
-
-.search-form input {
-  padding: 10px 15px;
-  font-size: 16px;
-  border: 2px solid #ccc;
-  border-radius: 5px;
-  flex: 1;
-  max-width: 400px;
-}
-
-.search-form button {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #f39c12;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.search-form button:hover {
-  background-color: #d0870b;
-}
-
-/* Navbar */
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-}
-
-.logo-link {
-  color: #f39c12;
-  text-decoration: none;
-  font-size: 36px;
-  font-weight: bold;
-  font-family: "Arial", sans-serif;
-  transition: color 0.3s ease, transform 0.3s ease;
-}
-
-.logo-link:hover {
-  color: #d87d0d;
-  transform: scale(1.05);
-  text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.nav-links {
-  list-style: none;
-  display: flex;
-  gap: 20px;
-}
-
-.nav-links li {
-  position: relative;
-}
-
-.nav-links a {
-  text-decoration: none;
-  color: #fff;
-  font-size: 18px;
-  transition: color 0.3s ease;
-}
-
-.nav-links a:hover {
-  color: #ffffff;
-}
-
-.nav-links li::after {
-  content: "";
-  position: absolute;
-  bottom: -5px;
-  left: 0;
-  width: 0;
-  height: 3px;
-  background-color: #f39c12;
-  transition: width 0.3s ease;
-}
-
-.nav-links li:hover::after {
-  width: 100%;
-}
-
-/* Kontener */
+/* Container and Form Styles */
 .container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
 }
-
-.container h2 {
-  font-size: 28px;
-  margin-bottom: 10px;
-  color: #333;
+/* Form Group Styling */
+.new-post-form .form-group {
+    margin-bottom: 20px;
 }
-
-.container p {
-  font-size: 18px;
-  line-height: 1.8;
+.new-post-form label {
+    font-size: 18px;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 8px;
+    display: block;
 }
-
-/* Responsywność */
-@media (max-width: 768px) {
-  .navbar {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .nav-links {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .container h2 {
-    font-size: 24px;
-  }
-
-  .container p {
+.new-post-form input[type="text"],
+.new-post-form select,
+.new-post-form textarea {
+    width: 100%;
+    padding: 10px;
     font-size: 16px;
-  }
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
 }
-
-.auth-buttons {
-  display: flex;
-  gap: 10px;
+/* Submit Button */
+.new-post-form .new-post-btn {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
 }
-
-.btn {
-  padding: 8px 16px;
-  font-size: 16px;
-  font-weight: bold;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+.new-post-form .new-post-btn:hover {
+    background-color: #218838;
 }
-
-.register-btn {
-  background-color: #f39c12;
-  color: #fff;
+/* Error Message */
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: bold;
 }
-
-.register-btn:hover {
-  background-color: #d87d0d;
-  transform: scale(1.05);
-}
-
-.login-btn {
-  background-color: #555;
-  color: #fff;
-}
-
-.login-btn:hover {
-  background-color: #444;
-  transform: scale(1.05);
-}
-.logout-btn {
-  background-color: #f39c12;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.logout-btn:hover {
-  background-color: #d87d0d;
-  transform: scale(1.05);
-}
-
-@media (max-width: 768px) {
-  .auth-buttons {
-    margin-top: 10px;
-  }
-
-  .btn {
-    font-size: 14px;
-    padding: 6px 12px;
-  }
-}
-
-/* Lista rozwijana z kategoriami */
-/* Ogólne style menu */
-.dropdown {
-  position: relative;
-  display: inline-block;
-  font-family: Arial, sans-serif;
-}
-
-.dropdown-button {
-  background-color: #f39c12;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-size: 16px;
-}
-
-.dropdown-button:hover {
-  background-color: #d87d0d;
-}
-
-/* Ukryte menu rozwijane */
-.dropdown-menu {
-  display: none;
-  position: absolute;
-  background-color: #333;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border-radius: 5px;
-  margin-top: 5px;
-  width: 200px;
-  z-index: 1000;
-}
-
-.dropdown-menu a {
-  display: block;
-  padding: 10px 15px;
-  color: #d87d0d;
-  text-decoration: none;
-  font-size: 14px;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  border-bottom: 1px solid #eee;
-}
-
-.dropdown-menu a:last-child {
-  border-bottom: none;
-}
-
-/* Efekt przy najechaniu na element */
-.dropdown-menu a:hover {
-  background-color: #d87d0d;
-  transform: translateX(5px);
-}
-
-/* Pokazywanie menu */
-.dropdown.show .dropdown-menu {
-  display: block;
-  animation: fadeIn 0.3s ease;
-}
-
-/* Animacja pojawiania się menu */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-
-
-.new-post-btn {
-    background-color: #28a745; /* Green color */
-    color: white; /* White text color */
-    border: none; /* Remove default border */
-    padding: 10px 15px; /* Padding for the button */
-    border-radius: 5px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor on hover */
-    font-size: 16px; /* Font size */
-    margin-right: 50px;
-}
-
-.new-post-btn:hover {
-    background-color: #218838; /* Darker green on hover */
+/* Success Message */
+.success-message {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 15px;
+    border: 1px solid #c3e6cb;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: bold;
 }
