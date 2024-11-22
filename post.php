@@ -3,6 +3,7 @@ session_start();
 
 include 'db_connection.php';
 
+// Check if the user is logged in
 $isLoggedIn = isset($_SESSION['user_id']);
 
 // Handle logout
@@ -12,47 +13,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
   exit;
 }
 
+// Retrieve post ID from the URL
 $postId = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
 if ($postId > 0) {
-    $sql = "SELECT p.post_id, p.title, p.created_at, p.content, p.image, u.username, c.name AS category_name, p.is_question 
-            FROM posts p
-            LEFT JOIN users u ON p.user_id = u.user_id
-            LEFT JOIN categories c ON p.category_id = c.category_id
-            WHERE p.post_id = $postId";
+    // Query to fetch post details
+    $sqlPostDetails = "SELECT p.post_id, p.title, p.created_at, p.content, p.image, u.username, c.name AS category_name, p.is_question 
+                       FROM posts p
+                       LEFT JOIN users u ON p.user_id = u.user_id
+                       LEFT JOIN categories c ON p.category_id = c.category_id
+                       WHERE p.post_id = $postId";
 
-    $result = $conn->query($sql);
+    $resultPostDetails = $conn->query($sqlPostDetails);
 
-    if ($result->num_rows > 0) {
-        $post = $result->fetch_assoc();
+    if ($resultPostDetails->num_rows > 0) {
+        $post = $resultPostDetails->fetch_assoc();
     } else {
         echo "<p>Post not found.</p>";
         exit;
     }
 
-    $commentsSql = "SELECT c.content, c.created_at, u.username 
+    // Query to fetch comments related to the post
+    $sqlComments = "SELECT c.content, c.created_at, u.username 
                     FROM comments c
                     LEFT JOIN users u ON c.user_id = u.user_id
                     WHERE c.post_id = $postId
                     ORDER BY c.created_at DESC";
-    $commentsResult = $conn->query($commentsSql);
+    $resultComments = $conn->query($sqlComments);
 } else {
     echo "<p>Invalid post ID.</p>";
     exit;
 }
 
+// Handle comment submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment']) && $isLoggedIn) {
   $userId = $_SESSION['user_id']; 
   $commentContent = $conn->real_escape_string($_POST['comment_content']);
   
-  $maxCommentIdSql = "SELECT MAX(comment_id) AS max_comment_id FROM comments";
-  $maxResult = $conn->query($maxCommentIdSql);
-  $maxRow = $maxResult->fetch_assoc();
-  $nextCommentId = $maxRow['max_comment_id'] + 1; 
+  // Get the next comment ID
+  $sqlMaxCommentId = "SELECT MAX(comment_id) AS max_comment_id FROM comments";
+  $resultMaxCommentId = $conn->query($sqlMaxCommentId);
+  $rowMaxCommentId = $resultMaxCommentId->fetch_assoc();
+  $nextCommentId = $rowMaxCommentId['max_comment_id'] + 1; 
   
-  $insertSql = "INSERT INTO comments (comment_id, post_id, user_id, content) VALUES ($nextCommentId, $postId, $userId, '$commentContent')";
+  // Insert the new comment
+  $sqlInsertComment = "INSERT INTO comments (comment_id, post_id, user_id, content) VALUES ($nextCommentId, $postId, $userId, '$commentContent')";
   
-  if ($conn->query($insertSql) === TRUE) {
+  if ($conn->query($sqlInsertComment) === TRUE) {
     $_SESSION['comment_success'] = 'Your comment has been posted successfully!';
     header('Location: ' . $_SERVER['REQUEST_URI']);
     exit();
@@ -86,15 +93,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment']) && 
             <button class="btn new-post-btn" onclick="window.location.href='new_post.php'">New Post</button>
             <a href="profile.php" class="profile-link">
               <?php
-                $userId = $_SESSION['user_id'];
-                $sqlImage = "SELECT profile_picture FROM users WHERE user_id = '$userId'";
-                $resultImage = $conn->query($sqlImage);
+              
+                $sqlProfilePicture = "SELECT profile_picture FROM users WHERE user_id = '$userId'";
+                $resultProfilePicture = $conn->query($sqlProfilePicture);
                 $profilePictureSrc = 'default.png'; // Default image
-                if ($resultImage->num_rows > 0) {
-                    $user = $resultImage->fetch_assoc();
-                    if (!empty($user['profile_picture'])) {
+                if ($resultProfilePicture->num_rows > 0) {
+                    $userProfile = $resultProfilePicture->fetch_assoc();
+                    if (!empty($userProfile['profile_picture'])) {
                         // If there's a profile picture, use it
-                        $profilePictureSrc = 'data:image/jpeg;base64,' . base64_encode($user['profile_picture']);
+                        $profilePictureSrc = 'data:image/jpeg;base64,' . base64_encode($userProfile['profile_picture']);
                     }
                 }
               ?>
@@ -171,8 +178,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment']) && 
         <br>  
 
         <!-- Display existing comments -->
-        <?php if ($commentsResult->num_rows > 0): ?>
-            <?php while ($comment = $commentsResult->fetch_assoc()): ?>
+        <?php if ($resultComments->num_rows > 0): ?>
+            <?php while ($comment = $resultComments->fetch_assoc()): ?>
                 <div class="comment">
                     <p><strong><?php echo htmlspecialchars($comment['username'], ENT_QUOTES, 'UTF-8'); ?></strong> <?php echo htmlspecialchars($comment['created_at'], ENT_QUOTES, 'UTF-8'); ?></p>
                     <p><?php echo nl2br(htmlspecialchars($comment['content'], ENT_QUOTES, 'UTF-8')); ?></p>
