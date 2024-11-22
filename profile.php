@@ -57,6 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <link rel="stylesheet" href="profile.css"> <!-- Separate CSS for profile -->
     <script src="profile.js" defer></script>
+    <link rel="stylesheet" href="navbar.css">
     <title>Profile • HobbyHub</title>
 </head>
 <body>

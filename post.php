@@ -69,6 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment']) && 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="glowna.css">
     <link rel="stylesheet" href="post.css">
+    <link rel="stylesheet" href="navbar.css">
     <script src="post.js" defer></script>
     <title><?php echo htmlspecialchars($post['title'], ENT_QUOTES, 'UTF-8'); ?></title> <!-- Dynamic title -->
 </head>

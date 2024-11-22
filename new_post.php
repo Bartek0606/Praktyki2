@@ -55,6 +55,7 @@ $categories_result = $conn->query($categories_sql);
     <link rel="stylesheet" href="glowna.css">
     <link rel="stylesheet" href="post.css">
     <link rel="stylesheet" href="new_post.css">
+    <link rel="stylesheet" href="navbar.css">
     <title>Create New Post</title>
 </head>
 <body>
