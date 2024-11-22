@@ -104,9 +104,12 @@ $categories_result = $conn->query($sql_categories);
                 $image_src = 'default.png'; // Default image
                 if ($result_image->num_rows > 0) {
                     $row = $result_image->fetch_assoc();
-                    if (!empty($row['profile_picture'])) {
-                        // If there's a profile picture, use it
+                    if (!empty($row['profile_picture']) && $row['profile_picture'] !== 'default.png') {
+                        // If there's a profile picture, use base64 encoding
                         $image_src = 'data:image/jpeg;base64,' . base64_encode($row['profile_picture']);
+                    } else {
+                        // If profile picture is 'default.png', use the default image
+                        $image_src = 'default.png';
                     }
                 }
               ?>
