@@ -37,8 +37,12 @@
   height: auto;
   border-radius: 8px;
   object-fit: cover;
-  margin: 25px;
+  margin-left: 200px; /* Add left margin for spacing */
+  margin-right: 0;   /* Remove or reduce right margin */
+  float: right;      /* This will make the image align to the right */
+  clear: both;       /* Ensures the image doesn't overlap with content */
 }
+
 
 /* Responsive Styles for Post */
 @media (max-width: 768px) {
