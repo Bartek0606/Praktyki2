@@ -115,22 +115,21 @@ $result_posts = $stmt_posts->get_result();
     </nav>
 </header>
 
-
 <section id="podstawy-fotografii" class="hero-section">
     <div class="hero-container">
+
+
         <?php 
         if ($result_category->num_rows > 0) {
             while ($category = $result_category->fetch_assoc()) {
-                echo "<div class='hero-content'>";
-                
-                // Wyświetlanie obrazu kategorii
+                 // Wyświetlanie obrazu kategorii
                 if (!empty($category['image'])) {
                     echo "<img src='" . 'data:image/jpeg;base64,' . base64_encode($category['image']) . "' alt='" . htmlspecialchars($category['title']) . "' class='hero-image'>";
-                }
-
-                echo "<h1>" . htmlspecialchars($category['title']) . "</h1>";
-                echo "<hr class='hero-divider'>";
-                echo "<p>" . $category['content'] . "</p>";
+                            }
+                echo "<div class='hero-content'>";
+               echo "<h1>" . htmlspecialchars($category['title']) . "</h1>";
+               echo "<hr class='hero-divider'>";
+               echo "<p>" . $category['content'] . "</p>";
                 echo "</div>";
             }
         } else {
