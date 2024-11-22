@@ -10,199 +10,7 @@ body {
   color: #333;
 }
 
-/* Stylizacja nagłówka */
-header {
-  width: 100%;
-  background-color: #333;
-  color: #fff;
-}
-/* Sekcja Wyszukiwania */
-.search-section {
-  background-color: #f7f7f7;
-  height: 200px;
-  text-align: center;
-}
-
-.search-section h2 {
-  font-size: 24px;
-  padding-top: 40px;
-  color: #333;
-  margin-bottom: 20px;
-}
-
-.search-form {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-}
-
-.search-form input {
-  padding: 10px 15px;
-  font-size: 16px;
-  border: 2px solid #ccc;
-  border-radius: 5px;
-  flex: 1;
-  max-width: 400px;
-}
-
-.search-form button {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #f39c12;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.search-form button:hover {
-  background-color: #d0870b;
-}
-
-/* Navbar */
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-}
-
-.logo-link {
-  color: #f39c12;
-  text-decoration: none;
-  font-size: 36px;
-  font-weight: bold;
-  font-family: "Arial", sans-serif;
-  transition: color 0.3s ease, transform 0.3s ease;
-}
-
-.logo-link:hover {
-  color: #d87d0d;
-  transform: scale(1.05);
-  text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.nav-links {
-  list-style: none;
-  display: flex;
-  gap: 20px;
-}
-
-.nav-links li {
-  position: relative;
-}
-
-.nav-links a {
-  text-decoration: none;
-  color: #fff;
-  font-size: 18px;
-  transition: color 0.3s ease;
-}
-
-.nav-links a:hover {
-  color: #ffffff;
-}
-
-.nav-links li::after {
-  content: "";
-  position: absolute;
-  bottom: -5px;
-  left: 0;
-  width: 0;
-  height: 3px;
-  background-color: #f39c12;
-  transition: width 0.3s ease;
-}
-
-.nav-links li:hover::after {
-  width: 100%;
-}
-
-/* Kontener */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.container h2 {
-  font-size: 28px;
-  margin-bottom: 10px;
-  color: #333;
-}
-
-.container p {
-  font-size: 18px;
-  line-height: 1.8;
-}
-
-/* Responsywność */
-@media (max-width: 768px) {
-  .navbar {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .nav-links {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .container h2 {
-    font-size: 24px;
-  }
-
-  .container p {
-    font-size: 16px;
-  }
-}
-
-.auth-buttons {
-  display: flex;
-  gap: 10px;
-}
-
-.btn {
-  padding: 8px 16px;
-  font-size: 16px;
-  font-weight: bold;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.register-btn {
-  background-color: #f39c12;
-  color: #fff;
-}
-
-.register-btn:hover {
-  background-color: #d87d0d;
-  transform: scale(1.05);
-}
-
-.login-btn {
-  background-color: #555;
-  color: #fff;
-}
-
-.login-btn:hover {
-  background-color: #444;
-  transform: scale(1.05);
-}
-
-@media (max-width: 768px) {
-  .auth-buttons {
-    margin-top: 10px;
-  }
-
-  .btn {
-    font-size: 14px;
-    padding: 6px 12px;
-  }
-}
+/* Sekcja wydarzen */
 
 .nagl {
   width: 35%;
@@ -310,7 +118,6 @@ header {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Kontener dla każdego posta */
 .blog-posts .posts .post {
   display: flex;
   align-items: flex-start;
@@ -322,12 +129,10 @@ header {
   transition: transform 0.2s ease-in-out;
 }
 
-/* Efekt hover dla każdego posta */
 .blog-posts .posts .post:hover {
   transform: scale(1.02);
 }
 
-/* Styl obrazka */
 .blog-posts .posts .post img {
   width: 40%;
   height: 100%;
@@ -338,12 +143,10 @@ header {
   border: 1px solid #ddd;
 }
 
-/* Kontener dla treści posta */
 .blog-posts .posts .post div {
   flex-grow: 1;
 }
 
-/* Styl tytułu posta */
 .blog-posts .posts .post h2 {
   font-size: 20px;
   margin: 0 0 10px 0;
@@ -353,12 +156,10 @@ header {
   transition: color 0.2s ease-in-out;
 }
 
-/* Hover dla tytułu */
 .blog-posts .posts .post h2:hover {
   color: #005bb5;
 }
 
-/* Styl dla kategorii */
 .blog-posts .posts .post p:first-of-type {
   font-size: 14px;
   font-weight: bold;
@@ -366,7 +167,6 @@ header {
   margin: 5px 0;
 }
 
-/* Styl dla treści */
 .blog-posts .posts .post p:nth-of-type(2) {
   font-size: 16px;
   line-height: 1.5;
@@ -374,7 +174,6 @@ header {
   margin: 10px 0;
 }
 
-/* Styl dla daty */
 .blog-posts .posts .post p:last-of-type {
   font-size: 12px;
   color: #888;
@@ -414,22 +213,6 @@ header {
   font-weight: bold;
 }
 
-.logout-btn {
-  background-color: #f39c12;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.logout-btn:hover {
-  background-color: #d87d0d;
-  transform: scale(1.05);
-}
-
 .question-highlight {
   background-color: #f9f1c0;
   color: #856404;
@@ -464,7 +247,7 @@ header {
   margin-bottom: 8px;
 }
 
-/* Dropdown button style */
+/* Wyglad menu z kategoriami*/
 .dropdown {
   position: relative;
   display: inline-block;
@@ -484,7 +267,6 @@ header {
   background-color: #0056b3;
 }
 
-/* Dropdown menu style */
 .dropdown-menu {
   display: none;
   position: absolute;
@@ -518,11 +300,11 @@ header {
 }
 
 .profile-img {
-  width: 40px; /* Możesz dostosować rozmiar */
-  height: 40px; /* Możesz dostosować rozmiar */
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   margin-right: 10px;
-  object-fit: cover; /* Utrzymanie proporcji obrazu */
+  object-fit: cover;
 }
 
 .username {
@@ -538,47 +320,47 @@ header {
 }
 
 .blog-grid {
-  display: block; /* Posts will stack vertically */
+  display: block;
   gap: 20px;
 }
 
 .blog-post {
-  background-color: #f5f5f5; /* Gray background for posts without an image */
-  border-radius: 12px; /* Slightly larger border-radius */
-  padding: 30px; /* Adjusted padding to make space for content */
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* More prominent shadow */
+  background-color: #f5f5f5;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  min-height: 800px; /* Adjusted height to fit content */
+  min-height: 800px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin-bottom: 30px; /* Increased space between blog posts */
+  margin-bottom: 30px;
 }
 
 .blog-post.no-image {
-  background-color: #e0e0e0; /* Lighter gray for empty image posts */
+  background-color: #e0e0e0;
 }
 
 .blog-post img {
   width: 100%;
-  height: 550px; /* Reduced image size */
-  object-fit: cover; /* Ensure image covers the space properly */
+  height: 550px;
+  object-fit: cover;
   border-radius: 10px;
-  margin-bottom: 20px; /* Added space below the image */
+  margin-bottom: 20px;
 }
 
 .blog-post-info {
-  padding-top: 15px; /* Adjusted padding for content */
+  padding-top: 15px;
 }
 
 .blog-post h3 {
-  font-size: 20px; /* Slightly reduced font size */
+  font-size: 20px;
   color: #333;
   margin-bottom: 15px;
 }
 
 .blog-post p {
-  font-size: 16px; /* Reduced font size */
+  font-size: 16px;
   color: #666;
   margin-bottom: 15px;
 }
@@ -620,21 +402,6 @@ header {
   font-weight: bold;
 }
 
-.logout-btn {
-  background-color: #f39c12;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.logout-btn:hover {
-  background-color: #d87d0d;
-  transform: scale(1.05);
-}
-
 .question-highlight {
   background-color: #f9f1c0;
   color: #856404;
@@ -644,7 +411,6 @@ header {
   margin-bottom: 15px;
   font-weight: bold;
 }
-
 .event-slider {
   display: flex;
   overflow-x: auto;
@@ -667,46 +433,4 @@ header {
 
 .event-card p {
   margin-bottom: 8px;
-}
-
-/* Dropdown button style */
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.dropdown-button {
-  background-color: #007bff;
-  color: white;
-  padding: 10px 20px;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-.dropdown-button:hover {
-  background-color: #0056b3;
-}
-
-/* Dropdown menu style */
-.dropdown-menu {
-  display: none;
-  position: absolute;
-  background-color: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border-radius: 5px;
-  z-index: 1;
-  min-width: 200px;
-}
-
-.dropdown-menu a {
-  color: black;
-  padding: 10px 15px;
-  text-decoration: none;
-  display: block;
-}
-
-.dropdown-menu a:hover {
-  background-color: #f1f1f1;
 }

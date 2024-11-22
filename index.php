@@ -50,13 +50,14 @@ $events_result = $conn->query($sql_events);
 $sql_categories = "SELECT category_id, name FROM categories ORDER BY name ASC"; 
 $categories_result = $conn->query($sql_categories);
 ?>
-?>
+
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="glowna.css">
+    <link rel="stylesheet" href="navbar.css">
     <script src="glowna.js" defer></script>
     <title>HobbyHub</title>
 </head>
