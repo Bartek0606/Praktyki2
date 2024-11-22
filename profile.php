@@ -81,14 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="logo">
             <h1><a href="index.php">HobbyHub</a></h1>
         </div>
-        <ul class="nav-links">
-            <li><a href="#">Fotografia</a></li>
-            <li><a href="#">Gaming</a></li>
-            <li><a href="#">Gotowanie</a></li>
-            <li><a href="#">Ogrodnictwo</a></li>
-            <li><a href="#">Sporty zimowe</a></li>
-            <li><a href="#">Sporty wodne</a></li>
-        </ul>
+       
         <div class="navbar-right">
             <?php if (isset($_SESSION['user_id'])): ?>
                 <?php
