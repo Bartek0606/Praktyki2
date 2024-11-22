@@ -12,53 +12,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
   exit;
 }
 
-$post_id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+$postId = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
-if ($post_id > 0) {
+if ($postId > 0) {
     $sql = "SELECT p.post_id, p.title, p.created_at, p.content, p.image, u.username, c.name AS category_name, p.is_question 
             FROM posts p
             LEFT JOIN users u ON p.user_id = u.user_id
             LEFT JOIN categories c ON p.category_id = c.category_id
-            WHERE p.post_id = $post_id";
+            WHERE p.post_id = $postId";
 
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
+        $post = $result->fetch_assoc();
     } else {
         echo "<p>Post not found.</p>";
         exit;
     }
 
-    $comments_sql = "SELECT c.content, c.created_at, u.username 
-                     FROM comments c
-                     LEFT JOIN users u ON c.user_id = u.user_id
-                     WHERE c.post_id = $post_id
-                     ORDER BY c.created_at DESC";
-    $comments_result = $conn->query($comments_sql);
+    $commentsSql = "SELECT c.content, c.created_at, u.username 
+                    FROM comments c
+                    LEFT JOIN users u ON c.user_id = u.user_id
+                    WHERE c.post_id = $postId
+                    ORDER BY c.created_at DESC";
+    $commentsResult = $conn->query($commentsSql);
 } else {
     echo "<p>Invalid post ID.</p>";
     exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment']) && $isLoggedIn) {
-  $user_id = $_SESSION['user_id']; 
-  $content = $conn->real_escape_string($_POST['comment_content']);
+  $userId = $_SESSION['user_id']; 
+  $commentContent = $conn->real_escape_string($_POST['comment_content']);
   
-  $max_comment_id_sql = "SELECT MAX(comment_id) AS max_comment_id FROM comments";
-  $max_result = $conn->query($max_comment_id_sql);
-  $max_row = $max_result->fetch_assoc();
-  $next_comment_id = $max_row['max_comment_id'] + 1; 
+  $maxCommentIdSql = "SELECT MAX(comment_id) AS max_comment_id FROM comments";
+  $maxResult = $conn->query($maxCommentIdSql);
+  $maxRow = $maxResult->fetch_assoc();
+  $nextCommentId = $maxRow['max_comment_id'] + 1; 
   
-  $insert_sql = "INSERT INTO comments (comment_id, post_id, user_id, content) VALUES ($next_comment_id, $post_id, $user_id, '$content')";
-if ($conn->query($insert_sql) === TRUE) {
-  $_SESSION['comment_success'] = 'Your comment has been posted successfully!';
-  header('Location: ' . $_SERVER['REQUEST_URI']);
-  exit();
-} else {
-  echo "<p>Error: " . $conn->error . "</p>";
-}
-
+  $insertSql = "INSERT INTO comments (comment_id, post_id, user_id, content) VALUES ($nextCommentId, $postId, $userId, '$commentContent')";
+  
+  if ($conn->query($insertSql) === TRUE) {
+    $_SESSION['comment_success'] = 'Your comment has been posted successfully!';
+    header('Location: ' . $_SERVER['REQUEST_URI']);
+    exit();
+  } else {
+    echo "<p>Error: " . $conn->error . "</p>";
+  }
 }
 ?>
 
@@ -70,7 +70,7 @@ if ($conn->query($insert_sql) === TRUE) {
     <link rel="stylesheet" href="glowna.css">
     <link rel="stylesheet" href="post.css">
     <script src="post.js" defer></script>
-    <title><?php echo htmlspecialchars($row['title'], ENT_QUOTES, 'UTF-8'); ?></title> <!-- Dynamic title -->
+    <title><?php echo htmlspecialchars($post['title'], ENT_QUOTES, 'UTF-8'); ?></title> <!-- Dynamic title -->
 </head>
 <body>
   <header>
@@ -78,35 +78,39 @@ if ($conn->query($insert_sql) === TRUE) {
       <div class="logo">
         <h1><a href="index.php">HobbyHub</a></h1>
       </div>
-<!-- Kod do menu rozwijanego -->
-    <div class="dropdown">
-        <button class="dropdown-button" onclick="toggleDropdown()">Wybierz kategorię</button>
-        <div class="dropdown-menu" id="dropdownMenu">
-            <?php
-            if ($categories_result->num_rows > 0) {
-                while ($row = $categories_result->fetch_assoc()) {
-                    echo '<a href="subpage.php?id=' . $row['category_id'] . '">' . htmlspecialchars($row['name']) . '</a>';
-                }
-            } else {
-                echo '<a>Brak kategorii</a>';
-            }
-            ?>
-        </div>
-    </div>
 
       <div class="auth-buttons">
         <?php if ($isLoggedIn): ?>
-          <span class="welcome-message"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
-
-            <form method="POST" style="display: inline;">
-                <button type="submit" name="logout" class="btn logout-btn">Log out</button>
-            </form>
-            
+          <div class="auth-info">
+            <button class="btn new-post-btn" onclick="window.location.href='new_post.php'">New Post</button>
+            <a href="profile.php" class="profile-link">
+              <?php
+                $userId = $_SESSION['user_id'];
+                $sqlImage = "SELECT profile_picture FROM users WHERE user_id = '$userId'";
+                $resultImage = $conn->query($sqlImage);
+                $profilePictureSrc = 'default.png'; // Default image
+                if ($resultImage->num_rows > 0) {
+                    $user = $resultImage->fetch_assoc();
+                    if (!empty($user['profile_picture'])) {
+                        // If there's a profile picture, use it
+                        $profilePictureSrc = 'data:image/jpeg;base64,' . base64_encode($user['profile_picture']);
+                    }
+                }
+              ?>
+              <img src="<?php echo $profilePictureSrc; ?>" alt="Profile Picture" class="profile-img">
+              <span class="username"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
+            </a>
+          </div>
+          
+          <form method="POST" style="display: inline;">
+              <button type="submit" name="logout" class="btn logout-btn">Log out</button>
+          </form>
         <?php else: ?>
             <button class="btn register-btn" onclick="window.location.href='register.php'">Sign up</button>
             <button class="btn login-btn" onclick="window.location.href='login.php'">Login</button>
         <?php endif; ?>
       </div>
+
     </nav>
   </header> 
 
@@ -114,37 +118,35 @@ if ($conn->query($insert_sql) === TRUE) {
     <div class="post-details">
         <div class="post-header">
             <div class="post-info">
-                <h1><?php echo htmlspecialchars($row['title'], ENT_QUOTES, 'UTF-8'); ?></h1>
-                <p><strong>Category:</strong> <?php echo htmlspecialchars($row['category_name'], ENT_QUOTES, 'UTF-8'); ?></p>
-                <p><strong>By:</strong> <?php echo htmlspecialchars($row['username'], ENT_QUOTES, 'UTF-8'); ?></p>
-                <p><strong>Date:</strong> <?php echo htmlspecialchars($row['created_at'], ENT_QUOTES, 'UTF-8'); ?></p>
+                <h1><?php echo htmlspecialchars($post['title'], ENT_QUOTES, 'UTF-8'); ?></h1>
+                <p><strong>Category:</strong> <?php echo htmlspecialchars($post['category_name'], ENT_QUOTES, 'UTF-8'); ?></p>
+                <p><strong>By:</strong> <?php echo htmlspecialchars($post['username'], ENT_QUOTES, 'UTF-8'); ?></p>
+                <p><strong>Date:</strong> <?php echo htmlspecialchars($post['created_at'], ENT_QUOTES, 'UTF-8'); ?></p>
             </div>
 
             <!-- Display post image if it exists -->
-            <?php if (!empty($row['image'])): ?>
-                <?php $image_src = 'data:image/jpeg;base64,' . base64_encode($row['image']); ?>
-                <img src="<?php echo $image_src; ?>" alt="Post Image" class="post-image">
+            <?php if (!empty($post['image'])): ?>
+                <?php $imageSrc = 'data:image/jpeg;base64,' . base64_encode($post['image']); ?>
+                <img src="<?php echo $imageSrc; ?>" alt="Post Image" class="post-image">
             <?php endif; ?>
         </div>
 
         <br>
 
         <!-- Highlight if it's a question -->
-        <?php if ($row['is_question']): ?>
+        <?php if ($post['is_question']): ?>
             <div class="question-highlight">
                 <strong>Question:</strong>
             </div>
         <?php endif; ?>
 
         <!-- Display post content -->
-        <p><?php echo nl2br(htmlspecialchars($row['content'], ENT_QUOTES, 'UTF-8')); ?></p>
+        <p><?php echo nl2br(htmlspecialchars($post['content'], ENT_QUOTES, 'UTF-8')); ?></p>
     </div>
 
     <!-- Display comments section -->
     <div class="comments-section">
         <h2>Comments</h2>
-
-        
 
         <!-- Display the comment form only if the user is logged in -->
         <form method="POST" class="comment-form" onsubmit="checkLoginStatus(event)">
@@ -168,8 +170,8 @@ if ($conn->query($insert_sql) === TRUE) {
         <br>  
 
         <!-- Display existing comments -->
-        <?php if ($comments_result->num_rows > 0): ?>
-            <?php while ($comment = $comments_result->fetch_assoc()): ?>
+        <?php if ($commentsResult->num_rows > 0): ?>
+            <?php while ($comment = $commentsResult->fetch_assoc()): ?>
                 <div class="comment">
                     <p><strong><?php echo htmlspecialchars($comment['username'], ENT_QUOTES, 'UTF-8'); ?></strong> <?php echo htmlspecialchars($comment['created_at'], ENT_QUOTES, 'UTF-8'); ?></p>
                     <p><?php echo nl2br(htmlspecialchars($comment['content'], ENT_QUOTES, 'UTF-8')); ?></p>
@@ -182,9 +184,8 @@ if ($conn->query($insert_sql) === TRUE) {
     </div>
 </main>
 
-
-  <!-- Hidden input to pass login status to JS -->
-  <input type="hidden" id="isLoggedIn" value="<?php echo $isLoggedIn ? 'true' : 'false'; ?>" />
+<!-- Hidden input to pass login status to JS -->
+<input type="hidden" id="isLoggedIn" value="<?php echo $isLoggedIn ? 'true' : 'false'; ?>" />
 </body>
 </html>
 

@@ -710,3 +710,14 @@ header {
 .dropdown-menu a:hover {
   background-color: #f1f1f1;
 }
+
+
+.post-link {
+    display: block;
+    text-decoration: none;  /* Remove underline */
+    color: inherit;         /* Inherit color from parent (the text color) */
+}
+
+.post-link:hover {
+    background-color: #f0f0f0; /* Optional: add a hover effect */
+}
