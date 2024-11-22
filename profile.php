@@ -26,6 +26,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
+    // Reset profile picture to default if reset button is clicked
+    if (isset($_POST['reset_picture'])) {
+        // Update profile picture in the database to 'default.png'
+        $sql_update = "UPDATE users SET profile_picture = 'default.png' WHERE user_id = '$user_id'";
+
+        if ($conn->query($sql_update) === TRUE) {
+            // Success, redirect to profile page to see updated data
+            header("Location: profile.php");
+            exit(); // Always call exit after header redirection to stop further code execution
+        } else {
+            echo "Error resetting profile picture: " . $conn->error;
+        }
+    }
+
     // Update the profile data
     $username = $_POST['username'];
     $email = $_POST['email'];
@@ -44,6 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Success message
         $_SESSION['username'] = $username;
         header("Location: profile.php"); // Redirect to profile page to see updated data
+        exit(); // Always call exit after header redirection to stop further code execution
     } else {
         echo "Error updating record: " . $conn->error;
     }
@@ -77,14 +92,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="navbar-right">
             <?php if (isset($_SESSION['user_id'])): ?>
                 <?php
-                // Pobierz profilowe użytkownika
+                // Fetch profile picture of the user
                 $sql_image = "SELECT profile_picture FROM users WHERE user_id = '$user_id'";
                 $result_image = $conn->query($sql_image);
-                $image_src = 'default-avatar.jpg'; // Domyślne zdjęcie
+                $image_src = 'default-avatar.jpg'; // Default profile picture
                 if ($result_image->num_rows > 0) {
                     $row = $result_image->fetch_assoc();
-                    if (!empty($row['profile_picture'])) {
+                    if (!empty($row['profile_picture']) && $row['profile_picture'] !== 'default.png') {
                         $image_src = 'data:image/jpeg;base64,' . base64_encode($row['profile_picture']);
+                    } else {
+                        $image_src = 'default.png'; // If it's the default, use the image name
                     }
                 }
                 ?>
@@ -107,16 +124,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="form-group">
                 <div class="profile-picture-container">
                     <div class="current-profile-picture">
-                        <?php if ($user['profile_picture']): ?>
+                        <?php if ($user['profile_picture'] && $user['profile_picture'] !== 'default.png'): ?>
                             <img src="data:image/jpeg;base64,<?php echo base64_encode($user['profile_picture']); ?>" alt="Profile Picture">
                         <?php else: ?>
-                            <img src="default-avatar.jpg" alt="Default Profile Picture">
+                            <img src="default.png" alt="Default Profile Picture">
                         <?php endif; ?>
                     </div>
                     <div class="file-input">
                         <label for="profile_picture">Profile Picture</label>
                         <input type="file" name="profile_picture" id="profile_picture" accept="image/*">
+                        
                     </div>
+                        <!-- Add Reset Profile Picture Button -->
+            <button type="submit" name="reset_picture" class="btn reset-btn">Reset Profile Picture</button>
                 </div>
             </div>
 
@@ -141,6 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <button type="submit" class="btn save-btn">Save Changes</button>
+        
         </form>
     </div>
 </main>
