@@ -51,37 +51,41 @@ if (isset($_GET['id'])) {
       <div class="logo">
         <h1><a href="index.php">HobbyHub</a></h1>
       </div>
-<!-- Kod do menu rozwijanego -->
-    <div class="dropdown">
-        <button class="dropdown-button" onclick="toggleDropdown()">Wybierz kategorię</button>
-        <div class="dropdown-menu" id="dropdownMenu">
-            <?php
-            if ($categories_result->num_rows > 0) {
-                while ($row = $categories_result->fetch_assoc()) {
-                    echo '<a href="subpage.php?id=' . $row['category_id'] . '">' . htmlspecialchars($row['name']) . '</a>';
-                }
-            } else {
-                echo '<a>Brak kategorii</a>';
-            }
-            ?>
-        </div>
-    </div>
 
       <div class="auth-buttons">
         <?php if ($isLoggedIn): ?>
-          <span class="welcome-message"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
-
-            <form method="POST" style="display: inline;">
-                <button type="submit" name="logout" class="btn logout-btn">Log out</button>
-            </form>
-            
+          <div class="auth-info">
+            <button class="btn new-post-btn" onclick="window.location.href='new_post.php'">New Post</button>
+            <a href="profile.php" class="profile-link">
+              <?php
+                $userId = $_SESSION['user_id'];
+                $sqlImage = "SELECT profile_picture FROM users WHERE user_id = '$userId'";
+                $resultImage = $conn->query($sqlImage);
+                $profilePictureSrc = 'default.png'; // Default image
+                if ($resultImage->num_rows > 0) {
+                    $user = $resultImage->fetch_assoc();
+                    if (!empty($user['profile_picture'])) {
+                        // If there's a profile picture, use it
+                        $profilePictureSrc = 'data:image/jpeg;base64,' . base64_encode($user['profile_picture']);
+                    }
+                }
+              ?>
+              <img src="<?php echo $profilePictureSrc; ?>" alt="Profile Picture" class="profile-img">
+              <span class="username"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
+            </a>
+          </div>
+          
+          <form method="POST" style="display: inline;">
+              <button type="submit" name="logout" class="btn logout-btn">Log out</button>
+          </form>
         <?php else: ?>
             <button class="btn register-btn" onclick="window.location.href='register.php'">Sign up</button>
             <button class="btn login-btn" onclick="window.location.href='login.php'">Login</button>
         <?php endif; ?>
       </div>
+
     </nav>
-  </header>
+  </header> 
 
   <main class="container">
     <div class="event-details">

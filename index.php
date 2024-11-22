@@ -95,6 +95,7 @@ $categories_result = $conn->query($sql_categories);
       <div class="auth-buttons">
         <?php if ($isLoggedIn): ?>
           <div class="auth-info">
+            <button class="btn new-post-btn" onclick="window.location.href='new_post.php'">New Post</button>
             <a href="profile.php" class="profile-link">
               <?php
                 // Pobranie ścieżki do zdjęcia profilowego z bazy danych (założenie, że zdjęcie jest w tabeli 'users')
@@ -104,12 +105,9 @@ $categories_result = $conn->query($sql_categories);
                 $image_src = 'default.png'; // Default image
                 if ($result_image->num_rows > 0) {
                     $row = $result_image->fetch_assoc();
-                    if (!empty($row['profile_picture']) && $row['profile_picture'] !== 'default.png') {
-                        // If there's a profile picture, use base64 encoding
+                    if (!empty($row['profile_picture'])) {
+                        // If there's a profile picture, use it
                         $image_src = 'data:image/jpeg;base64,' . base64_encode($row['profile_picture']);
-                    } else {
-                        // If profile picture is 'default.png', use the default image
-                        $image_src = 'default.png';
                     }
                 }
               ?>
