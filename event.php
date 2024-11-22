@@ -58,15 +58,15 @@ if (isset($_GET['id'])) {
             <button class="btn new-post-btn" onclick="window.location.href='new_post.php'">New Post</button>
             <a href="profile.php" class="profile-link">
               <?php
-                $userId = $_SESSION['user_id'];
-                $sqlImage = "SELECT profile_picture FROM users WHERE user_id = '$userId'";
-                $resultImage = $conn->query($sqlImage);
+              
+                $sqlProfilePicture = "SELECT profile_picture FROM users WHERE user_id = '$userId'";
+                $resultProfilePicture = $conn->query($sqlProfilePicture);
                 $profilePictureSrc = 'default.png'; // Default image
-                if ($resultImage->num_rows > 0) {
-                    $user = $resultImage->fetch_assoc();
-                    if (!empty($user['profile_picture'])) {
+                if ($resultProfilePicture->num_rows > 0) {
+                    $userProfile = $resultProfilePicture->fetch_assoc();
+                    if (!empty($userProfile['profile_picture'])) {
                         // If there's a profile picture, use it
-                        $profilePictureSrc = 'data:image/jpeg;base64,' . base64_encode($user['profile_picture']);
+                        $profilePictureSrc = 'data:image/jpeg;base64,' . base64_encode($userProfile['profile_picture']);
                     }
                 }
               ?>

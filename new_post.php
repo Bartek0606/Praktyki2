@@ -65,35 +65,32 @@ $categories_result = $conn->query($categories_sql);
         <h1><a href="index.php">HobbyHub</a></h1>
       </div>
 
-
-<div class="auth-buttons">
+      <div class="auth-buttons">
         <?php if ($isLoggedIn): ?>
           <div class="auth-info">
-
-          <button class="btn new-post-btn" onclick="window.location.href='new_post.php'">New Post</button>
+            <button class="btn new-post-btn" onclick="window.location.href='new_post.php'">New Post</button>
             <a href="profile.php" class="profile-link">
               <?php
-                // Pobranie ścieżki do zdjęcia profilowego z bazy danych (założenie, że zdjęcie jest w tabeli 'users')
-                $sql_image = "SELECT profile_picture FROM users WHERE user_id = '$user_id'";
-                $result_image = $conn->query($sql_image);
-                $profile_picture = 'default.png'; // Default image
-                if ($result_image->num_rows > 0) {
-                    $row = $result_image->fetch_assoc();
-                    if (!empty($row['profile_picture'])) {
+              
+                $sqlProfilePicture = "SELECT profile_picture FROM users WHERE user_id = '$userId'";
+                $resultProfilePicture = $conn->query($sqlProfilePicture);
+                $profilePictureSrc = 'default.png'; // Default image
+                if ($resultProfilePicture->num_rows > 0) {
+                    $userProfile = $resultProfilePicture->fetch_assoc();
+                    if (!empty($userProfile['profile_picture'])) {
                         // If there's a profile picture, use it
-                        $profile_picture = 'data:image/jpeg;base64,' . base64_encode($row['profile_picture']);
+                        $profilePictureSrc = 'data:image/jpeg;base64,' . base64_encode($userProfile['profile_picture']);
                     }
                 }
               ?>
-              <img src="<?php echo $profile_picture; ?>" alt="Profile Picture" class="profile-img">
+              <img src="<?php echo $profilePictureSrc; ?>" alt="Profile Picture" class="profile-img">
               <span class="username"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
             </a>
           </div>
           
-            <form method="POST" style="display: inline;">
-                <button type="submit" name="logout" class="btn logout-btn">Log out</button>
-            </form>
-            
+          <form method="POST" style="display: inline;">
+              <button type="submit" name="logout" class="btn logout-btn">Log out</button>
+          </form>
         <?php else: ?>
             <button class="btn register-btn" onclick="window.location.href='register.php'">Sign up</button>
             <button class="btn login-btn" onclick="window.location.href='login.php'">Login</button>
@@ -101,7 +98,7 @@ $categories_result = $conn->query($categories_sql);
       </div>
 
     </nav>
-  </header>
+  </header> 
 
     <main class="container">
         <div class="post-details">
