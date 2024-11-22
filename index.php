@@ -69,7 +69,7 @@ $categories_result = $conn->query($sql_categories);
 
             <!-- Kod do menu rozwijanego -->
     <div class="dropdown">
-        <button class="dropdown-button" onclick="toggleDropdown()">Wybierz kategorię</button>
+        <button class="dropdown-button" onclick="toggleDropdown()">Select Category</button>
         <div class="dropdown-menu" id="dropdownMenu">
             <?php
             if ($categories_result->num_rows > 0) {
