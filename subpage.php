@@ -85,6 +85,7 @@ $result_posts = $stmt_posts->get_result();
     <meta charset="UTF-8">
     <link rel="stylesheet" href="fotografia.css">
     <link rel="stylesheet" href="glowna.css">
+    <link rel="stylesheet" href="navbar.css">
     <script src="fotografia.js"></script>
     <title>Blog o fotografii</title>
 </head>
