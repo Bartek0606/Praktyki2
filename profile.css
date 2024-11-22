@@ -1,15 +1,6 @@
-/* profile.css */
-
-/* Wspólne style z głównego pliku */
 @import url('glowna.css');
 
-/* Profile Form Styling */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
-}
-
+/* Specyficzne style dla strony profilu */
 .container {
     max-width: 800px;
     margin: 40px auto;
@@ -52,134 +43,12 @@ h2 {
 .form-group textarea {
     height: 100px;
     resize: vertical;
-}
-
-.profile-form-container img {
-    width: 100px; /* Zmniejszenie zdjęcia */
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-top: 10px;
-}
-
-.current-profile-picture {
-    display: flex;
-    justify-content: flex-start; /* Ustawienie zdjęcia po lewej stronie */
-    margin-bottom: 15px;
-}
-
-.current-profile-picture img {
-    width: 80px; /* Zmniejszenie rozmiaru zdjęcia */
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-right: 20px; /* Przestrzeń pomiędzy zdjęciem a formularzem */
-}
-
-.save-btn {
-    width: 100%;
-    padding: 12px;
-    background-color: #f39c12;
-    border: none;
-    color: #fff;
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.save-btn:hover {
-    background-color: #d87d0d;
-    transform: scale(1.05);
-}
-
-@media (max-width: 768px) {
-    .container {
-        padding: 15px;
-    }
-    .form-group input,
-    .form-group textarea {
-        font-size: 14px;
-    }
-}
-/* Profile Form Styling */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
-}
-
-.container {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-h2 {
-    text-align: center;
-    margin-bottom: 30px;
-    color: #333;
-}
-
-.profile-form-container {
-    width: 100%;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    font-size: 16px;
-    margin-bottom: 5px;
-}
-
-.form-group input,
-.form-group textarea {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-}
-
-.form-group textarea {
-    height: 100px;
-    resize: vertical;
-}
-
-.profile-form-container img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-top: 10px;
-}
-
-.current-profile-picture {
-    display: flex;
-    justify-content: flex-start;
-    margin-bottom: 15px;
-}
-
-.current-profile-picture img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-right: 20px;
 }
 
 .profile-picture-container {
     display: flex;
     align-items: center;
-    gap: 20px; /* Space between image and file input */
+    gap: 20px;
 }
 
 .file-input {
@@ -219,43 +88,168 @@ h2 {
     }
 }
 
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Przestrzeń między zdjęciem a nazwą użytkownika */
+}
 
+.navbar-profile-img {
+    width: 40px; /* Zmienione rozmiary na 40x40px */
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
 
+.navbar-username {
+    font-size: 18px; /* Zwiększenie rozmiaru nickname */
+    font-weight: bold;
+    color: #fff; /* Kolor tekstu (biały) */
+    text-decoration: none; /* Usunięcie podkreślenia */
+}
+
+.profile-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.profile-link:hover .navbar-username {
+    text-decoration: none;
+}
+
+.logout-form {
+    margin-left: 15px;
+}
+
+.logout-btn {
+    padding: 8px 12px; /* Większy przycisk */
+    background-color: #f39c12; /* Pomarańczowy kolor */
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.logout-btn:hover {
+    background-color: #e67e22;
+    transform: scale(1.05);
+}
+
+/* Stylizacja dla edytowania profilu */
+.profile-picture-container {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Przestrzeń między zdjęciem a inputem */
+}
+
+.current-profile-picture {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 20px;
+}
+
+.current-profile-picture img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.file-input {
+    display: flex;
+    flex-direction: column;
+}
+
+.file-input label {
+    margin-bottom: 5px;
+}
+
+/* Stylizacja formularza */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.form-group textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+.save-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #f39c12;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.save-btn:hover {
+    background-color: #d87d0d;
+    transform: scale(1.05);
+}
 
 /* Stylizacja dla linku */
 .profile-picture-navbar a {
-    display: inline-block; /* Link jako blokowy element w navbarze */
+    display: inline-block;
 }
+
 /* Stylizacja dla kontenera z profilem i logowaniem */
 .auth-buttons {
     display: flex;
-    align-items: center; /* Wyrównanie elementów w pionie */
-    justify-content: flex-end; /* Przesunięcie do prawej strony */
+    align-items: center;
+    justify-content: flex-end;
 }
 
-/* Wyśrodkowanie przycisku logowania względem innych elementów */
 .logout-form {
     display: flex;
-    align-items: center; /* Wyrównanie w pionie */
+    align-items: center;
     justify-content: center;
 }
 
 /* Stylizacja miniaturki profilowego zdjęcia w navbarze */
 .profile-info {
     display: flex;
-    align-items: center; /* Ustawienie zdjęcia i nickname obok siebie */
+    align-items: center;
 }
 
 .profile-picture-navbar {
-    margin-right: 10px; /* Przestrzeń między zdjęciem a nickname */
+    margin-right: 10px;
 }
 
 .profile-picture-navbar img {
-    width: 40px; /* Zmniejszenie rozmiaru zdjęcia */
+    width: 40px;
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
-    text-decoration: none; /* Usunięcie podkreślenia z linku */
+    text-decoration: none;
 }
 
 .welcome-message {
@@ -263,8 +257,12 @@ h2 {
     font-weight: bold;
 }
 
-/* Stylizacja dla linku */
-.profile-picture-navbar a {
-    display: inline-block; /* Link jako blokowy element w navbarze */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    .form-group input,
+    .form-group textarea {
+        font-size: 14px;
+    }
 }
-
