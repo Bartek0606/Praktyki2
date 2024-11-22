@@ -117,28 +117,27 @@ $result_posts = $stmt_posts->get_result();
 
 
 <section id="podstawy-fotografii" class="hero-section">
-            <div class="hero-container">
-                <img src="zdjecie_foto.png">
-            <?php 
-              if ($result_category->num_rows > 0) {
-                while ($category = $result_category->fetch_assoc()) {
-                    // echo "<img src='".htmlspecialchars($category['image'])."'>";
-                    echo "<div class='hero-content'>";
-                    echo "<h1>". htmlspecialchars($category['title']) ."</h1> ";
-                    echo "<hr class='hero-divider'>";
-                    echo "<p>". $category['content'] ."</p>";
-                    
+    <div class="hero-container">
+        <?php 
+        if ($result_category->num_rows > 0) {
+            while ($category = $result_category->fetch_assoc()) {
+                echo "<div class='hero-content'>";
+                
+                // Wyświetlanie obrazu kategorii
+                if (!empty($category['image'])) {
+                    echo "<img src='" . 'data:image/jpeg;base64,' . base64_encode($category['image']) . "' alt='" . htmlspecialchars($category['title']) . "' class='hero-image'>";
                 }
-            } else {
-                echo "<p>Brak postów w tej kategorii.</p>";
-            }
-            ?>
-            <p>Let's start our adventure together!</p>
-            <hr class="hero-divider">
 
-            </div>
+                echo "<h1>" . htmlspecialchars($category['title']) . "</h1>";
+                echo "<hr class='hero-divider'>";
+                echo "<p>" . $category['content'] . "</p>";
+                echo "</div>";
+            }
+        } else {
+            echo "<p>Brak postów w tej kategorii.</p>";
+        }
+        ?>
     </div>
-  
 </section>
 
 
