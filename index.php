@@ -179,10 +179,10 @@ if ($result_image->num_rows > 0) {
             echo '<div class="post">';
             echo "<img src='".'data:image/jpeg;base64,' . base64_encode($row['image']) ."' alt='Post Image'>";
             echo '<div>';
-            echo '<h2>' . htmlspecialchars($row['title']) . '</h2>';
-            echo '<p>Category: ' . htmlspecialchars($row['category_name']) . '</p>';
-            echo '<p>' . htmlspecialchars($row['content']) . '</p>';
-            echo '<p>Date: ' . htmlspecialchars($row['created_at']) . '</p>';
+            echo '<h2>' . $row['title'] . '</h2>';
+            echo '<p>Category: ' . $row['category_name']. '</p>';
+            echo '<p>' . $row['content'] . '</p>';
+            echo '<p>Date: ' . $row['created_at'] . '</p>';
             echo '</div>';
             echo '</div>';
             echo '</a>';  // Close the anchor tag here
