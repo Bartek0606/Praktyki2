@@ -32,6 +32,7 @@ if ($result_category->num_rows > 0) {
 
 $sql_posts = "
     SELECT 
+        posts.post_id,
         posts.title, 
         posts.content, 
         posts.image, 
@@ -149,14 +150,18 @@ $result_posts = $stmt_posts->get_result();
             <?php
             if ($result_posts->num_rows > 0) {
                 while ($post = $result_posts->fetch_assoc()) {
+                    $post_url = 'post.php?id=' . $post['post_id'];
+
                     echo "<div class='post'>";
-                    echo "<img src='" . htmlspecialchars($post['image_url']) . "' alt='" . htmlspecialchars($post['title']) . "'>";
-                    echo "<h3>" . htmlspecialchars($post['title']) . "</h3>";
+                    echo '<a href="' . $post_url . '" class="post-link">'; 
+                    echo "<img src='" . $post['image_url'] . "' alt='" . $post['title'] . "'>";
+                    echo "<h3>" . $post['title'] . "</h3>";
                     echo "<br />";
-                    echo "<p>" . htmlspecialchars($post['content']) . "</p>";
+                    echo "<p>" . $post['content']. "</p>";
                     echo "<br />";
-                    echo "<p>Add by: <strong>" . htmlspecialchars($post['username']) . "</strong></p>";
-                    echo "<p>Category: <strong>" . htmlspecialchars($post['category_name']) . "</strong></p>";
+                    echo "<p>Add by: <strong>" . $post['username'] . "</strong></p>";
+                    echo "<p>Category: <strong>" . $post['category_name'] . "</strong></p>";
+                    echo "</a>";
                     echo "</div>";
                 }
             } else {
@@ -167,41 +172,6 @@ $result_posts = $stmt_posts->get_result();
         </div>
     </section>
 </div>
-
-<!-- <div class="tlo_posty_popularne">
-    <section id="najpopularniejsze-posty" class="most-liked-posts-section">
-        <h2 class="most-liked-posts-title">Najczęściej polubiane posty</h2>
-        <a href="#" class="see-more-posts">Zobacz więcej postów</a>
-
-        <div class="most-liked-posts-container">
-            <div class="most-liked-post">
-                <img src="wesela.png" alt="Post 1" class="post-image">
-                <h3 class="most-liked-post-title">Fotografia ślubna na światowym poziomie</h3>
-                <a href="#" class="read-more">Czytaj więcej</a>
-            </div>
-            <div class="most-liked-post">
-                <img src="plenery.png" alt="Post 2" class="post-image">
-                <h3 class="most-liked-post-title">Top 5 najpiękniejszych plenerów fotograficznych w Polsce</h3>
-                <a href="#" class="read-more">Czytaj więcej</a>
-            </div>
-            <div class="most-liked-post">
-                <img src="zlota.png" alt="Post 3" class="post-image">
-                <h3 class="most-liked-post-title">Fotografowanie w złotej godzinie: Poradnik profesjonalisty</h3>
-                <a href="#" class="read-more">Czytaj więcej</a>
-            </div>
-            <div class="most-liked-post">
-                <img src="podroze.png" alt="Post 4" class="post-image">
-                <h3 class="most-liked-post-title">Tajniki fotografii podróżniczej: Uchwyć chwilę w kadrze</h3>
-                <a href="#" class="read-more">Czytaj więcej</a>
-            </div>
-            <div class="most-liked-post">
-                <img src="event.png" alt="Post 5" class="post-image">
-                <h3 class="most-liked-post-title">Jak uchwycić emocje podczas eventów? Poradnik od profesjonalisty</h3>
-                <a href="#" class="read-more">Czytaj więcej</a>
-            </div>
-        </div>
-    </section>
-</div> -->
 
 <section id="opinie" class="reviews-section">
     <h2 class="reviews-title">User opinions about the blog</h2>
