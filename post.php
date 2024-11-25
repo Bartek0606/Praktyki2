@@ -149,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment']) && 
         <?php endif; ?>
 
         <!-- Display post content -->
-        <p><?php echo nl2br(htmlspecialchars($post['content'], ENT_QUOTES, 'UTF-8')); ?></p>
+        <p><?php echo $post['content']; ?></p>
     </div>
 
     <!-- Display comments section -->
