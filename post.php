@@ -93,19 +93,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment']) && 
             <button class="btn new-post-btn" onclick="window.location.href='new_post.php'">New Post</button>
             <a href="profile.php" class="profile-link">
               <?php
-              
-                $sqlProfilePicture = "SELECT profile_picture FROM users WHERE user_id = '$userId'";
-                $resultProfilePicture = $conn->query($sqlProfilePicture);
-                $profilePictureSrc = 'default.png'; // Default image
-                if ($resultProfilePicture->num_rows > 0) {
-                    $userProfile = $resultProfilePicture->fetch_assoc();
-                    if (!empty($userProfile['profile_picture'])) {
-                        // If there's a profile picture, use it
-                        $profilePictureSrc = 'data:image/jpeg;base64,' . base64_encode($userProfile['profile_picture']);
-                    }
-                }
+
+                // Pobranie ścieżki do zdjęcia profilowego z bazy danych (założenie, że zdjęcie jest w tabeli 'users')
+                $user_id = $_SESSION['user_id'];
+                $sql_image = "SELECT profile_picture FROM users WHERE user_id = '$user_id'";
+                $result_image = $conn->query($sql_image);
+                $image_src = 'default.png'; // Default image
+if ($result_image->num_rows > 0) {
+    $row = $result_image->fetch_assoc();
+    if (!empty($row['profile_picture']) && $row['profile_picture'] !== 'default.png') {
+        // If there's a profile picture (and it's not the default one), use base64 encoding
+        $image_src = 'data:image/jpeg;base64,' . base64_encode($row['profile_picture']);
+    }
+}
+
               ?>
-              <img src="<?php echo $profilePictureSrc; ?>" alt="Profile Picture" class="profile-img">
+              <img src="<?php echo $image_src; ?>" alt="Profile Picture" class="profile-img">
+
               <span class="username"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
             </a>
           </div>
