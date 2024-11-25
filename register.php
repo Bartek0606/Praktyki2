@@ -1,8 +1,7 @@
 <?php
-// Import the database connection file
+
 require_once 'db_connection.php';
 
-// Variables for error messages and success messages
 $emailError = '';
 $passwordError = '';
 $confirmPasswordError = '';
@@ -10,16 +9,14 @@ $fullnameError = '';
 $usernameError = '';
 $successMessage = '';
 
-// Handle form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Retrieve data from the form
+
     $email = trim($_POST['email']);
     $fullname = trim($_POST['fullname']);
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
     $confirmPassword = trim($_POST['confirm_password']);
 
-    // Validate input
     if (empty($email)) {
         $emailError = "Email is required.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -40,12 +37,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $passwordError = "Passwords do not match.";
     }
 
-    // If no errors, proceed to insert the user into the database
     if (empty($emailError) && empty($fullnameError) && empty($usernameError) && empty($passwordError)) {
-        // Hash the password
+      
         $passwordHash = password_hash($password, PASSWORD_BCRYPT);
 
-        // Check if email or username already exists
         $stmt = $conn->prepare("SELECT * FROM users WHERE email = ? OR username = ?");
         $stmt->bind_param('ss', $email, $username);
         $stmt->execute();
@@ -54,16 +49,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($result->num_rows > 0) {
             $emailError = "Email or username is already taken.";
         } else {
-            // Set the default profile picture
-            $defaultProfilePicture = file_get_contents('default.png'); // Load the default image as a binary string
+            
+            $defaultProfilePicture = file_get_contents('default.png'); 
 
-            // Insert the user into the database
             $stmt = $conn->prepare("INSERT INTO users (username, email, password_hash, full_name, created_at, profile_picture) VALUES (?, ?, ?, ?, NOW(), ?)");
             $stmt->bind_param('sssss', $username, $email, $passwordHash, $fullname, $defaultProfilePicture);
 
             if ($stmt->execute()) {
                 $successMessage = "<b>Registration successful! You can now log in.</b>";
-                // Reset form fields
+                
                 $_POST = [];
             } else {
                 die("Error inserting data: " . $conn->error);
@@ -92,31 +86,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
     <div id="form_register">
         <form id="registerForm" method="POST" action="register.php">
-            <!-- E-mail -->
+       
             <input type="text" id="email" name="email" placeholder="Email" value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>">
             <?php if ($emailError): ?>
                 <p class="error"><?php echo $emailError; ?></p>
             <?php endif; ?>
 
-            <!-- Full Name -->
             <input type="text" id="fullname" name="fullname" placeholder="Full Name" value="<?php echo htmlspecialchars($_POST['fullname'] ?? ''); ?>">
             <?php if ($fullnameError): ?>
                 <p class="error"><?php echo $fullnameError; ?></p>
             <?php endif; ?>
 
-            <!-- Username -->
             <input type="text" id="username" name="username" placeholder="Username" value="<?php echo htmlspecialchars($_POST['username'] ?? ''); ?>">
             <?php if ($usernameError): ?>
                 <p class="error"><?php echo $usernameError; ?></p>
             <?php endif; ?>
 
-            <!-- Password -->
             <input type="password" id="password" name="password" placeholder="Password">
             <?php if ($passwordError): ?>
                 <p class="error"><?php echo $passwordError; ?></p>
             <?php endif; ?>
 
-            <!-- Confirm Password -->
             <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm Password">
             <?php if ($confirmPasswordError): ?>
                 <p class="error"><?php echo $confirmPasswordError; ?></p>
