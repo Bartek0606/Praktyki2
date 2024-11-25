@@ -1,59 +1,59 @@
 <?php
-session_start(); // Start the session to manage user authentication
+session_start(); 
 
-// Include database connection
+
 include 'db_connection.php';
 
-// Initialize error messages
+
 $emailError = '';
 $passwordError = '';
-$fieldsError = false; // Flag for empty fields
+$fieldsError = false; 
 
-// Check if form is submitted
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Get user input
-    $username = $_POST['username']; // Email entered by the user
-    $password = $_POST['password']; // Password entered by the user
+  
+    $username = $_POST['username']; 
+    $password = $_POST['password']; 
 
-    // Sanitize user input to prevent SQL injection
+    
     $username = mysqli_real_escape_string($conn, $username);
     $password = mysqli_real_escape_string($conn, $password);
 
-    // Check if any field is empty
+   
     if (empty($username) || empty($password)) {
         $fieldsError = true;
     }
 
-    // If the email is not empty, validate it
+   
     if (!empty($username) && !filter_var($username, FILTER_VALIDATE_EMAIL)) {
         $emailError = "Invalid email format. Please include '@' in the email address.";
     }
 
-    // If there are no errors, proceed with login attempt
+   
     if (!$fieldsError && empty($emailError)) {
-        // Query to check if user exists with the given email
+       
         $sql = "SELECT * FROM users WHERE email = '$username'";
         $result = mysqli_query($conn, $sql);
         
         if (mysqli_num_rows($result) > 0) {
-            // User found, now verify password
+           
             $user = mysqli_fetch_assoc($result);
 
-            // Verify the hashed password
+            
             if (password_verify($password, $user['password_hash'])) {
-                // Password is correct, log the user in
+              
                 $_SESSION['user_id'] = $user['user_id'];
                 $_SESSION['username'] = $user['username'];
 
-                // Redirect to homepage
+               
                 header("Location: index.php");
                 exit;
             } else {
-                // Incorrect password
+                
                 $passwordError = "Invalid password. Please try again.";
             }
         } else {
-            // No user found with that email
+           
             $emailError = "No account found with that email.";
         }
     }

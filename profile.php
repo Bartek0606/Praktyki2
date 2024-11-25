@@ -1,52 +1,45 @@
 <?php
-session_start(); // Start session to check login status
+session_start(); 
 
-// Include the database connection
 include 'db_connection.php';
 
-// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php"); // Redirect to login page if not logged in
+    header("Location: login.php"); 
     exit();
 }
 
-// Fetch user data from the database
 $user_id = $_SESSION['user_id'];
 $sql_user = "SELECT username, email, full_name, bio, profile_picture FROM users WHERE user_id = '$user_id'";
 $result_user = $conn->query($sql_user);
 $user = $result_user->fetch_assoc();
 
-// Update profile if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Handle log out
+    
     if (isset($_POST['logout'])) {
-        session_unset(); // Unset all session variables
-        session_destroy(); // Destroy the session
-        header("Location: login.php"); // Redirect to login page
+        session_unset(); 
+        session_destroy(); 
+        header("Location: login.php"); 
         exit();
     }
 
-    // Reset profile picture to default if reset button is clicked
     if (isset($_POST['reset_picture'])) {
-        // Update profile picture in the database to 'default.png'
+    
         $sql_update = "UPDATE users SET profile_picture = 'default.png' WHERE user_id = '$user_id'";
 
         if ($conn->query($sql_update) === TRUE) {
-            // Success, redirect to profile page to see updated data
+        
             header("Location: profile.php");
-            exit(); // Always call exit after header redirection to stop further code execution
+            exit();
         } else {
             echo "Error resetting profile picture: " . $conn->error;
         }
     }
 
-    // Update the profile data
     $username = $_POST['username'];
     $email = $_POST['email'];
     $full_name = $_POST['full_name'];
     $bio = $_POST['bio'];
 
-    // Handle profile picture upload
     if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == 0) {
         $profile_picture = addslashes(file_get_contents($_FILES['profile_picture']['tmp_name']));
         $sql_update = "UPDATE users SET username = '$username', email = '$email', full_name = '$full_name', bio = '$bio', profile_picture = '$profile_picture' WHERE user_id = '$user_id'";
@@ -55,10 +48,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($conn->query($sql_update) === TRUE) {
-        // Success message
+        
         $_SESSION['username'] = $username;
-        header("Location: profile.php"); // Redirect to profile page to see updated data
-        exit(); // Always call exit after header redirection to stop further code execution
+        header("Location: profile.php"); 
+        exit(); 
     } else {
         echo "Error updating record: " . $conn->error;
     }
@@ -70,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="profile.css"> <!-- Separate CSS for profile -->
+    <link rel="stylesheet" href="profile.css">
     <script src="profile.js" defer></script>
     <link rel="stylesheet" href="navbar.css">
     <title>Profile • HobbyHub</title>
@@ -85,16 +78,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="navbar-right">
             <?php if (isset($_SESSION['user_id'])): ?>
                 <?php
-                // Fetch profile picture of the user
+                
                 $sql_image = "SELECT profile_picture FROM users WHERE user_id = '$user_id'";
                 $result_image = $conn->query($sql_image);
-                $image_src = 'default-avatar.jpg'; // Default profile picture
+                $image_src = 'default-avatar.jpg'; 
                 if ($result_image->num_rows > 0) {
                     $row = $result_image->fetch_assoc();
                     if (!empty($row['profile_picture']) && $row['profile_picture'] !== 'default.png') {
                         $image_src = 'data:image/jpeg;base64,' . base64_encode($row['profile_picture']);
                     } else {
-                        $image_src = 'default.png'; // If it's the default, use the image name
+                        $image_src = 'default.png'; 
                     }
                 }
                 ?>
@@ -128,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <input type="file" name="profile_picture" id="profile_picture" accept="image/*">
                         
                     </div>
-                        <!-- Add Reset Profile Picture Button -->
+                      
             <button type="submit" name="reset_picture" class="btn reset-btn">Reset Profile Picture</button>
                 </div>
             </div>
