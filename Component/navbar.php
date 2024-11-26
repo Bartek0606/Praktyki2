@@ -49,6 +49,9 @@ class Navbar{
     <nav class="navbar">
       <div class="logo">
         <h1><a href="index.php">HobbyHub</a></h1>
+        <?php 
+        if ($_SERVER['REQUEST_URI'] != '/profile.php' && $_SERVER['REQUEST_URI'] != '/new_post.php') {
+        ?>
             <div class="dropdown">
                 <button class="dropdown-button" onclick="toggleDropdown()">Select Category</button>
                 <div class="dropdown-menu" id="dropdownMenu">
@@ -63,16 +66,30 @@ class Navbar{
                     <?php endif; ?>
                 </div>
             </div>
+        <?php 
+        }
+        ?>
         </div>
-        <form class="search-form" method="GET" action="">
-            <input type="text" name="category" placeholder="Search by category" value="<?php echo htmlspecialchars($search_category ?? ''); ?>">
-            <button type="submit">Search</button>
-        </form>
+        <?php
+        if ($_SERVER['REQUEST_URI'] == '/' || $_SERVER['REQUEST_URI'] == '' || $_SERVER['PHP_SELF'] == '/index.php') {
+        ?>
+            <form class="search-form" method="GET" action="">
+                <input type="text" name="category" placeholder="Search by category" value="<?php echo htmlspecialchars($search_category ?? ''); ?>">
+                <button type="submit">Search</button>
+            </form>
+        <?php 
+        }
+        ?>
 
         <div class="auth-buttons">
             <?php if ($this->isLoggedIn): ?>
             <div class="auth-info">
+                <?php if ($_SERVER['REQUEST_URI'] != '/new_post.php') {
+                ?>
                 <button class="btn new-post-btn" onclick="window.location.href='new_post.php'">New Post</button>
+                <?php 
+                }
+                ?>
                 <a href="profile.php" class="profile-link">
                     <?php
                         $image_src = $this->fetchProfilePicture($this->userId);
@@ -97,3 +114,20 @@ class Navbar{
     }
 }
 ?>
+<script>
+// Toggle dropdown menu visibility
+function toggleDropdown() {
+  const menu = document.getElementById("dropdownMenu");
+  menu.style.display = menu.style.display === "block" ? "none" : "block";
+}
+
+// Close dropdown if clicked outside
+window.onclick = function (event) {
+  if (!event.target.matches(".dropdown-button")) {
+    const dropdowns = document.getElementsByClassName("dropdown-menu");
+    for (let i = 0; i < dropdowns.length; i++) {
+      dropdowns[i].style.display = "none";
+    }
+  }
+};
+</script>
