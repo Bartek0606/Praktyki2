@@ -54,7 +54,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $parentCommentId = isset($_POST['parent_comment_id']) ? (int) $_POST['parent_comment_id'] : NULL;
 
         // Get the next comment ID (if needed, or let the DB handle it if autoincrement)
-        // If you have autoincrement on `comment_id`, this can be omitted
         $sqlMaxCommentId = "SELECT MAX(comment_id) AS max_comment_id FROM comments";
         $resultMaxCommentId = $conn->query($sqlMaxCommentId);
         $rowMaxCommentId = $resultMaxCommentId->fetch_assoc();
@@ -93,6 +92,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="post.css">
     <link rel="stylesheet" href="navbar.css">
     <title><?php echo htmlspecialchars($post['title'], ENT_QUOTES, 'UTF-8'); ?></title>
+    <script>
+        // Function to toggle the reply textarea visibility
+        function toggleReplyForm(commentId) {
+            var replyForm = document.getElementById("reply-form-" + commentId);
+            replyForm.style.display = (replyForm.style.display === "none" || replyForm.style.display === "") ? "block" : "none";
+        }
+    </script>
 </head>
 <body>
   <header>
@@ -106,19 +112,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <div class="auth-info">
             <button class="btn new-post-btn" onclick="window.location.href='new_post.php'">New Post</button>
             <a href="profile.php" class="profile-link">
-              <?php
-                // Fetch profile picture from the database
-                $user_id = $_SESSION['user_id'];
-                $sql_image = "SELECT profile_picture FROM users WHERE user_id = '$user_id'";
-                $result_image = $conn->query($sql_image);
-                $image_src = 'default.png'; // Default image
-                if ($result_image->num_rows > 0) {
-                    $row = $result_image->fetch_assoc();
-                    if (!empty($row['profile_picture']) && $row['profile_picture'] !== 'default.png') {
-                        $image_src = 'data:image/jpeg;base64,' . base64_encode($row['profile_picture']);
-                    }
-                }
-              ?>
               <img src="<?php echo $image_src; ?>" alt="Profile Picture" class="profile-img">
               <span class="username"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
             </a>
@@ -145,7 +138,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <p><strong>Date:</strong> <?php echo htmlspecialchars($post['created_at'], ENT_QUOTES, 'UTF-8'); ?></p>
             </div>
 
-            <!-- Display post image if it exists -->
             <?php if (!empty($post['image'])): ?>
                 <?php $imageSrc = 'data:image/jpeg;base64,' . base64_encode($post['image']); ?>
                 <img src="<?php echo $imageSrc; ?>" alt="Post Image" class="post-image">
@@ -154,22 +146,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <br>
 
-        <!-- Highlight if it's a question -->
         <?php if ($post['is_question']): ?>
             <div class="question-highlight">
                 <strong>Question:</strong>
             </div>
         <?php endif; ?>
 
-        <!-- Display post content -->
         <p><?php echo $post['content']; ?></p>
     </div>
 
-    <!-- Display comments section -->
     <div class="comments-section">
         <h2>Comments</h2>
 
-        <!-- Display the comment form only if the user is logged in -->
         <form method="POST" class="comment-form">
             <textarea name="comment_content" placeholder="Write your comment..." required class="comment-input"></textarea>
             <button type="submit" name="submit_comment" class="btn comment-btn">Post Comment</button>
@@ -177,24 +165,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <br>
 
-        <!-- Display success message if set -->
         <?php if (isset($_SESSION['comment_success'])): ?>
-            <div class="success-message"><?php echo $_SESSION['comment_success']; ?></div>
-            <?php unset($_SESSION['comment_success']); // Clear the success message after displaying ?>
+            <p class="success-message"><?php echo $_SESSION['comment_success']; unset($_SESSION['comment_success']); ?></p>
         <?php endif; ?>
 
-        <?php if (!$isLoggedIn): ?>
-            <p id="error-message" class="error-message"><strong>You must be logged in to post a comment</strong></p>
-        <?php endif; ?>
+        <br>
 
         <?php
-        // Organize comments and replies
         $comments = [];
         while ($row = $resultComments->fetch_assoc()) {
             $comments[] = $row;
         }
 
-        // Display comments and replies
         foreach ($comments as $comment) {
             echo "<div class='comment'>";
             echo "<div class='comment-content'>";
@@ -202,26 +184,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo "<p>" . htmlspecialchars($comment['content'], ENT_QUOTES, 'UTF-8') . "</p>";
             echo "</div>";
 
-            // Query for replies to this comment (sorted by creation date ascending)
+            if ($isLoggedIn) {
+                echo "<button class='btn reply-btn' onclick='toggleReplyForm(" . $comment['comment_id'] . ")'>Reply</button>";
+                echo "<form method='POST' id='reply-form-" . $comment['comment_id'] . "' style='display:none;' class='reply-form'>";
+                echo "<textarea name='reply_content' placeholder='Write your reply...' required class='reply-input'></textarea>";
+                echo "<input type='hidden' name='parent_comment_id' value='" . $comment['comment_id'] . "'>";
+                echo "<button type='submit' name='submit_reply' class='btn reply-submit-btn'>Post Reply</button>";
+                echo "</form>";
+            }
+
             $sqlReplies = "SELECT r.comment_id, r.content, r.created_at, u.username
                            FROM comments r
                            LEFT JOIN users u ON r.user_id = u.user_id
                            WHERE r.parent_comment_id = " . (int) $comment['comment_id'] . "
-                           ORDER BY r.created_at ASC"; // Replies sorted by creation date ascending
+                           ORDER BY r.created_at ASC";
             $resultReplies = $conn->query($sqlReplies);
-
-            // Display replies
             while ($reply = $resultReplies->fetch_assoc()) {
                 echo "<div class='reply'>";
                 echo "<p><strong>" . htmlspecialchars($reply['username'], ENT_QUOTES, 'UTF-8') . "</strong> <span class='reply-date'>" . htmlspecialchars($reply['created_at'], ENT_QUOTES, 'UTF-8') . "</span></p>";
                 echo "<p>" . htmlspecialchars($reply['content'], ENT_QUOTES, 'UTF-8') . "</p>";
                 echo "</div>";
             }
-
             echo "</div>";
         }
         ?>
     </div>
-  </main>
+</main>
+
 </body>
 </html>
