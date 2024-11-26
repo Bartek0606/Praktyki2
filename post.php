@@ -1,5 +1,5 @@
 <?php
-session_start(); 
+session_start();
 
 include 'db_connection.php';
 include 'Component/navbar.php';
@@ -39,39 +39,49 @@ if ($postId > 0) {
         exit;
     }
 
-    // Query to fetch comments related to the post
-    $sqlComments = "SELECT c.content, c.created_at, u.username 
-                    FROM comments c
-                    LEFT JOIN users u ON c.user_id = u.user_id
-                    WHERE c.post_id = $postId
-                    ORDER BY c.created_at DESC";
-    $resultComments = $conn->query($sqlComments);
+    // Query to fetch main comments related to the post (parent_comment_id is NULL), sorted by creation date (newest first)
+$sqlComments = "SELECT c.comment_id, c.content, c.created_at, u.username, c.parent_comment_id 
+                FROM comments c
+                LEFT JOIN users u ON c.user_id = u.user_id
+                WHERE c.post_id = $postId AND c.parent_comment_id IS NULL
+                ORDER BY c.created_at DESC"; // Latest comments first
+$resultComments = $conn->query($sqlComments);
+
 } else {
     echo "<p>Invalid post ID.</p>";
     exit;
 }
 
-// Handle comment submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment']) && $isLoggedIn) {
-  $userId = $_SESSION['user_id']; 
-  $commentContent = $conn->real_escape_string($_POST['comment_content']);
-  
-  // Get the next comment ID
-  $sqlMaxCommentId = "SELECT MAX(comment_id) AS max_comment_id FROM comments";
-  $resultMaxCommentId = $conn->query($sqlMaxCommentId);
-  $rowMaxCommentId = $resultMaxCommentId->fetch_assoc();
-  $nextCommentId = $rowMaxCommentId['max_comment_id'] + 1; 
-  
-  // Insert the new comment
-  $sqlInsertComment = "INSERT INTO comments (comment_id, post_id, user_id, content) VALUES ($nextCommentId, $postId, $userId, '$commentContent')";
-  
-  if ($conn->query($sqlInsertComment) === TRUE) {
-    $_SESSION['comment_success'] = 'Your comment has been posted successfully!';
-    header('Location: ' . $_SERVER['REQUEST_URI']);
-    exit();
-  } else {
-    echo "<p>Error: " . $conn->error . "</p>";
-  }
+// Handle comment or reply submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['submit_comment']) && $isLoggedIn) {
+        // For main comments and replies
+        $userId = $_SESSION['user_id'];
+        $commentContent = $conn->real_escape_string($_POST['comment_content']);
+        
+        // Check if it's a reply or a main comment
+        $parentCommentId = isset($_POST['parent_comment_id']) ? (int) $_POST['parent_comment_id'] : NULL;
+
+        if ($parentCommentId === NULL) {
+            // Insert main comment (parent_comment_id is NULL)
+            $sqlInsertComment = "INSERT INTO comments (post_id, user_id, content, parent_comment_id) 
+                                 VALUES ($postId, $userId, '$commentContent', NULL)";
+            $insertSuccess = $conn->query($sqlInsertComment);
+        } else {
+            // Insert reply (parent_comment_id is set)
+            $sqlInsertReply = "INSERT INTO comments (post_id, user_id, content, parent_comment_id) 
+                               VALUES ($postId, $userId, '$commentContent', $parentCommentId)";
+            $insertSuccess = $conn->query($sqlInsertReply);
+        }
+
+        if ($insertSuccess) {
+            $_SESSION['comment_success'] = 'Your comment has been posted successfully!';
+            header('Location: ' . $_SERVER['REQUEST_URI']);
+            exit();
+        } else {
+            echo "<p>Error: " . $conn->error . "</p>";
+        }
+    }
 }
 ?>
 
@@ -83,14 +93,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment']) && 
     <link rel="stylesheet" href="glowna.css">
     <link rel="stylesheet" href="post.css">
     <link rel="stylesheet" href="navbar.css">
-    <script src="post.js" defer></script>
-    <title><?php echo htmlspecialchars($post['title'], ENT_QUOTES, 'UTF-8'); ?></title> <!-- Dynamic title -->
+    <title><?php echo htmlspecialchars($post['title'], ENT_QUOTES, 'UTF-8'); ?></title>
+    <script>
+        // Function to toggle the reply textarea visibility
+        function toggleReplyForm(commentId) {
+            var replyForm = document.getElementById("reply-form-" + commentId);
+            replyForm.style.display = (replyForm.style.display === "none" || replyForm.style.display === "") ? "block" : "none";
+        }
+    </script>
 </head>
 <body>
   <header>
+
   <?php
         echo $navbar->render();
     ?>
+
   </header> 
 
   <main class="container">
@@ -103,7 +121,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment']) && 
                 <p><strong>Date:</strong> <?php echo htmlspecialchars($post['created_at'], ENT_QUOTES, 'UTF-8'); ?></p>
             </div>
 
-            <!-- Display post image if it exists -->
             <?php if (!empty($post['image'])): ?>
                 <?php $imageSrc = 'data:image/jpeg;base64,' . base64_encode($post['image']); ?>
                 <img src="<?php echo $imageSrc; ?>" alt="Post Image" class="post-image">
@@ -112,59 +129,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment']) && 
 
         <br>
 
-        <!-- Highlight if it's a question -->
         <?php if ($post['is_question']): ?>
             <div class="question-highlight">
                 <strong>Question:</strong>
             </div>
         <?php endif; ?>
 
-        <!-- Display post content -->
         <p><?php echo $post['content']; ?></p>
     </div>
 
-    <!-- Display comments section -->
     <div class="comments-section">
         <h2>Comments</h2>
 
-        <!-- Display the comment form only if the user is logged in -->
-        <form method="POST" class="comment-form" onsubmit="checkLoginStatus(event)">
+        <form method="POST" class="comment-form">
             <textarea name="comment_content" placeholder="Write your comment..." required class="comment-input"></textarea>
             <button type="submit" name="submit_comment" class="btn comment-btn">Post Comment</button>
         </form>
 
         <br>
-
-        <!-- Display success message if set -->
+        
         <?php if (isset($_SESSION['comment_success'])): ?>
-            <div class="success-message"><?php echo $_SESSION['comment_success']; ?></div>
-            <?php unset($_SESSION['comment_success']); // Clear the success message after displaying ?>
+            <p class="success-message"><?php echo $_SESSION['comment_success']; unset($_SESSION['comment_success']); ?></p>
         <?php endif; ?>
 
-        <?php if (!$isLoggedIn): ?>
-            <!-- Display message if not logged in -->
-            <p id="error-message" class="error-message"><strong>You must be logged in to post a comment</strong></p>
-        <?php endif; ?>
+        <br>
 
-        <br>  
+        <?php
+        $comments = [];
+        while ($row = $resultComments->fetch_assoc()) {
+            $comments[] = $row;
+        }
 
-        <!-- Display existing comments -->
-        <?php if ($resultComments->num_rows > 0): ?>
-            <?php while ($comment = $resultComments->fetch_assoc()): ?>
-                <div class="comment">
-                    <p><strong><?php echo htmlspecialchars($comment['username'], ENT_QUOTES, 'UTF-8'); ?></strong> <?php echo htmlspecialchars($comment['created_at'], ENT_QUOTES, 'UTF-8'); ?></p>
-                    <p><?php echo nl2br(htmlspecialchars($comment['content'], ENT_QUOTES, 'UTF-8')); ?></p>
-                </div>
-                <br>
-            <?php endwhile; ?>
-        <?php else: ?>
-            <p>No comments yet. Be the first to comment!</p>
-        <?php endif; ?>
+        foreach ($comments as $comment) {
+            echo "<div class='comment'>";
+            echo "<div class='comment-content'>";
+            echo "<p><strong>" . htmlspecialchars($comment['username'], ENT_QUOTES, 'UTF-8') . "</strong> <span class='comment-date'>" . htmlspecialchars($comment['created_at'], ENT_QUOTES, 'UTF-8') . "</span></p>";
+            echo "<p>" . htmlspecialchars($comment['content'], ENT_QUOTES, 'UTF-8') . "</p>";
+            echo "</div>";
+
+            if ($isLoggedIn) {
+                echo "<button class='btn reply-btn' onclick='toggleReplyForm(" . $comment['comment_id'] . ")'>Reply</button>";
+                echo "<form method='POST' id='reply-form-" . $comment['comment_id'] . "' style='display:none;' class='reply-form'>";
+                echo "<textarea name='comment_content' placeholder='Write your reply...' required class='reply-input'></textarea>";
+                echo "<input type='hidden' name='parent_comment_id' value='" . $comment['comment_id'] . "'>";
+                echo "<button type='submit' name='submit_comment' class='btn reply-submit-btn'>Post Reply</button>";
+                echo "</form>";
+            }
+
+            $sqlReplies = "SELECT r.comment_id, r.content, r.created_at, u.username
+                           FROM comments r
+                           LEFT JOIN users u ON r.user_id = u.user_id
+                           WHERE r.parent_comment_id = " . (int) $comment['comment_id'] . "
+                           ORDER BY r.created_at ASC";
+            $resultReplies = $conn->query($sqlReplies);
+            while ($reply = $resultReplies->fetch_assoc()) {
+                echo "<div class='reply'>";
+                echo "<p><strong>" . htmlspecialchars($reply['username'], ENT_QUOTES, 'UTF-8') . "</strong> <span class='reply-date'>" . htmlspecialchars($reply['created_at'], ENT_QUOTES, 'UTF-8') . "</span></p>";
+                echo "<p>" . htmlspecialchars($reply['content'], ENT_QUOTES, 'UTF-8') . "</p>";
+                echo "</div>";
+            }
+
+            echo "</div>";
+        }
+        ?>
     </div>
-</main>
-
-<!-- Hidden input to pass login status to JS -->
-<input type="hidden" id="isLoggedIn" value="<?php echo $isLoggedIn ? 'true' : 'false'; ?>" />
+  </main>
 </body>
 </html>
 
