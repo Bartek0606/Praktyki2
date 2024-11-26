@@ -1,11 +1,15 @@
 <?php
-session_start(); // Start session to check login status
+session_start(); 
 
-// Include the database connection
 include 'db_connection.php';
-
+include 'COs/navbar.php';
 // Check if user is logged in
 $isLoggedIn = isset($_SESSION['user_id']);
+
+$userId = $isLoggedIn ? $_SESSION['user_id'] : null;
+$userName = $isLoggedIn ? $_SESSION['username'] : null;
+
+$navbar = new Navbar($conn, $isLoggedIn, $userId, $userName);
 
 // Handle logout
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
@@ -13,8 +17,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
     header("Location: index.php"); // Redirect to homepage
     exit;
 }
-
-
 // Pobieranie nazwy kategorii z pola wyszukiwania
 $category_name = isset($_GET['category']) ? $conn->real_escape_string($_GET['category']) : '';
 
@@ -46,9 +48,7 @@ $sql_events = "SELECT event_id, event_name, event_description, event_date, locat
 
 $events_result = $conn->query($sql_events);
 
-// Kod do pobierania kategorii z bazy
-$sql_categories = "SELECT category_id, name FROM categories ORDER BY name ASC"; 
-$categories_result = $conn->query($sql_categories);
+
 ?>
 
 
@@ -63,70 +63,9 @@ $categories_result = $conn->query($sql_categories);
 </head>
 <body>
 <header>
-    <nav class="navbar">
-      <div class="logo">
-        <h1><a href="index.php">HobbyHub</a></h1>
-
-            <!-- Kod do menu rozwijanego -->
-    <div class="dropdown">
-        <button class="dropdown-button" onclick="toggleDropdown()">Select Category</button>
-        <div class="dropdown-menu" id="dropdownMenu">
-            <?php
-            if ($categories_result->num_rows > 0) {
-                while ($row = $categories_result->fetch_assoc()) {
-                    echo '<a href="subpage.php?id=' . $row['category_id'] . '">' . htmlspecialchars($row['name']) . '</a>';
-                }
-            } else {
-                echo '<a>Brak kategorii</a>';
-            }
-            ?>
-        </div>
-    </div>
-      </div>
-
-      <form class="search-form" method="GET" action="">
-    <input type="text" name="category" placeholder="Search by category" value="<?php echo htmlspecialchars($search_category ?? ''); ?>">
-    <button type="submit">Search</button>
-</form>
-
-  
-  
-
-      <div class="auth-buttons">
-        <?php if ($isLoggedIn): ?>
-          <div class="auth-info">
-            <button class="btn new-post-btn" onclick="window.location.href='new_post.php'">New Post</button>
-            <a href="profile.php" class="profile-link">
-              <?php
-                // Pobranie ścieżki do zdjęcia profilowego z bazy danych (założenie, że zdjęcie jest w tabeli 'users')
-                $user_id = $_SESSION['user_id'];
-                $sql_image = "SELECT profile_picture FROM users WHERE user_id = '$user_id'";
-                $result_image = $conn->query($sql_image);
-                $image_src = 'default.png'; // Default image
-if ($result_image->num_rows > 0) {
-    $row = $result_image->fetch_assoc();
-    if (!empty($row['profile_picture']) && $row['profile_picture'] !== 'default.png') {
-        // If there's a profile picture (and it's not the default one), use base64 encoding
-        $image_src = 'data:image/jpeg;base64,' . base64_encode($row['profile_picture']);
-    }
-}
-
-              ?>
-              <img src="<?php echo $image_src; ?>" alt="Profile Picture" class="profile-img">
-              <span class="username"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
-            </a>
-          </div>
-          
-            <form method="POST" style="display: inline;">
-                <button type="submit" name="logout" class="btn logout-btn">Log out</button>
-            </form>
-            
-        <?php else: ?>
-            <button class="btn register-btn" onclick="window.location.href='register.php'">Sign up</button>
-            <button class="btn login-btn" onclick="window.location.href='login.php'">Login</button>
-        <?php endif; ?>
-      </div>
-    </nav>
+    <?php
+        echo $navbar->render();
+    ?>
 </header>
 <main class="container">
     <div class="nagl">
