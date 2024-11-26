@@ -179,7 +179,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <p class="category"><strong>Category: <?php echo htmlspecialchars($post['category_name']); ?></strong></p>
                                 <p><?php echo htmlspecialchars($post['content']); ?></p>
                                 <div class="post-date">
-                                    <small><strong>Date: </strong><?php echo date("F j, Y, g:i a", strtotime($post['created_at'])); ?></small>
+                                    <strong>Date: </strong><?php echo date($post['created_at']); ?>
                                 </div>
                             </div>
                         </div>
