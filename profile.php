@@ -3,6 +3,9 @@ session_start();
 
 include 'db_connection.php';
 
+$emailError = ''; // Zmienna na komunikat o błędzie e-maila
+$usernameError = ''; // Zmienna na komunikat o błędzie username
+
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php"); 
     exit();
@@ -23,11 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (isset($_POST['reset_picture'])) {
-    
         $sql_update = "UPDATE users SET profile_picture = 'default.png' WHERE user_id = '$user_id'";
-
         if ($conn->query($sql_update) === TRUE) {
-        
             header("Location: profile.php");
             exit();
         } else {
@@ -40,23 +40,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $full_name = $_POST['full_name'];
     $bio = $_POST['bio'];
 
-    if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == 0) {
-        $profile_picture = addslashes(file_get_contents($_FILES['profile_picture']['tmp_name']));
-        $sql_update = "UPDATE users SET username = '$username', email = '$email', full_name = '$full_name', bio = '$bio', profile_picture = '$profile_picture' WHERE user_id = '$user_id'";
+    // Walidacja e-maila
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $emailError = "Invalid email format.";
     } else {
-        $sql_update = "UPDATE users SET username = '$username', email = '$email', full_name = '$full_name', bio = '$bio' WHERE user_id = '$user_id'";
+        // Sprawdzenie, czy e-mail już istnieje w bazie danych (poza bieżącym użytkownikiem)
+        $sql_check_email = "SELECT * FROM users WHERE email = '$email' AND user_id != '$user_id'";
+        $result_email = $conn->query($sql_check_email);
+
+        if ($result_email->num_rows > 0) {
+            $emailError = "This email is already taken.";
+        }
     }
 
-    if ($conn->query($sql_update) === TRUE) {
-        
-        $_SESSION['username'] = $username;
-        header("Location: profile.php"); 
-        exit(); 
+    // Walidacja username
+    if (empty($username)) {
+        $usernameError = "Username is required.";
     } else {
-        echo "Error updating record: " . $conn->error;
+        // Sprawdzenie, czy username już istnieje w bazie danych (poza bieżącym użytkownikiem)
+        $sql_check_username = "SELECT * FROM users WHERE username = '$username' AND user_id != '$user_id'";
+        $result_username = $conn->query($sql_check_username);
+
+        if ($result_username->num_rows > 0) {
+            $usernameError = "This username is already taken.";
+        }
+    }
+
+    if (empty($emailError) && empty($usernameError)) {
+        if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == 0) {
+            $profile_picture = addslashes(file_get_contents($_FILES['profile_picture']['tmp_name']));
+            $sql_update = "UPDATE users SET username = '$username', email = '$email', full_name = '$full_name', bio = '$bio', profile_picture = '$profile_picture' WHERE user_id = '$user_id'";
+        } else {
+            $sql_update = "UPDATE users SET username = '$username', email = '$email', full_name = '$full_name', bio = '$bio' WHERE user_id = '$user_id'";
+        }
+
+        if ($conn->query($sql_update) === TRUE) {
+            $_SESSION['username'] = $username;
+            header("Location: profile.php"); 
+            exit(); 
+        } else {
+            echo "Error updating record: " . $conn->error;
+        }
     }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -78,7 +104,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="navbar-right">
             <?php if (isset($_SESSION['user_id'])): ?>
                 <?php
-                
                 $sql_image = "SELECT profile_picture FROM users WHERE user_id = '$user_id'";
                 $result_image = $conn->query($sql_image);
                 $image_src = 'default-avatar.jpg'; 
@@ -127,11 +152,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" name="username" id="username" value="<?php echo htmlspecialchars($user['username']); ?>" required>
+                <?php if ($usernameError): ?>
+                    <p class="error" style="color: red;"><?php echo $usernameError; ?></p>
+                <?php endif; ?>
             </div>
 
             <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" name="email" id="email" value="<?php echo htmlspecialchars($user['email']); ?>" required>
+                <?php if ($emailError): ?>
+                    <p class="error" style="color: red;"><?php echo $emailError; ?></p>
+                <?php endif; ?>
             </div>
 
             <div class="form-group">
@@ -191,9 +222,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
     </div>
 </main>
-
-
-
 </body>
 </html>
 
