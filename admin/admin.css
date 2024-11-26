@@ -1,0 +1,168 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: #333;
+  background-color: #f9f9f9;
+}
+
+.admin-panel {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  grid-template-rows: auto 1fr;
+  height: 100vh;
+}
+
+/* Nagłówek */
+header {
+  grid-column: 1 / 3;
+  background-color: #333;
+  color: white;
+  text-align: left;
+}
+.tittle {
+  margin-left: 20px;
+}
+
+/* Pasek boczny */
+.sidebar {
+  background-color: #333;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.profile-section {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.profile-pic {
+  width: 100px;
+  height: 100px;
+  background-color: #bdc3c7;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.username {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Menu */
+.menu {
+  width: 100%;
+}
+
+.menu-button {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  text-align: left;
+  transition: background-color 0.3s;
+}
+
+.menu-button:hover {
+  background-color: #464545;
+}
+
+.logout-button {
+  margin-top: auto;
+  padding: 10px;
+  width: 100%;
+  background-color: #333;
+  color: rgb(255, 0, 0);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.logout-button:hover {
+  background-color: #c0392b;
+}
+
+/* Główna sekcja */
+.dashboard {
+  background-color: white;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  text-align: center;
+  color: #4caf50;
+}
+
+.post-list {
+  list-style-type: none; /* Usunięcie punktów przy liście */
+  padding: 0;
+}
+
+.post-item {
+  display: flex;
+  align-items: flex-start; /* Wyrównanie do góry */
+  width: 70%;
+  margin: auto;
+  gap: 20px; /* Odstęp między zdjęciem a treścią */
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: #f9f9f9;
+  margin-bottom: 20px; /* Odstęp między postami */
+}
+
+.post-image img {
+  max-width: 200px;
+  border-radius: 5px; /* Zaokrąglenie rogów obrazu */
+}
+
+.post-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Odstęp między liniami tekstu */
+  flex: 1; /* Sprawia, że treść wypełnia przestrzeń */
+}
+
+h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+p {
+  margin: 0;
+  font-size: 1rem;
+}
+#editpost_button {
+  width: 40px;
+  height: 40px;
+  background-color: transparent;
+  border: none;
+}
+.logout_icon {
+  width: 20px; /* Dostosowanie szerokości ikony */
+  height: 20px; /* Dostosowanie wysokości ikony */
+  margin-right: 10px; /* Odstęp między ikoną a tekstem */
+}
+.logout-button {
+  padding: 10px;
+  width: 100%;
+  background-color: #333;
+  color: rgb(255, 0, 0);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 16px;
+  /* To ustawi przycisk na dole sidebaru */
+}
