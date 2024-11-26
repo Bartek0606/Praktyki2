@@ -48,27 +48,22 @@ if ($postId > 0) {
 // Handle comment or reply submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['submit_comment']) && $isLoggedIn) {
-        // For main comments
+        // For main comments and replies
         $userId = $_SESSION['user_id'];
         $commentContent = $conn->real_escape_string($_POST['comment_content']);
+        
+        // Check if it's a reply or a main comment
         $parentCommentId = isset($_POST['parent_comment_id']) ? (int) $_POST['parent_comment_id'] : NULL;
 
-        // Get the next comment ID (if needed, or let the DB handle it if autoincrement)
-        $sqlMaxCommentId = "SELECT MAX(comment_id) AS max_comment_id FROM comments";
-        $resultMaxCommentId = $conn->query($sqlMaxCommentId);
-        $rowMaxCommentId = $resultMaxCommentId->fetch_assoc();
-        $nextCommentId = $rowMaxCommentId['max_comment_id'] + 1;
-
-        // Insert the new comment or reply
         if ($parentCommentId === NULL) {
             // Insert main comment (parent_comment_id is NULL)
-            $sqlInsertComment = "INSERT INTO comments (comment_id, post_id, user_id, content, parent_comment_id) 
-                                 VALUES ($nextCommentId, $postId, $userId, '$commentContent', NULL)";
+            $sqlInsertComment = "INSERT INTO comments (post_id, user_id, content, parent_comment_id) 
+                                 VALUES ($postId, $userId, '$commentContent', NULL)";
             $insertSuccess = $conn->query($sqlInsertComment);
         } else {
             // Insert reply (parent_comment_id is set)
-            $sqlInsertReply = "INSERT INTO comments (comment_id, post_id, user_id, content, parent_comment_id) 
-                               VALUES ($nextCommentId, $postId, $userId, '$commentContent', $parentCommentId)";
+            $sqlInsertReply = "INSERT INTO comments (post_id, user_id, content, parent_comment_id) 
+                               VALUES ($postId, $userId, '$commentContent', $parentCommentId)";
             $insertSuccess = $conn->query($sqlInsertReply);
         }
 
@@ -164,7 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
 
         <br>
-
+        
         <?php if (isset($_SESSION['comment_success'])): ?>
             <p class="success-message"><?php echo $_SESSION['comment_success']; unset($_SESSION['comment_success']); ?></p>
         <?php endif; ?>
@@ -187,9 +182,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($isLoggedIn) {
                 echo "<button class='btn reply-btn' onclick='toggleReplyForm(" . $comment['comment_id'] . ")'>Reply</button>";
                 echo "<form method='POST' id='reply-form-" . $comment['comment_id'] . "' style='display:none;' class='reply-form'>";
-                echo "<textarea name='reply_content' placeholder='Write your reply...' required class='reply-input'></textarea>";
+                echo "<textarea name='comment_content' placeholder='Write your reply...' required class='reply-input'></textarea>";
                 echo "<input type='hidden' name='parent_comment_id' value='" . $comment['comment_id'] . "'>";
-                echo "<button type='submit' name='submit_reply' class='btn reply-submit-btn'>Post Reply</button>";
+                echo "<button type='submit' name='submit_comment' class='btn reply-submit-btn'>Post Reply</button>";
                 echo "</form>";
             }
 
@@ -205,11 +200,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 echo "<p>" . htmlspecialchars($reply['content'], ENT_QUOTES, 'UTF-8') . "</p>";
                 echo "</div>";
             }
+
             echo "</div>";
         }
         ?>
     </div>
-</main>
-
+  </main>
 </body>
 </html>
+
+<?php
+$conn->close();
+?>
