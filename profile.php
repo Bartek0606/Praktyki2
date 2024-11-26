@@ -152,8 +152,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="container posts-container">
         <h2>Your Posts</h2>
         <?php
-        // Pobranie postów użytkownika z bazy danych
-        $sql_posts = "SELECT post_id, title, content, image, created_at FROM posts WHERE user_id = '$user_id' ORDER BY created_at DESC";
+        // Pobranie postów użytkownika z bazy danych wraz z kategorią
+        $sql_posts = "
+            SELECT posts.post_id, posts.title, posts.content, posts.image, posts.created_at, categories.name AS category_name 
+            FROM posts 
+            LEFT JOIN categories ON posts.category_id = categories.category_id 
+            WHERE posts.user_id = '$user_id' 
+            ORDER BY posts.created_at DESC
+        ";
         $result_posts = $conn->query($sql_posts);
 
         if (!$result_posts) {
@@ -170,9 +176,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <?php endif; ?>
                             <div class="post-content">
                                 <h3><?php echo htmlspecialchars($post['title']); ?></h3>
+                                <p class="category"><strong>Category: <?php echo htmlspecialchars($post['category_name']); ?></strong></p>
                                 <p><?php echo htmlspecialchars($post['content']); ?></p>
                                 <div class="post-date">
-                                    Date:<?php echo date(($post['created_at'])); ?>
+                                    <small><strong>Date: </strong><?php echo date("F j, Y, g:i a", strtotime($post['created_at'])); ?></small>
                                 </div>
                             </div>
                         </div>
@@ -184,7 +191,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
     </div>
 </main>
-
 
 
 
