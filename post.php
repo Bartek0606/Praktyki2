@@ -2,9 +2,15 @@
 session_start();
 
 include 'db_connection.php';
+include 'Component/navbar.php';
 
-// Check if the user is logged in
 $isLoggedIn = isset($_SESSION['user_id']);
+
+$userId = $isLoggedIn ? $_SESSION['user_id'] : null;
+$userName = $isLoggedIn ? $_SESSION['username'] : null;
+
+$navbar = new Navbar($conn, $isLoggedIn, $userId, $userName);
+
 
 // Handle logout
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
@@ -98,30 +104,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
   <header>
-    <nav class="navbar">
-      <div class="logo">
-        <h1><a href="index.php">HobbyHub</a></h1>
-      </div>
 
-      <div class="auth-buttons">
-        <?php if ($isLoggedIn): ?>
-          <div class="auth-info">
-            <button class="btn new-post-btn" onclick="window.location.href='new_post.php'">New Post</button>
-            <a href="profile.php" class="profile-link">
-              <img src="<?php echo $image_src; ?>" alt="Profile Picture" class="profile-img">
-              <span class="username"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
-            </a>
-          </div>
-          
-          <form method="POST" style="display: inline;">
-              <button type="submit" name="logout" class="btn logout-btn">Log out</button>
-          </form>
-        <?php else: ?>
-            <button class="btn register-btn" onclick="window.location.href='register.php'">Sign up</button>
-            <button class="btn login-btn" onclick="window.location.href='login.php'">Login</button>
-        <?php endif; ?>
-      </div>
-    </nav>
+  <?php
+        echo $navbar->render();
+    ?>
+
   </header> 
 
   <main class="container">

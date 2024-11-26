@@ -1,7 +1,19 @@
 <?php
 session_start();
 include 'db_connection.php';
+include 'Component/navbar.php';
+$isLoggedIn = isset($_SESSION['user_id']);
 
+$userId = $isLoggedIn ? $_SESSION['user_id'] : null;
+$userName = $isLoggedIn ? $_SESSION['username'] : null;
+
+$navbar = new Navbar($conn, $isLoggedIn, $userId, $userName);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
+    session_destroy(); // Destroy the session
+    header("Location: index.php"); // Redirect to homepage
+    exit;
+}
 // Sprawdzenie ID kategorii w URL
 if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     $category_id = intval($_GET['id']); // Zabezpieczenie danych wejściowych
@@ -93,27 +105,9 @@ $result_posts = $stmt_posts->get_result();
 <body>
     
 <header>
-    <nav class="navbar">
-        <div class="logo">
-            <h1>Explore <?php echo $category_name; ?> with us!</h1>
-        </div>
-        <div id="search_form">
-            <form class="search-form">
-                <input type="text" placeholder="Search what you need">
-                <button type="submit">Search</button>
-            </form>
-        </div>
-        <ul class="nav-links">
-            <li><a href="#posty">Posts about <?php echo $category_name; ?></a></li>
-            <li><a href="#opinie">Opinions</a></li>
-            <li><a href="#o-nas">About Blog</a></li>
-            <li><a href="#najpopularniejsze-posty">Most popular posts</a></li>
-        </ul>
-        <div class="auth-buttons">
-            <button class="btn register-btn">Register</button>
-            <button class="btn login-btn">Log In</button>
-        </div>
-    </nav>
+    <?php
+        echo $navbar->render();
+    ?>
 </header>
 
 <section id="podstawy-fotografii" class="hero-section">
