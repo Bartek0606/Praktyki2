@@ -2,7 +2,9 @@
 session_start(); 
 
 include 'db_connection.php';
-include 'COs/navbar.php';
+include 'Component/navbar.php';
+include 'Component/post.php';
+
 // Check if user is logged in
 $isLoggedIn = isset($_SESSION['user_id']);
 
@@ -11,36 +13,17 @@ $userName = $isLoggedIn ? $_SESSION['username'] : null;
 
 $navbar = new Navbar($conn, $isLoggedIn, $userId, $userName);
 
+// Pobieranie nazwy kategorii z pola wyszukiwania
+$category_name = isset($_GET['category']) ? $conn->real_escape_string($_GET['category']) : '';
+
+$posts = new PostRender($conn, $category_name); 
+
 // Handle logout
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
     session_destroy(); // Destroy the session
     header("Location: index.php"); // Redirect to homepage
     exit;
 }
-// Pobieranie nazwy kategorii z pola wyszukiwania
-$category_name = isset($_GET['category']) ? $conn->real_escape_string($_GET['category']) : '';
-
-// SQL do filtrowania lub wyświetlania wszystkich postów
-if (!empty($category_name)) {
-    // Gdy użytkownik wprowadzi nazwę kategorii, dołączamy `categories` do `posts`
-    $sql_search = "
-        SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.image, categories.name AS category_name
-        FROM posts
-        JOIN categories ON posts.category_id = categories.category_id
-        WHERE categories.name LIKE '%$category_name%'
-        ORDER BY posts.created_at DESC
-    ";
-} else {
-    // Wyświetlenie wszystkich postów
-    $sql_search = "
-        SELECT posts.post_id, posts.title, posts.content, posts.created_at,posts.image, categories.name AS category_name
-        FROM posts
-        JOIN categories ON posts.category_id = categories.category_id
-        ORDER BY posts.created_at DESC
-    ";
-}
-
-$result = $conn->query($sql_search);
 
 $sql_events = "SELECT event_id, event_name, event_description, event_date, location 
                FROM events 
@@ -106,31 +89,9 @@ $events_result = $conn->query($sql_events);
     </div>
 
    <section class="blog-posts">
-    <div class="posts">
-    <?php
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            // Create the link to the post page
-            $post_url = 'post.php?id=' . $row['post_id'];
-
-            // Wrap the entire post div inside the anchor tag
-            echo '<a href="' . $post_url . '" class="post-link">';  // Start the anchor tag here
-            echo '<div class="post">';
-            echo "<img src='".'data:image/jpeg;base64,' . base64_encode($row['image']) ."' alt='Post Image'>";
-            echo '<div>';
-            echo '<h2>' . $row['title'] . '</h2>';
-            echo '<p>Category: ' . $row['category_name']. '</p>';
-            echo '<p>' . $row['content'] . '</p>';
-            echo '<p>Date: ' . $row['created_at'] . '</p>';
-            echo '</div>';
-            echo '</div>';
-            echo '</a>';  // Close the anchor tag here
-        }
-    } else {
-        echo '<p>No posts found.</p>';
-    }
+    <?php 
+        echo $posts->render();
     ?>
-    </div>
 </section>
 
 
