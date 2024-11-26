@@ -1,4 +1,5 @@
 <?php
+ob_start();
 session_start();
 include 'db_connection.php';
 include 'Component/navbar.php';
@@ -119,4 +120,5 @@ $categories_result = $conn->query($categories_sql);
 
 <?php
 $conn->close();
+ob_end_flush();
 ?>
