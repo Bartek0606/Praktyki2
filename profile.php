@@ -102,9 +102,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </nav>
 </header>
-
-<main class="container">
-    <div class="profile-form-container">
+<main>
+    <!-- Kwadrat: Edycja profilu -->
+    <div class="container">
         <h2>Edit Profile</h2>
         <form method="POST" enctype="multipart/form-data">
             <div class="form-group">
@@ -119,10 +119,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="file-input">
                         <label for="profile_picture">Profile Picture</label>
                         <input type="file" name="profile_picture" id="profile_picture" accept="image/*">
-                        
                     </div>
-                      
-            <button type="submit" name="reset_picture" class="btn reset-btn">Reset Profile Picture</button>
+                    <button type="submit" name="reset_picture" class="btn reset-btn">Reset Profile Picture</button>
                 </div>
             </div>
 
@@ -147,10 +145,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <button type="submit" class="btn save-btn">Save Changes</button>
-        
         </form>
     </div>
+
+    <!-- Kwadrat: Posty użytkownika -->
+    <div class="container posts-container">
+        <h2>Your Posts</h2>
+        <?php
+        // Pobranie postów użytkownika z bazy danych
+        $sql_posts = "SELECT post_id, title, content, image, created_at FROM posts WHERE user_id = '$user_id' ORDER BY created_at DESC";
+        $result_posts = $conn->query($sql_posts);
+
+        if (!$result_posts) {
+            echo "<p>Error: " . $conn->error . "</p>";
+        }
+
+        if ($result_posts->num_rows > 0): ?>
+            <div class="posts">
+                <?php while ($post = $result_posts->fetch_assoc()): ?>
+                    <a href="post.php?id=<?php echo $post['post_id']; ?>" class="post-link">
+                        <div class="post">
+                            <?php if (!empty($post['image'])): ?>
+                                <img src="data:image/jpeg;base64,<?php echo base64_encode($post['image']); ?>" alt="Post Image" class="post-image">
+                            <?php endif; ?>
+                            <div class="post-content">
+                                <h3><?php echo htmlspecialchars($post['title']); ?></h3>
+                                <p><?php echo htmlspecialchars($post['content']); ?></p>
+                                <div class="post-date">
+                                    Date:<?php echo date(($post['created_at'])); ?>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                <?php endwhile; ?>
+            </div>
+        <?php else: ?>
+            <p>No posts yet. Start creating posts!</p>
+        <?php endif; ?>
+    </div>
 </main>
+
+
+
 
 </body>
 </html>
