@@ -11,11 +11,46 @@ $userName = $isLoggedIn ? $_SESSION['username'] : null;
 
 $navbar = new Navbar($conn, $isLoggedIn, $userId, $userName);
 
+$message = "";
+
 // Handle logout
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
   session_destroy(); // Destroy the session
   header("Location: index.php"); // Redirect to homepage
   exit;
+}
+
+
+// Handle registration for event (on button click)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
+    if ($isLoggedIn) {
+        $event_id = $_POST['event_id']; 
+        $user_id = $_SESSION['user_id']; 
+        
+        $sql_check = "SELECT * FROM event_registrations WHERE user_id = ? AND event_id = ?";
+        $stmt_check = $conn->prepare($sql_check);
+        $stmt_check->bind_param("ii", $user_id, $event_id);
+        $stmt_check->execute();
+        $result_check = $stmt_check->get_result();
+        
+        if ($result_check->num_rows > 0) {
+            $message = "<p>You are already registered for this event.</p>";
+        } else {
+            // Insert the registration into the event_registrations table
+            $sql_register = "INSERT INTO event_registrations (user_id, event_id) VALUES (?, ?)";
+            $stmt_register = $conn->prepare($sql_register);
+            $stmt_register->bind_param("ii", $user_id, $event_id);
+            $stmt_register->execute();
+
+            if ($stmt_register->affected_rows > 0) {
+                $message = "<p>You have successfully registered for the event!</p>";
+            } else {
+                $message = "<p>There was an error registering for the event. Please try again.</p>";
+            }
+        }
+    } else {
+        $message = "<p>You must be logged in to register for this event.</p>";
+    }
 }
 
 // Check if event id is provided
@@ -46,9 +81,9 @@ if (isset($_GET['id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="event.css">
     <link rel="stylesheet" href="glowna.css">
     <link rel="stylesheet" href="navbar.css">
-    <link rel="stylesheet" href="event.css">
     <title><?php echo htmlspecialchars($event['event_name'], ENT_QUOTES, 'UTF-8'); ?></title> <!-- Dynamic title -->
 </head>
 <body>
@@ -72,7 +107,28 @@ if (isset($_GET['id'])) {
         <!-- Display event description -->
         <p><?php echo nl2br(htmlspecialchars($event['event_description'], ENT_QUOTES, 'UTF-8')); ?></p>
     </div>
-  </main>
+
+    <?php if ($isLoggedIn): ?>
+    <div class="registration-form">
+        <form method="POST">
+            <input type="hidden" name="event_id" value="<?php echo $event['event_id']; ?>">
+            <button type="submit" name="register" class="btn-register">Register for Event</button>
+        </form>
+        </div>
+    <?php else: ?>
+        <div class="login-message">
+            <p>You need to <a href="login.php" class="login-link">log in</a> to register for this event.</p>
+        </div>
+    <?php endif; ?>
+
+    <!-- Display messages (success or error) -->
+    <?php if (!empty($message)): ?>
+        <div class="message">
+            <?php echo $message; ?>
+        </div>
+    <?php endif; ?>
+
+    </main>
 
 </body>
 </html>
