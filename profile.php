@@ -1,12 +1,20 @@
 <?php
+ob_start();
 session_start(); 
 
 include 'db_connection.php';
+include 'Component/navbar.php';
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php"); 
     exit();
 }
+$isLoggedIn = isset($_SESSION['user_id']);
+
+$userId = $isLoggedIn ? $_SESSION['user_id'] : null;
+$userName = $isLoggedIn ? $_SESSION['username'] : null;
+
+$navbar = new Navbar($conn, $isLoggedIn, $userId, $userName);
 
 $user_id = $_SESSION['user_id'];
 $sql_user = "SELECT username, email, full_name, bio, profile_picture FROM users WHERE user_id = '$user_id'";
@@ -70,37 +78,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 <header>
-    <nav class="navbar">
-        <div class="logo">
-            <h1><a href="index.php">HobbyHub</a></h1>
-        </div>
-       
-        <div class="navbar-right">
-            <?php if (isset($_SESSION['user_id'])): ?>
-                <?php
-                
-                $sql_image = "SELECT profile_picture FROM users WHERE user_id = '$user_id'";
-                $result_image = $conn->query($sql_image);
-                $image_src = 'default-avatar.jpg'; 
-                if ($result_image->num_rows > 0) {
-                    $row = $result_image->fetch_assoc();
-                    if (!empty($row['profile_picture']) && $row['profile_picture'] !== 'default.png') {
-                        $image_src = 'data:image/jpeg;base64,' . base64_encode($row['profile_picture']);
-                    } else {
-                        $image_src = 'default.png'; 
-                    }
-                }
-                ?>
-                <a href="profile.php" class="profile-link">
-                    <img src="<?php echo $image_src; ?>" alt="Profile Picture" class="navbar-profile-img">
-                    <span class="navbar-username"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
-                </a>
-                <form method="POST" class="logout-form">
-                    <button type="submit" name="logout" class="logout-btn">Log out</button>
-                </form>
-            <?php endif; ?>
-        </div>
-    </nav>
+<?php
+        echo $navbar->render();
+    ?>
 </header>
 <main>
     <!-- Kwadrat: Edycja profilu -->
@@ -199,4 +179,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <?php
 $conn->close();
+ob_end_flush();
 ?>
