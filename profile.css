@@ -385,3 +385,6 @@ h2 {
         text-align: center;
     }
 }
+.container + .container {
+    margin-top: 40px; /* Przerwa między kontenerami */
+}
