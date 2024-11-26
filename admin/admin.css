@@ -166,52 +166,88 @@ p {
   font-size: 16px;
   /* To ustawi przycisk na dole sidebaru */
 }
-
+/* Popup Modal */
 #popupModal {
+  display: none;
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: white;
-  padding: 20px;
-  border: 1px solid #ccc;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 500px;
+  background: #fff;
+  padding: 30px 20px;
+  border-radius: 12px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
   z-index: 1000;
-  display: none;
-  width: 300px;
-  text-align: center;
+  font-family: Arial, sans-serif;
 }
 
-#popupModal input,
-#popupModal textarea {
+#popupModal h2 {
+  margin-top: 0;
+  font-size: 1.5em;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#popupModal label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #555;
+}
+
+#popupModal input[type="text"],
+#popupModal textarea,
+#popupModal select {
   width: 100%;
-  margin-bottom: 10px;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1em;
+  box-sizing: border-box;
+}
+
+#popupModal textarea {
+  resize: none;
+  height: 100px;
 }
 
 #popupModal button {
-  padding: 10px;
-  background-color: #4caf50;
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
+  font-size: 1em;
   cursor: pointer;
+  margin-top: 10px;
+  margin-right: 5px;
 }
 
-#popupModal button[type="button"] {
-  background-color: #f44336;
+#popupModal button:hover {
+  background-color: #0056b3;
 }
 
-/* Overlay - Przyciemnienie tła */
+#popupModal .cancel-button {
+  background-color: #dc3545;
+}
+
+#popupModal .cancel-button:hover {
+  background-color: #b02a37;
+}
+
+/* Overlay */
 #overlay {
+  display: none;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Przyciemnienie */
+  background-color: rgba(0, 0, 0, 0.6);
   z-index: 999;
-  display: none;
 }
