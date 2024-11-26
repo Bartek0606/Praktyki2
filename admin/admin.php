@@ -12,6 +12,7 @@ $posts = $post->getAllPosts();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
     <link rel="stylesheet" href="admin.css">
+    <script src="admin.js" defer></script>
 </head>
 <body>
     <div class="admin-panel">
@@ -47,7 +48,7 @@ $posts = $post->getAllPosts();
         </aside>
         <main class="dashboard">
   
-<h2>All Posts</h2>
+        <h2>All Posts</h2>
 <ul class="post-list">
     <?php if (empty($posts)): ?>
         <li>No posts found.</li>
@@ -61,65 +62,44 @@ $posts = $post->getAllPosts();
                 <?php endif; ?>
                 <div class="post-content">
                     <h3><?php echo htmlspecialchars($post['title']); ?></h3>
-                    <p class="cont"><?php echo($post['content']); ?></p>
+                    <p class="cont"><?php echo ($post['content']); ?></p>
                     <p><strong>Category:</strong> <?php echo htmlspecialchars($post['category_name']); ?></p>
                     <p><em>Created at: <?php echo htmlspecialchars($post['created_at']); ?></em></p>
                 </div>
-                <button class="editpost_button" type="button">Edytuj</button>
+                <!-- Przycisk edycji z atrybutem data-post-id -->
+                <button class="editpost_button" type="button" data-post-id="<?php echo $post['post_id']; ?>">Edytuj</button>
             </li>
         <?php endforeach; ?>
     <?php endif; ?>
 </ul>
+
 
 <!-- Overlay (przyciemnione tło) -->
 <div id="overlay" style="display:none;"></div>
 
 <!-- Popup Modal -->
 <div id="popupModal" style="display:none;">
-    <h2>Edytuj Post</h2>
-    <form id="editForm">
-        <input type="text" id="editTitle" placeholder="Tytuł" required>
-        <textarea id="editContent" placeholder="Treść" required></textarea>
-        <input type="text" id="editCategory" placeholder="Kategoria" required>
-        <button type="submit">Zapisz zmiany</button>
-        <button type="button" id="closePopup">Anuluj</button>
-    </form>
+    <h2>Edit post</h2>
+  <!-- Formularz edycji -->
+<form id="editForm">
+    <input type="text" id="editTitle" placeholder="Title">
+    <textarea id="editContent" placeholder="Content"></textarea>
+    <!-- Dodajemy dynamicznie generowany dropdown -->
+    <select id="editCategory" name="category_id">
+        <?php
+        // Pobierz kategorie z bazy danych
+        include __DIR__ . '/../db_connection.php';
+        $categoriesQuery = $conn->query("SELECT category_id, name FROM categories");
+        while ($category = $categoriesQuery->fetch_assoc()) {
+            echo "<option value=\"{$category['category_id']}\">" . htmlspecialchars($category['name']) . "</option>";
+        }
+        ?>
+    </select>
+    <button type="submit">Save changes</button>
+    <button type="button" id="closePopup">Cancel</button>
+</form>
+
 </div>
-
-
-<script>
- document.addEventListener("DOMContentLoaded", function() {
-    const editButtons = document.querySelectorAll(".editpost_button");
-    const popupModal = document.getElementById("popupModal");
-    const closePopup = document.getElementById("closePopup");
-    const overlay = document.getElementById("overlay");
-
-    // Obsługa kliknięcia w przycisk "Edytuj"
-    editButtons.forEach(button => {
-        button.addEventListener("click", function() {
-            // Pokaż popup i overlay
-            popupModal.style.display = "block";
-            overlay.style.display = "block";
-        });
-    });
-
-    // Zamknięcie popupu po kliknięciu "Anuluj"
-    closePopup.addEventListener("click", function() {
-        // Ukryj popup i overlay
-        popupModal.style.display = "none";
-        overlay.style.display = "none";
-    });
-
-    // Zamknięcie popupu po kliknięciu na overlay (tło)
-    overlay.addEventListener("click", function() {
-        popupModal.style.display = "none";
-        overlay.style.display = "none";
-    });
-});
-
-
-</script>
-
 </main>
 </div>
 </body>
