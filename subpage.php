@@ -1,7 +1,7 @@
 <?php
 session_start();
 include 'db_connection.php';
-include 'COs/navbar.php';
+include 'Component/navbar.php';
 $isLoggedIn = isset($_SESSION['user_id']);
 
 $userId = $isLoggedIn ? $_SESSION['user_id'] : null;
