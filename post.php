@@ -33,13 +33,14 @@ if ($postId > 0) {
         exit;
     }
 
-    // Query to fetch comments related to the post, sorted by creation date (newest first)
-    $sqlComments = "SELECT c.comment_id, c.content, c.created_at, u.username, c.parent_comment_id 
-                    FROM comments c
-                    LEFT JOIN users u ON c.user_id = u.user_id
-                    WHERE c.post_id = $postId
-                    ORDER BY c.created_at DESC"; // Latest comments first
-    $resultComments = $conn->query($sqlComments);
+    // Query to fetch main comments related to the post (parent_comment_id is NULL), sorted by creation date (newest first)
+$sqlComments = "SELECT c.comment_id, c.content, c.created_at, u.username, c.parent_comment_id 
+                FROM comments c
+                LEFT JOIN users u ON c.user_id = u.user_id
+                WHERE c.post_id = $postId AND c.parent_comment_id IS NULL
+                ORDER BY c.created_at DESC"; // Latest comments first
+$resultComments = $conn->query($sqlComments);
+
 } else {
     echo "<p>Invalid post ID.</p>";
     exit;
