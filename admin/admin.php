@@ -1,13 +1,7 @@
 <?php
-// Połączenie z bazą danych
 include __DIR__ . '/../db_connection.php';
-// Wczytanie klasy Post
 include 'Post.php';
-
-// Utworzenie obiektu Post
 $post = new Post($conn);
-
-// Pobranie wszystkich postów
 $posts = $post->getAllPosts();
 ?>
 
@@ -52,12 +46,10 @@ $posts = $post->getAllPosts();
              <hr class="hrbutton">
         </aside>
         <main class="dashboard">
-  <!-- Wyświetlanie postów -->
   
-  <h2>All Posts</h2>
+<h2>All Posts</h2>
 <ul class="post-list">
-    <?php if (empty($posts)): 
-        ?>
+    <?php if (empty($posts)): ?>
         <li>No posts found.</li>
     <?php else: ?>
         <?php foreach ($posts as $post): ?>
@@ -73,18 +65,62 @@ $posts = $post->getAllPosts();
                     <p><strong>Category:</strong> <?php echo htmlspecialchars($post['category_name']); ?></p>
                     <p><em>Created at: <?php echo htmlspecialchars($post['created_at']); ?></em></p>
                 </div>
-                <button id="editpost_button" type="button">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon_edit">
-  <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-</svg>
-                </button>
+                <button class="editpost_button" type="button">Edytuj</button>
             </li>
         <?php endforeach; ?>
     <?php endif; ?>
 </ul>
 
-            
-        </main>
-    </div>
+<!-- Overlay (przyciemnione tło) -->
+<div id="overlay" style="display:none;"></div>
+
+<!-- Popup Modal -->
+<div id="popupModal" style="display:none;">
+    <h2>Edytuj Post</h2>
+    <form id="editForm">
+        <input type="text" id="editTitle" placeholder="Tytuł" required>
+        <textarea id="editContent" placeholder="Treść" required></textarea>
+        <input type="text" id="editCategory" placeholder="Kategoria" required>
+        <button type="submit">Zapisz zmiany</button>
+        <button type="button" id="closePopup">Anuluj</button>
+    </form>
+</div>
+
+
+<script>
+ document.addEventListener("DOMContentLoaded", function() {
+    const editButtons = document.querySelectorAll(".editpost_button");
+    const popupModal = document.getElementById("popupModal");
+    const closePopup = document.getElementById("closePopup");
+    const overlay = document.getElementById("overlay");
+
+    // Obsługa kliknięcia w przycisk "Edytuj"
+    editButtons.forEach(button => {
+        button.addEventListener("click", function() {
+            // Pokaż popup i overlay
+            popupModal.style.display = "block";
+            overlay.style.display = "block";
+        });
+    });
+
+    // Zamknięcie popupu po kliknięciu "Anuluj"
+    closePopup.addEventListener("click", function() {
+        // Ukryj popup i overlay
+        popupModal.style.display = "none";
+        overlay.style.display = "none";
+    });
+
+    // Zamknięcie popupu po kliknięciu na overlay (tło)
+    overlay.addEventListener("click", function() {
+        popupModal.style.display = "none";
+        overlay.style.display = "none";
+    });
+});
+
+
+</script>
+
+</main>
+</div>
 </body>
 </html>
