@@ -32,11 +32,11 @@ class Navbar{
         $stmt->execute();
         $result = $stmt->get_result();
     
-        $image_src = 'default.png'; 
+        $image_src = '../default.png'; 
     
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
-            if (!empty($row['profile_picture'])) {
+            if (!empty($row['profile_picture']) && $row['profile_picture']!='default.png') {
                 $image_src = 'data:image/png;base64,' . base64_encode($row['profile_picture']); 
             }
         }
