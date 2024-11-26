@@ -34,7 +34,7 @@ if ($postId > 0) {
     }
 
     // Query to fetch comments related to the post
-    $sqlComments = "SELECT c.content, c.created_at, u.username 
+    $sqlComments = "SELECT c.comment_id, c.content, c.created_at, u.username, c.parent_comment_id 
                     FROM comments c
                     LEFT JOIN users u ON c.user_id = u.user_id
                     WHERE c.post_id = $postId
@@ -56,8 +56,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment']) && 
   $rowMaxCommentId = $resultMaxCommentId->fetch_assoc();
   $nextCommentId = $rowMaxCommentId['max_comment_id'] + 1; 
   
+  // If it's a reply, set the parent comment ID
+  $parentCommentId = isset($_POST['parent_comment_id']) ? (int)$_POST['parent_comment_id'] : NULL;
+  
   // Insert the new comment
-  $sqlInsertComment = "INSERT INTO comments (comment_id, post_id, user_id, content) VALUES ($nextCommentId, $postId, $userId, '$commentContent')";
+  $sqlInsertComment = "INSERT INTO comments (comment_id, post_id, user_id, content, parent_comment_id) 
+                       VALUES ($nextCommentId, $postId, $userId, '$commentContent', $parentCommentId)";
   
   if ($conn->query($sqlInsertComment) === TRUE) {
     $_SESSION['comment_success'] = 'Your comment has been posted successfully!';
@@ -78,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment']) && 
     <link rel="stylesheet" href="post.css">
     <link rel="stylesheet" href="navbar.css">
     <script src="post.js" defer></script>
-    <title><?php echo htmlspecialchars($post['title'], ENT_QUOTES, 'UTF-8'); ?></title> <!-- Dynamic title -->
+    <title><?php echo htmlspecialchars($post['title'], ENT_QUOTES, 'UTF-8'); ?></title>
 </head>
 <body>
   <header>
@@ -93,23 +97,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment']) && 
             <button class="btn new-post-btn" onclick="window.location.href='new_post.php'">New Post</button>
             <a href="profile.php" class="profile-link">
               <?php
-
-                // Pobranie ścieżki do zdjęcia profilowego z bazy danych (założenie, że zdjęcie jest w tabeli 'users')
+                // Fetch profile picture from the database
                 $user_id = $_SESSION['user_id'];
                 $sql_image = "SELECT profile_picture FROM users WHERE user_id = '$user_id'";
                 $result_image = $conn->query($sql_image);
                 $image_src = 'default.png'; // Default image
-if ($result_image->num_rows > 0) {
-    $row = $result_image->fetch_assoc();
-    if (!empty($row['profile_picture']) && $row['profile_picture'] !== 'default.png') {
-        // If there's a profile picture (and it's not the default one), use base64 encoding
-        $image_src = 'data:image/jpeg;base64,' . base64_encode($row['profile_picture']);
-    }
-}
-
+                if ($result_image->num_rows > 0) {
+                    $row = $result_image->fetch_assoc();
+                    if (!empty($row['profile_picture']) && $row['profile_picture'] !== 'default.png') {
+                        $image_src = 'data:image/jpeg;base64,' . base64_encode($row['profile_picture']);
+                    }
+                }
               ?>
               <img src="<?php echo $image_src; ?>" alt="Profile Picture" class="profile-img">
-
               <span class="username"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
             </a>
           </div>
@@ -122,7 +122,6 @@ if ($result_image->num_rows > 0) {
             <button class="btn login-btn" onclick="window.location.href='login.php'">Login</button>
         <?php endif; ?>
       </div>
-
     </nav>
   </header> 
 
@@ -161,7 +160,7 @@ if ($result_image->num_rows > 0) {
         <h2>Comments</h2>
 
         <!-- Display the comment form only if the user is logged in -->
-        <form method="POST" class="comment-form" onsubmit="checkLoginStatus(event)">
+        <form method="POST" class="comment-form">
             <textarea name="comment_content" placeholder="Write your comment..." required class="comment-input"></textarea>
             <button type="submit" name="submit_comment" class="btn comment-btn">Post Comment</button>
         </form>
@@ -175,32 +174,59 @@ if ($result_image->num_rows > 0) {
         <?php endif; ?>
 
         <?php if (!$isLoggedIn): ?>
-            <!-- Display message if not logged in -->
             <p id="error-message" class="error-message"><strong>You must be logged in to post a comment</strong></p>
         <?php endif; ?>
 
         <br>  
+      
+<?php
+// Create an associative array to hold comments
+$commentsHierarchy = [];
+$replies = [];
 
-        <!-- Display existing comments -->
-        <?php if ($resultComments->num_rows > 0): ?>
-            <?php while ($comment = $resultComments->fetch_assoc()): ?>
-                <div class="comment">
-                    <p><strong><?php echo htmlspecialchars($comment['username'], ENT_QUOTES, 'UTF-8'); ?></strong> <?php echo htmlspecialchars($comment['created_at'], ENT_QUOTES, 'UTF-8'); ?></p>
-                    <p><?php echo nl2br(htmlspecialchars($comment['content'], ENT_QUOTES, 'UTF-8')); ?></p>
-                </div>
-                <br>
-            <?php endwhile; ?>
-        <?php else: ?>
-            <p>No comments yet. Be the first to comment!</p>
-        <?php endif; ?>
+while ($comment = $resultComments->fetch_assoc()) {
+    if ($comment['parent_comment_id'] == NULL) {
+        // Parent comment
+        $commentsHierarchy[$comment['comment_id']] = $comment;
+    } else {
+        // Reply to parent comment
+        $replies[$comment['parent_comment_id']][] = $comment;
+    }
+}
+
+// Display the comments and replies
+foreach ($commentsHierarchy as $parentComment) {
+    echo "<div class='comment'>";
+    echo "<p><strong>" . htmlspecialchars($parentComment['username'], ENT_QUOTES, 'UTF-8') . "</strong> " . htmlspecialchars($parentComment['created_at'], ENT_QUOTES, 'UTF-8') . "</p>";
+    echo "<p>" . nl2br(htmlspecialchars($parentComment['content'], ENT_QUOTES, 'UTF-8')) . "</p>";
+
+    // Display replies if any (in reverse order)
+    if (isset($replies[$parentComment['comment_id']])) {
+        echo "<div class='replies'>";
+        
+        // Reverse the replies array for this particular comment
+        $reversedReplies = array_reverse($replies[$parentComment['comment_id']]);
+        
+        foreach ($reversedReplies as $reply) {
+            echo "<div class='reply'>";
+            echo "<p><strong>" . htmlspecialchars($reply['username'], ENT_QUOTES, 'UTF-8') . "</strong> " . htmlspecialchars($reply['created_at'], ENT_QUOTES, 'UTF-8') . "</p>";
+            echo "<p>" . nl2br(htmlspecialchars($reply['content'], ENT_QUOTES, 'UTF-8')) . "</p>";
+            echo "</div>";
+        }
+        echo "</div>";
+    }
+
+    echo "</div><br>";
+}
+
+// If no comments, show a message
+if (empty($commentsHierarchy)) {
+    echo "<p>No comments yet. Be the first to comment!</p>";
+}
+?>
+
+
     </div>
-</main>
-
-<!-- Hidden input to pass login status to JS -->
-<input type="hidden" id="isLoggedIn" value="<?php echo $isLoggedIn ? 'true' : 'false'; ?>" />
+  </main>
 </body>
 </html>
-
-<?php
-$conn->close();
-?>
