@@ -119,6 +119,24 @@
   font-weight: bold;
 }
 
+/* Style for comments */
+.comment {
+  padding: 15px;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd; /* Light gray border */
+  margin-bottom: 20px; /* Space between comments */
+}
+
+.comment-content {
+  margin-bottom: 15px;
+}
+
+.comment .comment-date {
+  color: #777;
+  font-size: 14px;
+}
+
 /* Style for replies */
 .replies {
   margin-left: 30px; /* Indent replies */
@@ -128,7 +146,9 @@
 }
 
 .reply {
-  margin-bottom: 15px;
   padding: 10px;
   border-radius: 5px;
+  background-color: #f1f1f1; /* Light gray background for replies */
+  border: 1px solid #e0e0e0; /* Light gray border for replies */
+  margin-bottom: 10px; /* Space between replies */
 }

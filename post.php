@@ -1,5 +1,5 @@
 <?php
-session_start(); 
+session_start();
 
 include 'db_connection.php';
 
@@ -33,43 +33,54 @@ if ($postId > 0) {
         exit;
     }
 
-    // Query to fetch comments related to the post
+    // Query to fetch comments related to the post, sorted by creation date (newest first)
     $sqlComments = "SELECT c.comment_id, c.content, c.created_at, u.username, c.parent_comment_id 
                     FROM comments c
                     LEFT JOIN users u ON c.user_id = u.user_id
                     WHERE c.post_id = $postId
-                    ORDER BY c.created_at DESC";
+                    ORDER BY c.created_at DESC"; // Latest comments first
     $resultComments = $conn->query($sqlComments);
 } else {
     echo "<p>Invalid post ID.</p>";
     exit;
 }
 
-// Handle comment submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment']) && $isLoggedIn) {
-  $userId = $_SESSION['user_id']; 
-  $commentContent = $conn->real_escape_string($_POST['comment_content']);
-  
-  // Get the next comment ID
-  $sqlMaxCommentId = "SELECT MAX(comment_id) AS max_comment_id FROM comments";
-  $resultMaxCommentId = $conn->query($sqlMaxCommentId);
-  $rowMaxCommentId = $resultMaxCommentId->fetch_assoc();
-  $nextCommentId = $rowMaxCommentId['max_comment_id'] + 1; 
-  
-  // If it's a reply, set the parent comment ID
-  $parentCommentId = isset($_POST['parent_comment_id']) ? (int)$_POST['parent_comment_id'] : NULL;
-  
-  // Insert the new comment
-  $sqlInsertComment = "INSERT INTO comments (comment_id, post_id, user_id, content, parent_comment_id) 
-                       VALUES ($nextCommentId, $postId, $userId, '$commentContent', $parentCommentId)";
-  
-  if ($conn->query($sqlInsertComment) === TRUE) {
-    $_SESSION['comment_success'] = 'Your comment has been posted successfully!';
-    header('Location: ' . $_SERVER['REQUEST_URI']);
-    exit();
-  } else {
-    echo "<p>Error: " . $conn->error . "</p>";
-  }
+// Handle comment or reply submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['submit_comment']) && $isLoggedIn) {
+        // For main comments
+        $userId = $_SESSION['user_id'];
+        $commentContent = $conn->real_escape_string($_POST['comment_content']);
+        $parentCommentId = isset($_POST['parent_comment_id']) ? (int) $_POST['parent_comment_id'] : NULL;
+
+        // Get the next comment ID (if needed, or let the DB handle it if autoincrement)
+        // If you have autoincrement on `comment_id`, this can be omitted
+        $sqlMaxCommentId = "SELECT MAX(comment_id) AS max_comment_id FROM comments";
+        $resultMaxCommentId = $conn->query($sqlMaxCommentId);
+        $rowMaxCommentId = $resultMaxCommentId->fetch_assoc();
+        $nextCommentId = $rowMaxCommentId['max_comment_id'] + 1;
+
+        // Insert the new comment or reply
+        if ($parentCommentId === NULL) {
+            // Insert main comment (parent_comment_id is NULL)
+            $sqlInsertComment = "INSERT INTO comments (comment_id, post_id, user_id, content, parent_comment_id) 
+                                 VALUES ($nextCommentId, $postId, $userId, '$commentContent', NULL)";
+            $insertSuccess = $conn->query($sqlInsertComment);
+        } else {
+            // Insert reply (parent_comment_id is set)
+            $sqlInsertReply = "INSERT INTO comments (comment_id, post_id, user_id, content, parent_comment_id) 
+                               VALUES ($nextCommentId, $postId, $userId, '$commentContent', $parentCommentId)";
+            $insertSuccess = $conn->query($sqlInsertReply);
+        }
+
+        if ($insertSuccess) {
+            $_SESSION['comment_success'] = 'Your comment has been posted successfully!';
+            header('Location: ' . $_SERVER['REQUEST_URI']);
+            exit();
+        } else {
+            echo "<p>Error: " . $conn->error . "</p>";
+        }
+    }
 }
 ?>
 
@@ -81,7 +92,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment']) && 
     <link rel="stylesheet" href="glowna.css">
     <link rel="stylesheet" href="post.css">
     <link rel="stylesheet" href="navbar.css">
-    <script src="post.js" defer></script>
     <title><?php echo htmlspecialchars($post['title'], ENT_QUOTES, 'UTF-8'); ?></title>
 </head>
 <body>
@@ -177,55 +187,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment']) && 
             <p id="error-message" class="error-message"><strong>You must be logged in to post a comment</strong></p>
         <?php endif; ?>
 
-        <br>  
-      
-<?php
-// Create an associative array to hold comments
-$commentsHierarchy = [];
-$replies = [];
+        <?php
+        // Organize comments and replies
+        $comments = [];
+        while ($row = $resultComments->fetch_assoc()) {
+            $comments[] = $row;
+        }
 
-while ($comment = $resultComments->fetch_assoc()) {
-    if ($comment['parent_comment_id'] == NULL) {
-        // Parent comment
-        $commentsHierarchy[$comment['comment_id']] = $comment;
-    } else {
-        // Reply to parent comment
-        $replies[$comment['parent_comment_id']][] = $comment;
-    }
-}
+        // Display comments and replies
+        foreach ($comments as $comment) {
+            echo "<div class='comment'>";
+            echo "<div class='comment-content'>";
+            echo "<p><strong>" . htmlspecialchars($comment['username'], ENT_QUOTES, 'UTF-8') . "</strong> <span class='comment-date'>" . htmlspecialchars($comment['created_at'], ENT_QUOTES, 'UTF-8') . "</span></p>";
+            echo "<p>" . htmlspecialchars($comment['content'], ENT_QUOTES, 'UTF-8') . "</p>";
+            echo "</div>";
 
-// Display the comments and replies
-foreach ($commentsHierarchy as $parentComment) {
-    echo "<div class='comment'>";
-    echo "<p><strong>" . htmlspecialchars($parentComment['username'], ENT_QUOTES, 'UTF-8') . "</strong> " . htmlspecialchars($parentComment['created_at'], ENT_QUOTES, 'UTF-8') . "</p>";
-    echo "<p>" . nl2br(htmlspecialchars($parentComment['content'], ENT_QUOTES, 'UTF-8')) . "</p>";
+            // Query for replies to this comment (sorted by creation date ascending)
+            $sqlReplies = "SELECT r.comment_id, r.content, r.created_at, u.username
+                           FROM comments r
+                           LEFT JOIN users u ON r.user_id = u.user_id
+                           WHERE r.parent_comment_id = " . (int) $comment['comment_id'] . "
+                           ORDER BY r.created_at ASC"; // Replies sorted by creation date ascending
+            $resultReplies = $conn->query($sqlReplies);
 
-    // Display replies if any (in reverse order)
-    if (isset($replies[$parentComment['comment_id']])) {
-        echo "<div class='replies'>";
-        
-        // Reverse the replies array for this particular comment
-        $reversedReplies = array_reverse($replies[$parentComment['comment_id']]);
-        
-        foreach ($reversedReplies as $reply) {
-            echo "<div class='reply'>";
-            echo "<p><strong>" . htmlspecialchars($reply['username'], ENT_QUOTES, 'UTF-8') . "</strong> " . htmlspecialchars($reply['created_at'], ENT_QUOTES, 'UTF-8') . "</p>";
-            echo "<p>" . nl2br(htmlspecialchars($reply['content'], ENT_QUOTES, 'UTF-8')) . "</p>";
+            // Display replies
+            while ($reply = $resultReplies->fetch_assoc()) {
+                echo "<div class='reply'>";
+                echo "<p><strong>" . htmlspecialchars($reply['username'], ENT_QUOTES, 'UTF-8') . "</strong> <span class='reply-date'>" . htmlspecialchars($reply['created_at'], ENT_QUOTES, 'UTF-8') . "</span></p>";
+                echo "<p>" . htmlspecialchars($reply['content'], ENT_QUOTES, 'UTF-8') . "</p>";
+                echo "</div>";
+            }
+
             echo "</div>";
         }
-        echo "</div>";
-    }
-
-    echo "</div><br>";
-}
-
-// If no comments, show a message
-if (empty($commentsHierarchy)) {
-    echo "<p>No comments yet. Be the first to comment!</p>";
-}
-?>
-
-
+        ?>
     </div>
   </main>
 </body>
