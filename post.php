@@ -1,4 +1,6 @@
 <?php
+ob_start();
+
 session_start();
 
 include 'db_connection.php';
@@ -141,18 +143,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="comments-section">
         <h2>Comments</h2>
 
-        <form method="POST" class="comment-form">
-            <textarea name="comment_content" placeholder="Write your comment..." required class="comment-input"></textarea>
-            <button type="submit" name="submit_comment" class="btn comment-btn">Post Comment</button>
-        </form>
+        <?php if ($isLoggedIn): ?>
+            <form method="POST" class="comment-form">
+                <textarea name="comment_content" placeholder="Write your comment..." required class="comment-input"></textarea>
+                <br>
+                <br>
+                <button type="submit" name="submit_comment" class="btn comment-btn">Post Comment</button>
+            </form>
+            <br>
+        <?php else: ?>
+            <p class="error-message">You must be logged in to post a comment.</p>
+        <?php endif; ?>
 
-        <br>
-        
         <?php if (isset($_SESSION['comment_success'])): ?>
             <p class="success-message"><?php echo $_SESSION['comment_success']; unset($_SESSION['comment_success']); ?></p>
         <?php endif; ?>
 
         <br>
+
 
         <?php
         $comments = [];
@@ -199,4 +207,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <?php
 $conn->close();
+ob_end_flush();
 ?>
