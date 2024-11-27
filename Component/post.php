@@ -14,10 +14,13 @@ class PostRender{
     private function fetchPosts() {
         if (!empty($this->categoryName)) {
             $sql = "
-                SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.image, categories.name AS category_name
+                SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.image, categories.name AS category_name,
+                COUNT(user_likes.likes_id) AS like_count
                 FROM posts
                 JOIN categories ON posts.category_id = categories.category_id
+                LEFT JOIN user_likes ON posts.post_id = user_likes.post_id
                 WHERE categories.name LIKE ?
+                GROUP BY posts.post_id
                 ORDER BY posts.created_at DESC
             ";
             $stmt = $this->dbConnection->prepare($sql);
@@ -27,9 +30,12 @@ class PostRender{
             return $stmt->get_result();
         } else {
             $sql = "
-                SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.image, categories.name AS category_name
+                SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.image, categories.name AS category_name,
+                COUNT(user_likes.likes_id) AS like_count
                 FROM posts
                 JOIN categories ON posts.category_id = categories.category_id
+                LEFT JOIN user_likes ON posts.post_id = user_likes.post_id
+                GROUP BY posts.post_id
                 ORDER BY posts.created_at DESC
             ";
         }
@@ -47,7 +53,6 @@ class PostRender{
                 $result_check = $stmt_check->get_result();
                 if ($result_check->num_rows > 0) {
                     echo "juz ma ";
-            exit();
                 } else {
                     $sql_register = "INSERT INTO `user_likes`(`user_id`, `post_id`) VALUES (?, ?)";
                     $stmt_register = $this->dbConnection->prepare($sql_register);
@@ -85,6 +90,7 @@ class PostRender{
                                 <p><?php echo $row['content']; ?></p>
                                 <p>Date: <?php echo $row['created_at']; ?></p>
                                 <form method="POST" action="">
+                                    <div>Likes: <?php echo $row['like_count']; ?></div> 
                                     <input type="hidden" name="post_id" value="<?php echo $row['post_id']; ?>">
                                     <button class="heart" name="like"></button>
                                 </form>
