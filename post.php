@@ -45,8 +45,24 @@ if ($postId > 0) {
                     FROM comments c
                     LEFT JOIN users u ON c.user_id = u.user_id
                     WHERE c.post_id = $postId 
+                    AND c.parent_comment_id IS NULL
                     ORDER BY c.created_at DESC";
     $resultComments = $conn->query($sqlComments);
+
+    // Query to fetch replies (oldest first)
+    $sqlReplies = "SELECT c.comment_id, c.content, c.created_at, u.user_id, u.username, c.parent_comment_id 
+                   FROM comments c
+                   LEFT JOIN users u ON c.user_id = u.user_id
+                   WHERE c.post_id = $postId 
+                   AND c.parent_comment_id IS NOT NULL
+                   ORDER BY c.created_at ASC";
+    $resultReplies = $conn->query($sqlReplies);
+
+    // Create an array to store replies indexed by parent comment ID
+    $replies = [];
+    while ($reply = $resultReplies->fetch_assoc()) {
+        $replies[$reply['parent_comment_id']][] = $reply;
+    }
 } else {
     echo "<p>Invalid post ID.</p>";
     exit;
@@ -126,8 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php if ($isLoggedIn): ?>
             <form method="POST" class="comment-form">
                 <textarea name="comment_content" placeholder="Write your comment..." required class="comment-input"></textarea>
-                <br>
-                <br>              
+                <br><br>              
                 <button type="submit" name="submit_comment" class="btn comment-btn">Post Comment</button>
             </form>
         <?php else: ?>
@@ -141,56 +156,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <br>
 
         <?php
-        // Create an array to store the comments and their replies
-        $comments = [];
-        $replies = [];
-
-        // Loop through the comments and sort them into parent and reply groups
+        // Display comments with replies nested under their respective parents
         while ($comment = $resultComments->fetch_assoc()) {
-            if ($comment['parent_comment_id'] === null) {
-                // Top-level comment
-                $comments[] = $comment;
-            } else {
-                // Reply to a parent comment
-                $replies[$comment['parent_comment_id']][] = $comment;
-            }
-        }
-
-        // Now, display the comments with replies nested under their respective parents
-foreach ($comments as $comment) {
-    echo "<div class='comment'>";
-    echo "<div class='comment-content'>";
-    echo "<p><strong><a href='user.php?id=" . urlencode($comment['user_id']) . "' class='username-link'>" . htmlspecialchars($comment['username'], ENT_QUOTES, 'UTF-8') . " " . "</a></strong><span class='comment-date'>" . htmlspecialchars($comment['created_at'], ENT_QUOTES, 'UTF-8') . "</span></p>";
-    echo "<p>" . htmlspecialchars($comment['content'], ENT_QUOTES, 'UTF-8') . "</p>";
-    echo "</div>";
-
-    // Show the reply form immediately after the main comment, if logged in
-    if ($isLoggedIn) {
-        echo "<button class='btn reply-btn' onclick='toggleReplyForm({$comment['comment_id']})'>Reply</button>";
-        echo "<form method='POST' id='reply-form-{$comment['comment_id']}' style='display:none;' class='reply-form'>";
-        echo "<textarea name='comment_content' placeholder='Write your reply...' required class='reply-input'></textarea>";
-        echo "<input type='hidden' name='parent_comment_id' value='{$comment['comment_id']}'>";
-        echo "<br>";
-        echo "<br>";
-        echo "<button type='submit' name='submit_comment' class='btn reply-submit-btn'>Post Reply</button>";
-        echo "</form>";
-    }
-
-    // Check if there are replies to this comment
-    if (isset($replies[$comment['comment_id']])) {
-        foreach ($replies[$comment['comment_id']] as $reply) {
-            echo "<div class='comment reply'>";
+            echo "<div class='comment'>";
             echo "<div class='comment-content'>";
-            echo "<p><strong><a href='user.php?id=" . urlencode($reply['user_id']) . "' class='username-link'>" . htmlspecialchars($reply['username'], ENT_QUOTES, 'UTF-8') . " " . "</a></strong><span class='comment-date'>" . htmlspecialchars($reply['created_at'], ENT_QUOTES, 'UTF-8') . "</span></p>";
-            echo "<p>" . htmlspecialchars($reply['content'], ENT_QUOTES, 'UTF-8') . "</p>";
+            echo "<p><strong><a href='user.php?id=" . urlencode($comment['user_id']) . "' class='username-link'>" . htmlspecialchars($comment['username'], ENT_QUOTES, 'UTF-8') . " " . "</a></strong><span class='comment-date'>" . htmlspecialchars($comment['created_at'], ENT_QUOTES, 'UTF-8') . "</span></p>";
+            echo "<p>" . htmlspecialchars($comment['content'], ENT_QUOTES, 'UTF-8') . "</p>";
             echo "</div>";
+
+            // Show the reply form immediately after the main comment, if logged in
+            if ($isLoggedIn) {
+                echo "<button class='btn reply-btn' onclick='toggleReplyForm({$comment['comment_id']})'>Reply</button>";
+                echo "<form method='POST' id='reply-form-{$comment['comment_id']}' style='display:none;' class='reply-form'>";
+                echo "<textarea name='comment_content' placeholder='Write your reply...' required class='reply-input'></textarea>";
+                echo "<input type='hidden' name='parent_comment_id' value='{$comment['comment_id']}'>";
+                echo "<br><br>";
+                echo "<button type='submit' name='submit_comment' class='btn reply-submit-btn'>Post Reply</button>";
+                echo "</form>";
+            }
+
+            // Check if there are replies to this comment
+            if (isset($replies[$comment['comment_id']])) {
+                foreach ($replies[$comment['comment_id']] as $reply) {
+                    echo "<div class='comment reply'>";
+                    echo "<div class='comment-content'>";
+                    echo "<p><strong><a href='user.php?id=" . urlencode($reply['user_id']) . "' class='username-link'>" . htmlspecialchars($reply['username'], ENT_QUOTES, 'UTF-8') . " " . "</a></strong><span class='comment-date'>" . htmlspecialchars($reply['created_at'], ENT_QUOTES, 'UTF-8') . "</span></p>";
+                    echo "<p>" . htmlspecialchars($reply['content'], ENT_QUOTES, 'UTF-8') . "</p>";
+                    echo "</div>";
+                    echo "</div>";
+                }
+            }
+
             echo "</div>";
         }
-    }
-
-    echo "</div>";
-}
-
         ?>
     </div>
 </main>
