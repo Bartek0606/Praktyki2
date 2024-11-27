@@ -70,6 +70,14 @@ if (isset($_GET['id'])) {
         echo "<p>Event not found.</p>";
         exit;
     }
+
+    // Fetch the number of registrations for this event
+    $sql_registration_count = "SELECT COUNT(*) as total_registrations FROM event_registrations WHERE event_id = ?";
+    $stmt_count = $conn->prepare($sql_registration_count);
+    $stmt_count->bind_param("i", $event_id);
+    $stmt_count->execute();
+    $result_count = $stmt_count->get_result();
+    $registration_count = $result_count->fetch_assoc()['total_registrations'];
 } else {
     echo "<p>No event specified.</p>";
     exit;
@@ -101,6 +109,7 @@ if (isset($_GET['id'])) {
                 <p><strong>Description:</strong> <?php echo htmlspecialchars($event['event_description'], ENT_QUOTES, 'UTF-8'); ?></p>
                 <p><strong>Date:</strong> <?php echo date("F j, Y, g:i a", strtotime($event['event_date'])); ?></p>
                 <p><strong>Location:</strong> <?php echo htmlspecialchars($event['location'], ENT_QUOTES, 'UTF-8'); ?></p>
+                <p><strong>Registrations:</strong> <?php echo $registration_count; ?> people registered</p> <!-- Display the registration count -->
             </div>
         </div>
 
@@ -114,7 +123,7 @@ if (isset($_GET['id'])) {
             <input type="hidden" name="event_id" value="<?php echo $event['event_id']; ?>">
             <button type="submit" name="register" class="btn-register">Register for Event</button>
         </form>
-        </div>
+    </div>
     <?php else: ?>
         <div class="login-message">
             <p>You need to <a href="login.php" class="login-link">log in</a> to register for this event.</p>
@@ -128,7 +137,7 @@ if (isset($_GET['id'])) {
         </div>
     <?php endif; ?>
 
-    </main>
+  </main>
 
 </body>
 </html>
