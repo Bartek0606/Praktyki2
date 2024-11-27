@@ -49,8 +49,9 @@ class PostRender{
                             <div>
                                 <h2><?php echo htmlspecialchars($row['title']); ?></h2>
                                 <p>Category: <?php echo htmlspecialchars($row['category_name']); ?></p>
-                                <p><?php echo htmlspecialchars($row['content']); ?></p>
+                                <p><?php echo $row['content']; ?></p>
                                 <p>Date: <?php echo htmlspecialchars($row['created_at']); ?></p>
+                                <button class="heart"></button>
                             </div>
                         </div>
                     </a>
