@@ -240,7 +240,6 @@ p {
   background-color: #b02a37;
 }
 
-/* Overlay */
 #overlay {
   display: none;
   position: fixed;
@@ -250,4 +249,51 @@ p {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.6);
   z-index: 999;
+}
+
+/* Strona z eventami */
+
+.dashboard h2 {
+  font-size: 28px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Styl dla każdego wydarzenia */
+.event {
+  background-color: #f9f9f9;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Nagłówek wydarzenia */
+.event h3 {
+  font-size: 22px;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+/* Data wydarzenia */
+.event p strong {
+  color: #3498db;
+}
+
+/* Ogólny tekst wydarzenia */
+.event p {
+  font-size: 16px;
+  color: #555;
+  line-height: 1.6;
+  margin: 5px 0;
+}
+
+/* Stylowanie daty */
+.event p strong + span {
+  font-weight: normal;
+}
+
+/* Dodanie marginesów do wydarzeń */
+.event:last-child {
+  margin-bottom: 0;
 }
