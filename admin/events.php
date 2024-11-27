@@ -8,32 +8,50 @@ $result = $conn->query($query);
 
 // Sprawdzamy, czy zapytanie o usunięcie wydarzenia zostało wysłane
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_event_id'])) {
-    // Pobieramy ID wydarzenia do usunięcia
     $event_id_to_delete = $_POST['delete_event_id'];
-
-    // Zapytanie do usunięcia wydarzenia
     $delete_query = "DELETE FROM events WHERE event_id = ?";
-
-    // Przygotowanie zapytania
     if ($stmt = $conn->prepare($delete_query)) {
-        // Powiązanie parametrów
         $stmt->bind_param("i", $event_id_to_delete);
-
-        // Wykonanie zapytania
         if ($stmt->execute()) {
-            // Po udanym usunięciu przekierowanie do tej samej strony
             header("Location: events.php");
             exit();
         } else {
             echo "Błąd: Nie udało się usunąć wydarzenia.";
         }
-
-        // Zamknięcie zapytania
         $stmt->close();
     } else {
         echo "Błąd: Nie udało się przygotować zapytania.";
     }
 }
+
+// Sprawdzamy, czy zapytanie o dodanie wydarzenia zostało wysłane
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_event'])) {
+    $event_name = $_POST['event_name'];
+    $event_date = $_POST['event_date'];
+    $event_location = $_POST['event_location'];
+    $event_description = $_POST['event_description'];
+
+    $result = $conn->query("SELECT MAX(event_id) AS max_id FROM events");
+    $row = $result->fetch_assoc();
+    $new_event_id = $row['max_id'] + 1; 
+
+    $insert_query = "INSERT INTO events (event_id, event_name, event_description, event_date, location) 
+                     VALUES (?, ?, ?, ?, ?)";
+    if ($stmt = $conn->prepare($insert_query)) {
+        $stmt->bind_param("issss", $new_event_id, $event_name, $event_description, $event_date, $event_location);
+        if ($stmt->execute()) {
+
+            header("Location: events.php");
+            exit();
+        } else {
+            echo "Błąd: Nie udało się dodać wydarzenia. " . $stmt->error; 
+        }
+        $stmt->close();
+    } else {
+        echo "Błąd: Nie udało się przygotować zapytania.";
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -76,19 +94,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_event_id'])) {
 
     <main class="dashboard">
         <h2>Upcoming Events</h2>
+        <button class="add-event-btn" onclick="openAddEventPopup()">Dodaj Wydarzenie</button>
         <?php
-        // Sprawdzamy, czy zapytanie zwróciło jakieś wyniki
         if ($result->num_rows > 0) {
-            // Pętla po wszystkich wydarzeniach
             while ($event = $result->fetch_assoc()) {
                 echo "<div class='event'>";
                 echo "<h3>" . htmlspecialchars($event['event_name']) . "</h3>";
                 echo "<p><strong>Date:</strong> " . htmlspecialchars($event['event_date']) . "</p>";
                 echo "<p><strong>Location:</strong> " . htmlspecialchars($event['location']) . "</p>";
                 echo "<p><strong>Description:</strong> " . nl2br(htmlspecialchars($event['event_description'])) . "</p>";
-                // Przycisk Edytuj
                 echo "<button class='edit-btn' onclick='openEditPopup(" . $event['event_id'] . ", \"" . addslashes($event['event_name']) . "\", \"" . addslashes($event['event_date']) . "\", \"" . addslashes($event['location']) . "\", \"" . addslashes($event['event_description']) . "\")'>Edytuj</button>";
-               // Formularz do usunięcia wydarzenia
+
                 echo "<form method='POST' action='events.php' style='display:inline;'>
                         <input type='hidden' name='delete_event_id' value='" . $event['event_id'] . "'>
                         <button type='submit' class='delete-btn'>Usuń</button>
@@ -102,7 +118,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_event_id'])) {
     </main>
 </div>
 
-<!-- Popup dla edycji -->
+<div id="add-event-popup" class="popup">
+    <div class="popup-content">
+        <h3>Dodaj Wydarzenie</h3>
+        <form method="POST" action="events.php">
+            <input type="hidden" name="add_event" value="1">
+            <input type="text" name="event_name" placeholder="Nazwa wydarzenia" required>
+            <input type="datetime-local" name="event_date" required>
+            <input type="text" name="event_location" placeholder="Lokalizacja" required>
+            <textarea name="event_description" placeholder="Opis wydarzenia" required></textarea>
+            <button type="submit">Zatwierdź</button>
+            <button type="button" onclick="closeAddEventPopup()">Anuluj</button>
+        </form>
+    </div>
+</div>
+
 <div id="edit-popup" class="popup">
     <div class="popup-content">
         <h3>Edit Event</h3>
@@ -119,7 +149,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_event_id'])) {
 </div>
 
 <script>
-    // Funkcja otwierająca popup i wypełniająca formularz danymi wydarzenia
+    // Funkcja otwierająca popup dla dodawania wydarzenia
+    function openAddEventPopup() {
+        document.getElementById('add-event-popup').style.display = 'flex';
+    }
+
+    // Funkcja zamykająca popup dla dodawania wydarzenia
+    function closeAddEventPopup() {
+        document.getElementById('add-event-popup').style.display = 'none';
+    }
+
+    // Funkcja otwierająca popup i wypełniająca formularz danymi wydarzenia (do edycji)
     function openEditPopup(eventId, name, date, location, description) {
         document.getElementById('event-id').value = eventId;
         document.getElementById('event-name').value = name;
@@ -129,7 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_event_id'])) {
         document.getElementById('edit-popup').style.display = 'flex';
     }
 
-    // Funkcja zamykająca popup
+    // Funkcja zamykająca popup dla edycji
     function closePopup() {
         document.getElementById('edit-popup').style.display = 'none';
     }
