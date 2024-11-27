@@ -5,6 +5,35 @@ include __DIR__ . '/../db_connection.php';
 // Zapytanie do bazy danych, aby pobrać wszystkie wydarzenia
 $query = "SELECT * FROM events ORDER BY event_date DESC";
 $result = $conn->query($query);
+
+// Sprawdzamy, czy zapytanie o usunięcie wydarzenia zostało wysłane
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_event_id'])) {
+    // Pobieramy ID wydarzenia do usunięcia
+    $event_id_to_delete = $_POST['delete_event_id'];
+
+    // Zapytanie do usunięcia wydarzenia
+    $delete_query = "DELETE FROM events WHERE event_id = ?";
+
+    // Przygotowanie zapytania
+    if ($stmt = $conn->prepare($delete_query)) {
+        // Powiązanie parametrów
+        $stmt->bind_param("i", $event_id_to_delete);
+
+        // Wykonanie zapytania
+        if ($stmt->execute()) {
+            // Po udanym usunięciu przekierowanie do tej samej strony
+            header("Location: events.php");
+            exit();
+        } else {
+            echo "Błąd: Nie udało się usunąć wydarzenia.";
+        }
+
+        // Zamknięcie zapytania
+        $stmt->close();
+    } else {
+        echo "Błąd: Nie udało się przygotować zapytania.";
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -59,6 +88,11 @@ $result = $conn->query($query);
                 echo "<p><strong>Description:</strong> " . nl2br(htmlspecialchars($event['event_description'])) . "</p>";
                 // Przycisk Edytuj
                 echo "<button class='edit-btn' onclick='openEditPopup(" . $event['event_id'] . ", \"" . addslashes($event['event_name']) . "\", \"" . addslashes($event['event_date']) . "\", \"" . addslashes($event['location']) . "\", \"" . addslashes($event['event_description']) . "\")'>Edytuj</button>";
+               // Formularz do usunięcia wydarzenia
+                echo "<form method='POST' action='events.php' style='display:inline;'>
+                        <input type='hidden' name='delete_event_id' value='" . $event['event_id'] . "'>
+                        <button type='submit' class='delete-btn'>Usuń</button>
+                    </form>";
                 echo "</div>";
             }
         } else {
