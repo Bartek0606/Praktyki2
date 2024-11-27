@@ -3,19 +3,13 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Nov 27, 2024 at 11:00 AM
+-- Generation Time: Nov 27, 2024 at 11:39 AM
 -- Server version: 5.7.44
 -- PHP Version: 8.2.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Database: `hobbyhub`
@@ -89,6 +83,7 @@ INSERT INTO `categories` (`category_id`, `name`, `description`) VALUES
 CREATE TABLE `comments` (
   `comment_id` int(10) UNSIGNED NOT NULL,
   `post_id` int(10) UNSIGNED NOT NULL,
+  `parent_comment_id` int(11) DEFAULT NULL,
   `user_id` int(10) UNSIGNED NOT NULL,
   `content` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -98,20 +93,20 @@ CREATE TABLE `comments` (
 -- Dumping data for table `comments`
 --
 
-INSERT INTO `comments` (`comment_id`, `post_id`, `user_id`, `content`, `created_at`) VALUES
-(1, 1, 8, 'This article is great! I love AI discussions.', '2024-11-19 09:00:23'),
-(2, 2, 9, 'Italy is on my bucket list! Thanks for sharing your experience.', '2024-11-19 09:05:23'),
-(3, 3, 7, 'I need to try this workout routine. Looks amazing!', '2024-11-19 09:10:23'),
-(4, 1, 9, 'AI is definitely the future! Exciting times ahead.', '2024-11-19 09:15:23'),
-(5, 2, 7, 'Love reading about new travel experiences! Italy sounds amazing.', '2024-11-19 09:20:23'),
-(6, 3, 8, 'This fitness routine is just what I need. Thanks for sharing!', '2024-11-19 09:25:23'),
-(7, 1, 7, 'Great post! Looking forward to more tech articles.', '2024-11-19 09:30:23'),
-(8, 2, 8, 'Italy is stunning, hope to travel there soon!', '2024-11-19 09:35:23'),
-(9, 3, 9, 'I need to start focusing on my fitness. Thanks for the inspiration!', '2024-11-19 09:40:23'),
-(10, 1, 9, 'AI technology is growing so fast. ItÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢s exciting to learn more.', '2024-11-19 09:45:23'),
-(11, 2, 7, 'Italy is such a beautiful destination. I love your travel blog!', '2024-11-19 09:50:23'),
-(12, 3, 8, 'This is a great fitness routine! Will try it this week!', '2024-11-19 09:55:23'),
-(13, 1, 8, 'AI is transforming everything! Exciting times ahead.', '2024-11-19 10:00:23');
+INSERT INTO `comments` (`comment_id`, `post_id`, `parent_comment_id`, `user_id`, `content`, `created_at`) VALUES
+(1, 1, NULL, 8, 'This article is great! I love AI discussions.', '2024-11-19 09:00:23'),
+(2, 2, NULL, 9, 'Italy is on my bucket list! Thanks for sharing your experience.', '2024-11-19 09:05:23'),
+(3, 3, NULL, 7, 'I need to try this workout routine. Looks amazing!', '2024-11-19 09:10:23'),
+(4, 1, 1, 9, 'AI is definitely the future! Exciting times ahead.', '2024-11-19 09:15:23'),
+(5, 2, 2, 7, 'Love reading about new travel experiences! Italy sounds amazing.', '2024-11-19 09:20:23'),
+(6, 3, NULL, 8, 'This fitness routine is just what I need. Thanks for sharing!', '2024-11-19 09:25:23'),
+(7, 1, 1, 7, 'Great post! Looking forward to more tech articles.', '2024-11-19 09:30:23'),
+(8, 2, 4, 8, 'Italy is stunning, hope to travel there soon!', '2024-11-19 09:35:23'),
+(9, 3, 5, 9, 'I need to start focusing on my fitness. Thanks for the inspiration!', '2024-11-19 09:40:23'),
+(10, 1, NULL, 9, 'AI technology is growing so fast. ItÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢s exciting to learn more.', '2024-11-19 09:45:23'),
+(11, 2, 5, 7, 'Italy is such a beautiful destination. I love your travel blog!', '2024-11-19 09:50:23'),
+(12, 3, NULL, 8, 'This is a great fitness routine! Will try it this week!', '2024-11-19 09:55:23'),
+(13, 1, NULL, 8, 'AI is transforming everything! Exciting times ahead.', '2024-11-19 10:00:23');
 
 -- --------------------------------------------------------
 
@@ -175,7 +170,7 @@ CREATE TABLE `posts` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `title` varchar(255) NOT NULL,
   `is_question` tinyint(1) DEFAULT '0',
-  `image` blob
+  `image` longblob
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -227,7 +222,7 @@ CREATE TABLE `users` (
   `password_hash` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `bio` text,
-  `profile_picture` mediumblob
+  `profile_picture` longblob
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -235,10 +230,10 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `username`, `full_name`, `email`, `password_hash`, `created_at`, `bio`, `profile_picture`) VALUES
-(1, 'user1', 'Jan Kowalski', 'jan.kowalski@example.com', 'hashed_password_1', '2024-11-20 11:56:58', 'Bio for Jan Kowalski', NULL),
-(2, 'user2', 'Anna Nowak', 'anna.nowak@example.com', 'hashed_password_2', '2024-11-20 11:56:58', 'Bio for Anna Nowak', NULL),
-(3, 'user3', 'Piotr Wisniewski', 'piotr.wisniewski@example.com', 'hashed_password_3', '2024-11-20 11:56:58', 'Bio for Piotr Wisniewski', NULL),
-(4, 'user', 'user', 'user@gmail.com', '$2y$10$ASVPw2I4SegRLj.k2XGe5OBh5hsOKe1RNm3rTj7rU15tkhdWXebX.', '2024-11-20 12:03:29', 'a', 0x64656661756c742e706e67),
+(1, 'user1', 'User One', 'user1@example.com', 'hashed_password_1', '2024-11-20 11:56:58', 'Bio for User One', NULL),
+(2, 'user2', 'User Two', 'user2@example.com', 'hashed_password_2', '2024-11-20 11:56:58', 'Bio for User Two', NULL),
+(3, 'user3', 'User Three', 'user3@example.com', 'hashed_password_3', '2024-11-20 11:56:58', 'Bio for User Three', NULL),
+(4, 'user4', 'User Four', 'user4@example.com', '$2y$10$ASVPw2I4SegRLj.k2XGe5OBh5hsOKe1RNm3rTj7rU15tkhdWXebX.', '2024-11-20 12:03:29', 'Bio for User', 0x64656661756c742e706e67),
 (5, 'user5', 'User Five', 'user5@example.com', 'hashed_password_5', '2024-11-25 08:00:56', 'Bio of User Five', 0x70726f66696c65352e6a7067),
 (6, 'user6', 'User Six', 'user6@example.com', 'hashed_password_6', '2024-11-25 08:00:56', 'Bio of User Six', 0x70726f66696c65362e6a7067),
 (7, 'user7', 'User Seven', 'user7@example.com', 'hashed_password_7', '2024-11-25 08:00:56', 'Bio of User Seven', 0x70726f66696c65372e6a7067),
@@ -263,19 +258,11 @@ INSERT INTO `users` (`user_id`, `username`, `full_name`, `email`, `password_hash
 --
 
 CREATE TABLE `user_likes` (
-  `likes_id` int(10) UNSIGNED NOT NULL,
-  `user_id` int(10) UNSIGNED NOT NULL,
-  `post_id` int(10) UNSIGNED NOT NULL,
+  `id_likes` int(10) UNSIGNED NOT NULL,
+  `id_user` int(10) UNSIGNED NOT NULL,
+  `id_post` int(10) UNSIGNED NOT NULL,
   `like_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `user_likes`
---
-
-INSERT INTO `user_likes` (`likes_id`, `user_id`, `post_id`, `like_date`) VALUES
-(1, 4, 23, '2024-11-27 10:08:43'),
-(2, 4, 22, '2024-11-27 10:57:25');
 
 --
 -- Indexes for dumped tables
@@ -293,6 +280,12 @@ ALTER TABLE `blog_information`
 --
 ALTER TABLE `categories`
   ADD PRIMARY KEY (`category_id`);
+
+--
+-- Indexes for table `comments`
+--
+ALTER TABLE `comments`
+  ADD PRIMARY KEY (`comment_id`);
 
 --
 -- Indexes for table `events`
@@ -324,9 +317,9 @@ ALTER TABLE `users`
 -- Indexes for table `user_likes`
 --
 ALTER TABLE `user_likes`
-  ADD PRIMARY KEY (`likes_id`),
-  ADD KEY `id_user` (`user_id`),
-  ADD KEY `id_post` (`post_id`);
+  ADD PRIMARY KEY (`id_likes`),
+  ADD KEY `id_user` (`id_user`),
+  ADD KEY `id_post` (`id_post`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -337,6 +330,12 @@ ALTER TABLE `user_likes`
 --
 ALTER TABLE `blog_information`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT for table `comments`
+--
+ALTER TABLE `comments`
+  MODIFY `comment_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `event_registrations`
@@ -360,7 +359,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `user_likes`
 --
 ALTER TABLE `user_likes`
-  MODIFY `likes_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_likes` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
@@ -383,10 +382,6 @@ ALTER TABLE `event_registrations`
 -- Constraints for table `user_likes`
 --
 ALTER TABLE `user_likes`
-  ADD CONSTRAINT `user_likes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
-  ADD CONSTRAINT `user_likes_ibfk_2` FOREIGN KEY (`post_id`) REFERENCES `posts` (`post_id`);
+  ADD CONSTRAINT `user_likes_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `users` (`user_id`),
+  ADD CONSTRAINT `user_likes_ibfk_2` FOREIGN KEY (`id_post`) REFERENCES `posts` (`post_id`);
 COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
