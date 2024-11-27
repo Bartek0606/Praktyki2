@@ -2,6 +2,7 @@
 include __DIR__ . '/../db_connection.php';
 include 'Edit_Post.php'; 
 include 'Post.php';
+include 'delete_post.php';
 
 // Pobieranie wszystkich postów
 $post = new Post($conn);
@@ -32,6 +33,12 @@ if (isset($_GET['edit_post_id'])) {
     $editPostId = intval($_GET['edit_post_id']);
     $postToEdit = $adminPanel->getPostToEdit($editPostId);
 }
+
+$postManager = new Delete_post($conn);
+
+// Obsługa usuwania posta przez wywołanie odpowiedniej metody klasy
+$postManager->handleDeleteRequest();
+
 ?>
 
 
@@ -74,30 +81,36 @@ if (isset($_GET['edit_post_id'])) {
         </aside>
     <main class="dashboard">
     <h2>All Posts</h2>
-    <ul class="post-list">
-    <?php if (empty($posts)): ?>
-        <li>No posts found.</li>
-    <?php else: ?>
-        <?php foreach ($posts as $post): ?>
-            <li class="post-item">
-                <?php if (!empty($post['image'])): ?>
-                    <div class="post-image">
-                        <img src="data:image/jpeg;base64,<?php echo base64_encode($post['image']); ?>" alt="Post Image">
-                    </div>
-                <?php endif; ?>
-
-                <div class="post-content">
-                    <h3><?php echo htmlspecialchars($post['title']); ?></h3>
-                    <p class="cont"><?php echo ($post['content']); ?></p>
-                    <p><strong>Category:</strong> <?php echo htmlspecialchars($post['category_name']); ?></p>
-                    <p><em>Created at: <?php echo htmlspecialchars($post['created_at']); ?></em></p>
+<ul class="post-list">
+<?php if (empty($posts)): ?>
+    <li>No posts found.</li>
+<?php else: ?>
+    <?php foreach ($posts as $post): ?>
+        <li class="post-item">
+            <?php if (!empty($post['image'])): ?>
+                <div class="post-image">
+                    <img src="data:image/jpeg;base64,<?php echo base64_encode($post['image']); ?>" alt="Post Image">
                 </div>
+            <?php endif; ?>
 
-                <!-- Przycisk edycji -->
-                <button class="editpost_button" data-post-id="<?php echo $post['post_id']; ?>">Edytuj</button>
-            </li>
-        <?php endforeach; ?>
-    <?php endif; ?>
+            <div class="post-content">
+                <h3><?php echo htmlspecialchars($post['title']); ?></h3>
+                <p class="cont"><?php echo ($post['content']); ?></p>
+                <p><strong>Category:</strong> <?php echo htmlspecialchars($post['category_name']); ?></p>
+                <p><em>Created at: <?php echo htmlspecialchars($post['created_at']); ?></em></p>
+            </div>
+
+            <!-- Przycisk edycji -->
+            <button class="editpost_button" data-post-id="<?php echo $post['post_id']; ?>">Edit</button>
+            
+            <!-- Przycisk usuwania -->
+            <form method="post" style="display:inline;">
+                <input type="hidden" name="delete_post_id" value="<?php echo $post['post_id']; ?>">
+                <button type="submit" class="deletepost_button">Delete</button>
+            </form>
+        </li>
+    <?php endforeach; ?>
+<?php endif; ?>
 </ul>
 
     </main>
