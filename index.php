@@ -1,4 +1,5 @@
 <?php
+ob_start();
 session_start(); 
 
 include 'db_connection.php';
@@ -103,4 +104,5 @@ $events_result = $conn->query($sql_events);
 
 <?php
 $conn->close();
+ob_end_flush();
 ?>
