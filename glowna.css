@@ -437,10 +437,45 @@ body {
 
 .post-link {
     display: block;
-    text-decoration: none;  /* Remove underline */
-    color: inherit;         /* Inherit color from parent (the text color) */
+    text-decoration: none; 
+    color: inherit;        
 }
 
 .post-link:hover {
-    background-color: #f0f0f0; /* Optional: add a hover effect */
+    background-color: #f0f0f0; 
 }
+.heart {
+  position: relative;
+  width: 30px;
+  height: 30px; 
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.heart::before,
+.heart::after {
+  position: absolute;
+  content: "";
+  left: 15px; 
+  top: 0;
+  width: 15px; 
+  height: 24px;
+  background: red;
+  border-radius: 15px 15px 0 0;
+  transform: rotate(-45deg);
+  transform-origin: 0 100%;
+  transition: box-shadow 0.3s ease;
+}
+
+.heart::after {
+  left: 0;
+  transform: rotate(45deg);
+  transform-origin: 100% 100%;
+}
+
+.heart:hover::before,
+  .heart:hover::after {
+    box-shadow: 0 0 6px 1px rgba(255, 0, 0, 0.5); 
+  }

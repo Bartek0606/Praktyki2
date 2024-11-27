@@ -17,13 +17,17 @@ $navbar = new Navbar($conn, $isLoggedIn, $userId, $userName);
 // Pobieranie nazwy kategorii z pola wyszukiwania
 $category_name = isset($_GET['category']) ? $conn->real_escape_string($_GET['category']) : '';
 
-$posts = new PostRender($conn, $category_name); 
+$posts = new PostRender($conn, $category_name, $userId); 
 
 // Handle logout
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
     session_destroy(); // Destroy the session
     header("Location: index.php"); // Redirect to homepage
     exit;
+}
+
+if ($isLoggedIn && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like'])) {
+    $posts->like($userId);  
 }
 
 $sql_events = "SELECT event_id, event_name, event_description, event_date, location 
