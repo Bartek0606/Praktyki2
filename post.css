@@ -11,7 +11,8 @@ body {
   margin: 0 auto;
 }
 
-h1, h2 {
+h1,
+h2 {
   color: #333;
 }
 
@@ -35,8 +36,9 @@ h1, h2 {
 .post-image {
   width: 100%;
   height: auto;
-  max-width: 800px;
+  max-width: 600px;
   margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 /* Comment Section */
@@ -56,7 +58,8 @@ h1, h2 {
   margin-bottom: 15px;
 }
 
-.comment-date, .reply-date {
+.comment-date,
+.reply-date {
   color: #777;
   font-size: 16px;
 }
@@ -70,15 +73,19 @@ h1, h2 {
   margin-left: 20px;
 }
 
-.comment-btn, .reply-btn, .reply-submit-btn {
+.comment-btn,
+.reply-btn,
+.reply-submit-btn {
   padding: 8px 12px;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   border: none;
-  cursor: pointer;  
+  cursor: pointer;
 }
 
-.comment-btn:hover, .reply-btn:hover, .reply-submit-btn:hover {
+.comment-btn:hover,
+.reply-btn:hover,
+.reply-submit-btn:hover {
   background-color: #45a049;
 }
 
@@ -117,10 +124,20 @@ h1, h2 {
 }
 
 .error-message {
-    padding: 15px;
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-    border-radius: 5px;
-    margin-top: 15px;
+  padding: 15px;
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  border-radius: 5px;
+  margin-top: 15px;
+}
+
+.username-link {
+  text-decoration: none;
+  font-weight: bold;
+  color: black;
+}
+
+.username-link:hover {
+  color: #444;
 }
