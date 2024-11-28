@@ -201,3 +201,25 @@
     cursor: not-allowed;
 }
 
+/* Styl dla przycisku 'Edit Profile' */
+.edit-btn {
+    background-color: #4CAF50; /* Zielony kolor tła */
+    color: white;              /* Biały kolor tekstu */
+    border: none;              /* Brak ramki */
+    padding: 10px 20px;        /* Wewnętrzne odstępy */
+    text-align: center;        /* Wyśrodkowanie tekstu */
+    text-decoration: none;     /* Usunięcie podkreślenia */
+    display: inline-block;     /* Umożliwia ustawienie go w linii */
+    font-size: 16px;           /* Rozmiar czcionki */
+    border-radius: 5px;        /* Zaokrąglone rogi */
+    transition: background-color 0.3s ease; /* Animacja zmiany tła */
+}
+
+.edit-btn:hover {
+    background-color: #45a049; /* Zmiana koloru tła po najechaniu */
+    cursor: pointer;           /* Zmiana kursora na wskazujący */
+}
+
+.edit-btn:active {
+    background-color: #388e3c; /* Zmiana koloru tła podczas kliknięcia */
+}
