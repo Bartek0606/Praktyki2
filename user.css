@@ -165,3 +165,39 @@
         font-size: 18px;
     }
 }
+
+/* Style for Follow/Unfollow Button */
+.follow-btn {
+    background-color: #4CAF50; /* Green color */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Change button color on hover */
+.follow-btn:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+
+/* Style for Unfollow button */
+.follow-btn.unfollow {
+    background-color: #f44336; /* Red color for unfollow */
+}
+
+/* Change button color on hover for Unfollow */
+.follow-btn.unfollow:hover {
+    background-color: #e53935;
+    transform: scale(1.05);
+}
+
+/* Disable the button when already followed */
+.follow-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+

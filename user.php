@@ -9,6 +9,12 @@ $isLoggedIn = isset($_SESSION['user_id']);
 $userId = $isLoggedIn ? $_SESSION['user_id'] : null;
 $userName = $isLoggedIn ? $_SESSION['username'] : null;
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
+    session_destroy(); // Destroy the session
+    header("Location: index.php"); // Redirect to homepage
+    exit;
+}
+
 $navbar = new Navbar($conn, $isLoggedIn, $userId, $userName);
 
 // Pobierz `user_id` z URL-a
@@ -44,6 +50,45 @@ $stmt_posts = $conn->prepare($sql_posts);
 $stmt_posts->bind_param("i", $profileUserId);
 $stmt_posts->execute();
 $result_posts = $stmt_posts->get_result();
+
+// Sprawdź, czy użytkownik jest już obserwowany
+$isFollowing = false;
+if ($isLoggedIn) {
+    $sql_follow_check = "SELECT * FROM user_follows WHERE follower_id = ? AND following_id = ?";
+    $stmt_follow_check = $conn->prepare($sql_follow_check);
+    $stmt_follow_check->bind_param("ii", $userId, $profileUserId);
+    $stmt_follow_check->execute();
+    $result_follow_check = $stmt_follow_check->get_result();
+    $isFollowing = $result_follow_check->num_rows > 0;
+}
+
+// Pobierz liczbę followersów
+$sql_followers_count = "SELECT COUNT(*) AS followers_count FROM user_follows WHERE following_id = ?";
+$stmt_followers_count = $conn->prepare($sql_followers_count);
+$stmt_followers_count->bind_param("i", $profileUserId);
+$stmt_followers_count->execute();
+$result_followers_count = $stmt_followers_count->get_result();
+$followers_count = $result_followers_count->fetch_assoc()['followers_count'];
+
+// Obsługuje follow/unfollow
+if ($isLoggedIn && isset($_POST['follow'])) {
+    if ($isFollowing) {
+        // Unfollow
+        $sql_unfollow = "DELETE FROM user_follows WHERE follower_id = ? AND following_id = ?";
+        $stmt_unfollow = $conn->prepare($sql_unfollow);
+        $stmt_unfollow->bind_param("ii", $userId, $profileUserId);
+        $stmt_unfollow->execute();
+    } else {
+        // Follow
+        $sql_follow = "INSERT INTO user_follows (follower_id, following_id) VALUES (?, ?)";
+        $stmt_follow = $conn->prepare($sql_follow);
+        $stmt_follow->bind_param("ii", $userId, $profileUserId);
+        $stmt_follow->execute();
+    }
+    // Refresh the page to reflect the follow/unfollow change
+    header("Location: " . $_SERVER['PHP_SELF'] . "?id=" . $profileUserId);
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -72,6 +117,17 @@ $result_posts = $stmt_posts->get_result();
             <h2><?php echo htmlspecialchars($user['username']); ?></h2>
             <p><strong>Full Name:</strong> <?php echo htmlspecialchars($user['full_name']); ?></p>
             <p><strong>Bio:</strong> <?php echo nl2br(htmlspecialchars($user['bio'])); ?></p>
+            <p><strong>Followers: </strong><?php echo $followers_count; ?></p>
+
+            <!-- Only show Follow button if the user is logged in and is not following the profile user -->
+<?php if ($isLoggedIn && $userId != $profileUserId): ?>
+    <form method="POST">
+        <button type="submit" name="follow" class="follow-btn <?php echo $isFollowing ? 'unfollow' : ''; ?>">
+            <?php echo $isFollowing ? 'Unfollow' : 'Follow'; ?>
+        </button>
+    </form>
+<?php endif; ?>
+
         </div>
     </div>
 
@@ -89,7 +145,7 @@ $result_posts = $stmt_posts->get_result();
                             <div class="post-content">
                                 <h3><?php echo htmlspecialchars($post['title']); ?></h3>
                                 <p class="category"><strong>Category: <?php echo htmlspecialchars($post['category_name']); ?></strong></p>
-                                <p><?php echo htmlspecialchars($post['content']); ?></p>
+                                <p><?php echo $post['content']; ?></p>
                                 <div class="post-date">
                                     <strong>Date: </strong><?php echo date("F j, Y, g:i a", strtotime($post['created_at'])); ?>
                                 </div>
