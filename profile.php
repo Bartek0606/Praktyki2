@@ -186,10 +186,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php unset($_SESSION['success_message']); ?>
     <?php unset($_SESSION['success_message_changes']); ?>
 <?php endif; ?>
-
+<div class="toggle-buttons">
+    <button id="show-posts" class="toggle-btn">Your Posts</button>
+    <button id="show-likes" class="toggle-btn">Your Likes</button>
+</div>
 
     <!-- Posty użytkownika -->
-    <div class="container posts-container">
+    <div class="container posts-container" id="posts-container">
         <h2>Your Posts</h2>
         <?php
         $sql_posts = "
@@ -200,10 +203,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ORDER BY posts.created_at DESC
         ";
         $result_posts = $conn->query($sql_posts);
-
-        if (!$result_posts) {
-            echo "<p>Error: " . $conn->error . "</p>";
-        }
 
         if ($result_posts->num_rows > 0): ?>
             <div class="posts">
@@ -229,7 +228,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p>No posts yet. Start creating posts!</p>
         <?php endif; ?>
     </div>
-    <div class="container posts-container">
+    <div class="container posts-container" id="likes-container" style="display: none;">
+   
         <h2>Your Like</h2>
         <?php
         $sql_like = "
@@ -258,7 +258,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($result_check->num_rows > 0) {
             $sql_delete = "DELETE FROM `user_likes` WHERE id_user = ? AND id_post = ?";
             $stmt_delete = $conn->prepare($sql_delete);
-            $stmt_delete->bind_param("ii", $userId, $   );
+            $stmt_delete->bind_param("ii", $userId, $post_id);
             $stmt_delete->execute();
         } else {
             $sql_register = "INSERT INTO `user_likes`(`id_user`, `id_post`) VALUES (?, ?)";
@@ -268,9 +268,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-        if (!$stmt_likes) {
-            echo "<p>Error: " . $conn->error . "</p>";
-        }
+ 
 
         if ($result_like->num_rows > 0): ?>
             <div class="posts">
@@ -309,4 +307,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $conn->close();
 ob_end_flush();
 ?>
+<script>
+    document.getElementById('show-posts').addEventListener('click', function() {
+        document.getElementById('posts-container').style.display = 'block';
+        document.getElementById('likes-container').style.display = 'none';
+    });
 
+    document.getElementById('show-likes').addEventListener('click', function() {
+        document.getElementById('posts-container').style.display = 'none';
+        document.getElementById('likes-container').style.display = 'block';
+    });
+</script>
