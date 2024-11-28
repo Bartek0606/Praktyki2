@@ -149,6 +149,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p class="error-message">You must be logged in to post a comment.</p>
         <?php endif; ?>
 
+        <br>
+
         <?php if (isset($_SESSION['comment_success'])): ?>
             <p class="success-message"><?php echo $_SESSION['comment_success']; unset($_SESSION['comment_success']); ?></p>
         <?php endif; ?>

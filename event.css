@@ -111,9 +111,9 @@
 
 /* Login message (for not logged-in users) */
 .login-message {
-  background-color: #fffae6;
+  background-color: #f8d7da;  /* Light pink background */
+  color: #721c24;  /* Dark red text */
   padding: 15px;
-  border: 1px solid #ffd700;
   border-radius: 5px;
   text-align: center;
   margin-top: 20px;
