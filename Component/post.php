@@ -53,23 +53,21 @@ class PostRender{
                 $stmt_check->execute();
                 $result_check = $stmt_check->get_result();
                 if ($result_check->num_rows > 0) {
-                   // echo "<script>alert('You have already liked this post.')</script>";
+                    $sql_delete = "DELETE FROM `user_likes` WHERE id_user = ? AND id_post = ?";
+                    $stmt_delete = $this->dbConnection->prepare($sql_delete);
+                    $stmt_delete->bind_param("ii", $userId, $post_id);
+                    $stmt_delete->execute();
                 } else {
                     $sql_register = "INSERT INTO `user_likes`(`id_user`, `id_post`) VALUES (?, ?)";
                     $stmt_register = $this->dbConnection->prepare($sql_register);
                     $stmt_register->bind_param("ii", $userId, $post_id);
                     $stmt_register->execute();
-                    if ($stmt_register->affected_rows > 0) {
-                        echo "polubies";
-                    } else {
-                        echo "There was an error adding your like.";
-                    }
-        
                 }
         }
+        header("Location: " . $_SERVER['REQUEST_URI']);
+        exit();
 
     }
-    
     public function render() {
         ob_start(); 
         ?>
@@ -90,7 +88,7 @@ class PostRender{
                                 <form method="POST" action="">
                                     <div>Likes: <?php echo $row['like_count']; ?></div> 
                                     <input type="hidden" name="post_id" value="<?php echo $row['post_id']; ?>">
-                                    <button class="heart" name="like"
+                                    <button class="heart" name="like" 
                                         <?php if (!$this->isLoggedIn) : ?>
                                             onclick="return alert('You need to log in to like a post.');"
                                         <?php endif; ?>
@@ -115,3 +113,15 @@ class PostRender{
     }
 }
 ?>
+<script>
+    window.onload = function() {
+        var scrollPosition = localStorage.getItem('scrollPosition');
+        if (scrollPosition) {
+            window.scrollTo(0, scrollPosition);
+            localStorage.removeItem('scrollPosition'); 
+        }
+    }
+    window.onbeforeunload = function() {
+        localStorage.setItem('scrollPosition', window.scrollY);
+    }
+</script>
