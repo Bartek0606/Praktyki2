@@ -33,10 +33,10 @@ class PostRender{
         } else {
             $sql = "
                 SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.image, categories.name AS category_name,
-                COUNT(user_likes.likes_id) AS like_count
+                COUNT(user_likes.id_likes) AS like_count
                 FROM posts
                 JOIN categories ON posts.category_id = categories.category_id
-                LEFT JOIN user_likes ON posts.post_id = user_likes.post_id
+                LEFT JOIN user_likes ON posts.post_id = user_likes.id_post
                 GROUP BY posts.post_id
                 ORDER BY posts.created_at DESC
             ";
