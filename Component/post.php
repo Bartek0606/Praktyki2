@@ -2,22 +2,27 @@
 class PostRender{
     private $dbConnection;
     private $categoryName;
+    private $isLoggedIn;
     private $posts;
     private $userId;
 
-    public function __construct($dbConnection, $categoryName = null, $userId = null) {
+    public function __construct($dbConnection, $isLoggedIn = false, $categoryName = null, $userId = null) {
         $this->dbConnection = $dbConnection;
         $this->categoryName = $categoryName;
+        $this->isLoggedIn = $isLoggedIn;
         $this->posts = $this->fetchPosts();
         $this->userId = $userId;
     }
     private function fetchPosts() {
         if (!empty($this->categoryName)) {
             $sql = "
-                SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.image, categories.name AS category_name
+                SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.image, categories.name AS category_name,
+                COUNT(user_likes.likes_id) AS like_count
                 FROM posts
                 JOIN categories ON posts.category_id = categories.category_id
+                LEFT JOIN user_likes ON posts.post_id = user_likes.post_id
                 WHERE categories.name LIKE ?
+                GROUP BY posts.post_id
                 ORDER BY posts.created_at DESC
             ";
             $stmt = $this->dbConnection->prepare($sql);
@@ -27,9 +32,12 @@ class PostRender{
             return $stmt->get_result();
         } else {
             $sql = "
-                SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.image, categories.name AS category_name
+                SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.image, categories.name AS category_name,
+                COUNT(user_likes.likes_id) AS like_count
                 FROM posts
                 JOIN categories ON posts.category_id = categories.category_id
+                LEFT JOIN user_likes ON posts.post_id = user_likes.post_id
+                GROUP BY posts.post_id
                 ORDER BY posts.created_at DESC
             ";
         }
@@ -38,7 +46,6 @@ class PostRender{
     }
     public function like($userId){
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like'])) {
-            //if ($isLoggedIn) {
                 $post_id = $_POST['post_id']; 
                 $sql_check = "SELECT * FROM `user_likes` WHERE user_id = ? AND post_id = ?";
                 $stmt_check = $this->dbConnection->prepare($sql_check);
@@ -46,23 +53,19 @@ class PostRender{
                 $stmt_check->execute();
                 $result_check = $stmt_check->get_result();
                 if ($result_check->num_rows > 0) {
-                    echo "juz ma ";
-            exit();
+                    echo "<script>alert('You have already liked this post.')</script>";
                 } else {
                     $sql_register = "INSERT INTO `user_likes`(`user_id`, `post_id`) VALUES (?, ?)";
                     $stmt_register = $this->dbConnection->prepare($sql_register);
                     $stmt_register->bind_param("ii", $userId, $post_id);
                     $stmt_register->execute();
                     if ($stmt_register->affected_rows > 0) {
-                        echo "nie ma ";
+                        echo "polubies";
                     } else {
                         echo "There was an error adding your like.";
                     }
         
                 }
-            // } else {
-            //     $message = "<p>You must be logged in to register for this event.</p>";
-            // }
         }
 
     }
@@ -85,8 +88,14 @@ class PostRender{
                                 <p><?php echo $row['content']; ?></p>
                                 <p>Date: <?php echo $row['created_at']; ?></p>
                                 <form method="POST" action="">
+                                    <div>Likes: <?php echo $row['like_count']; ?></div> 
                                     <input type="hidden" name="post_id" value="<?php echo $row['post_id']; ?>">
-                                    <button class="heart" name="like"></button>
+                                    <button class="heart" name="like"
+                                        <?php if (!$this->isLoggedIn) : ?>
+                                            onclick="return alert('You need to log in to like a post.');"
+                                        <?php endif; ?>
+                                        >
+                                    </button>
                                 </form>
                             </div>
                         </div>

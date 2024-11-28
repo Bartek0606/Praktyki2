@@ -17,7 +17,7 @@ $navbar = new Navbar($conn, $isLoggedIn, $userId, $userName);
 // Pobieranie nazwy kategorii z pola wyszukiwania
 $category_name = isset($_GET['category']) ? $conn->real_escape_string($_GET['category']) : '';
 
-$posts = new PostRender($conn, $category_name, $userId); 
+$posts = new PostRender($conn, $isLoggedIn, $category_name, $userId); 
 
 // Handle logout
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
