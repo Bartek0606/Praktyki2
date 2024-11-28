@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Nov 28, 2024 at 10:46 AM
+-- Generation Time: Nov 28, 2024 at 12:39 PM
 -- Server version: 5.7.44
 -- PHP Version: 8.2.8
 
@@ -106,7 +106,6 @@ INSERT INTO `comments` (`comment_id`, `post_id`, `parent_comment_id`, `user_id`,
 (10, 1, NULL, 9, 'AI technology is growing so fast. ItÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢s exciting to learn more.', '2024-11-19 09:45:23'),
 (11, 2, 5, 7, 'Italy is such a beautiful destination. I love your travel blog!', '2024-11-19 09:50:23'),
 (12, 3, NULL, 8, 'This is a great fitness routine! Will try it this week!', '2024-11-19 09:55:23'),
-(13, 1, NULL, 8, 'AI is transforming everything! Exciting times ahead.', '2024-11-19 10:00:23'),
 (14, 23, NULL, 4, 'a', '2024-11-28 08:06:35'),
 (15, 23, 14, 4, 'a', '2024-11-28 09:58:12');
 
@@ -271,7 +270,8 @@ CREATE TABLE `user_follows` (
 --
 
 INSERT INTO `user_follows` (`follower_id`, `following_id`, `followed_at`) VALUES
-(1, 3, '2024-11-28 10:31:04');
+(1, 3, '2024-11-28 10:31:04'),
+(4, 20, '2024-11-28 12:20:18');
 
 -- --------------------------------------------------------
 
@@ -396,7 +396,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `user_likes`
 --
 ALTER TABLE `user_likes`
-  MODIFY `id_likes` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_likes` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
