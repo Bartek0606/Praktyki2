@@ -47,15 +47,15 @@ class PostRender{
     public function like($userId){
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like'])) {
                 $post_id = $_POST['post_id']; 
-                $sql_check = "SELECT * FROM `user_likes` WHERE user_id = ? AND post_id = ?";
+                $sql_check = "SELECT * FROM `user_likes` WHERE id_user = ? AND id_post = ?";
                 $stmt_check = $this->dbConnection->prepare($sql_check);
                 $stmt_check->bind_param("ii", $userId, $post_id);
                 $stmt_check->execute();
                 $result_check = $stmt_check->get_result();
                 if ($result_check->num_rows > 0) {
-                    echo "<script>alert('You have already liked this post.')</script>";
+                   // echo "<script>alert('You have already liked this post.')</script>";
                 } else {
-                    $sql_register = "INSERT INTO `user_likes`(`user_id`, `post_id`) VALUES (?, ?)";
+                    $sql_register = "INSERT INTO `user_likes`(`id_user`, `id_post`) VALUES (?, ?)";
                     $stmt_register = $this->dbConnection->prepare($sql_register);
                     $stmt_register->bind_param("ii", $userId, $post_id);
                     $stmt_register->execute();
