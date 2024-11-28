@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
 }
 
 if ($isLoggedIn && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like'])) {
-    $posts->like($userId, $isLoggedIn);  
+    $posts->like($userId);  
 }
 
 $sql_events = "SELECT event_id, event_name, event_description, event_date, location 

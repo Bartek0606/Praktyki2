@@ -44,9 +44,8 @@ class PostRender{
 
         return $this->dbConnection->query($sql);
     }
-    public function like($userId, $isLoggedIn){
+    public function like($userId){
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like'])) {
-            if ($isLoggedIn) {
                 $post_id = $_POST['post_id']; 
                 $sql_check = "SELECT * FROM `user_likes` WHERE user_id = ? AND post_id = ?";
                 $stmt_check = $this->dbConnection->prepare($sql_check);
@@ -54,23 +53,19 @@ class PostRender{
                 $stmt_check->execute();
                 $result_check = $stmt_check->get_result();
                 if ($result_check->num_rows > 0) {
-                    echo "juz ma ";
+                    echo "<script>alert('You have already liked this post.')</script>";
                 } else {
                     $sql_register = "INSERT INTO `user_likes`(`user_id`, `post_id`) VALUES (?, ?)";
                     $stmt_register = $this->dbConnection->prepare($sql_register);
                     $stmt_register->bind_param("ii", $userId, $post_id);
                     $stmt_register->execute();
                     if ($stmt_register->affected_rows > 0) {
-                        echo "nie ma ";
+                        echo "polubies";
                     } else {
                         echo "There was an error adding your like.";
                     }
         
                 }
-            } else {
-                echo "nie jestes zalogowany";
-                
-            }
         }
 
     }
@@ -95,7 +90,12 @@ class PostRender{
                                 <form method="POST" action="">
                                     <div>Likes: <?php echo $row['like_count']; ?></div> 
                                     <input type="hidden" name="post_id" value="<?php echo $row['post_id']; ?>">
-                                    <button class="heart" name="like"></button>
+                                    <button class="heart" name="like"
+                                        <?php if (!$this->isLoggedIn) : ?>
+                                            onclick="return alert('You need to log in to like a post.');"
+                                        <?php endif; ?>
+                                        >
+                                    </button>
                                 </form>
                             </div>
                         </div>
