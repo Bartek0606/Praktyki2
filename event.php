@@ -9,19 +9,17 @@ $isLoggedIn = isset($_SESSION['user_id']);
 $userId = $isLoggedIn ? $_SESSION['user_id'] : null;
 $userName = $isLoggedIn ? $_SESSION['username'] : null;
 
+
 $navbar = new Navbar($conn, $isLoggedIn, $userId, $userName);
 
 $message = "";
 
-// Handle logout
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
-  session_destroy(); // Destroy the session
-  header("Location: index.php"); // Redirect to homepage
+  session_destroy(); 
+  header("Location: index.php"); 
   exit;
 }
 
-
-// Handle registration for event (on button click)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
     if ($isLoggedIn) {
         $event_id = $_POST['event_id']; 
@@ -34,30 +32,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
         $result_check = $stmt_check->get_result();
         
         if ($result_check->num_rows > 0) {
-            $message = "<p>You are already registered for this event.</p>";
+            $isRegistered = true;
         } else {
-            // Insert the registration into the event_registrations table
             $sql_register = "INSERT INTO event_registrations (user_id, event_id) VALUES (?, ?)";
             $stmt_register = $conn->prepare($sql_register);
             $stmt_register->bind_param("ii", $user_id, $event_id);
             $stmt_register->execute();
 
             if ($stmt_register->affected_rows > 0) {
-                $message = "<p>You have successfully registered for the event!</p>";
-            } else {
-                $message = "<p>There was an error registering for the event. Please try again.</p>";
+                $isRegistered = true;
             }
         }
-    } else {
-        $message = "<p>You must be logged in to register for this event.</p>";
     }
 }
 
-// Check if event id is provided
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['unregister'])) {
+    if ($isLoggedIn) {
+        $event_id = $_POST['event_id']; 
+        $user_id = $_SESSION['user_id']; 
+
+        $sql_unregister = "DELETE FROM event_registrations WHERE user_id = ? AND event_id = ?";
+        $stmt_unregister = $conn->prepare($sql_unregister);
+        $stmt_unregister->bind_param("ii", $user_id, $event_id);
+        $stmt_unregister->execute();
+
+        if ($stmt_unregister->affected_rows > 0) {
+            $isRegistered = false;
+        }
+    }
+}
+
 if (isset($_GET['id'])) {
     $event_id = $_GET['id'];
 
-    // Fetch event details from the database
     $sql_event_details = "SELECT * FROM events WHERE event_id = ?";
     $stmt = $conn->prepare($sql_event_details);
     $stmt->bind_param("i", $event_id);
@@ -71,7 +78,16 @@ if (isset($_GET['id'])) {
         exit;
     }
 
-    // Fetch the number of registrations for this event
+$isRegistered = false;
+if ($isLoggedIn) {
+    $sql_check_registration = "SELECT * FROM event_registrations WHERE user_id = ? AND event_id = ?";
+    $stmt_check_registration = $conn->prepare($sql_check_registration);
+    $stmt_check_registration->bind_param("ii", $userId, $event_id);
+    $stmt_check_registration->execute();
+    $result_registration = $stmt_check_registration->get_result();
+    $isRegistered = $result_registration->num_rows > 0;
+}
+
     $sql_registration_count = "SELECT COUNT(*) as total_registrations FROM event_registrations WHERE event_id = ?";
     $stmt_count = $conn->prepare($sql_registration_count);
     $stmt_count->bind_param("i", $event_id);
@@ -92,7 +108,7 @@ if (isset($_GET['id'])) {
     <link rel="stylesheet" href="event.css">
     <link rel="stylesheet" href="glowna.css">
     <link rel="stylesheet" href="navbar.css">
-    <title><?php echo htmlspecialchars($event['event_name'], ENT_QUOTES, 'UTF-8'); ?></title> <!-- Dynamic title -->
+    <title><?php echo htmlspecialchars($event['event_name'], ENT_QUOTES, 'UTF-8'); ?></title> 
 </head>
 <body>
   <header>
@@ -109,15 +125,28 @@ if (isset($_GET['id'])) {
                 <p><strong>Description:</strong> <?php echo htmlspecialchars($event['event_description'], ENT_QUOTES, 'UTF-8'); ?></p>
                 <p><strong>Date:</strong> <?php echo date("F j, Y, g:i a", strtotime($event['event_date'])); ?></p>
                 <p><strong>Location:</strong> <?php echo htmlspecialchars($event['location'], ENT_QUOTES, 'UTF-8'); ?></p>
-                <p><strong>Registrations:</strong> <?php echo $registration_count; ?> people registered</p> <!-- Display the registration count -->
+                <p><strong>Registrations:</strong> <?php echo $registration_count; ?> people registered</p> 
             </div>
         </div>
 
-        <!-- Display event description -->
         <p><?php echo nl2br(htmlspecialchars($event['event_description'], ENT_QUOTES, 'UTF-8')); ?></p>
     </div>
 
+<?php if ($isRegistered): ?>
+    <div class="registration-message">
+        <p>You are already registered for this event.</p>
+    </div>
+  
+    <div class="unregistration-form">
+    <form method="POST">
+        <input type="hidden" name="event_id" value="<?php echo $event['event_id']; ?>">
+        <button type="submit" name="unregister" class="btn-unregister">Unregister from Event</button>
+    </form>
+</div>
+
+<?php else: ?>
     <?php if ($isLoggedIn): ?>
+   
     <div class="registration-form">
         <form method="POST">
             <input type="hidden" name="event_id" value="<?php echo $event['event_id']; ?>">
@@ -129,15 +158,10 @@ if (isset($_GET['id'])) {
             <p>You need to <a href="login.php" class="login-link">log in</a> to register for this event.</p>
         </div>
     <?php endif; ?>
+<?php endif; ?>
 
-    <!-- Display messages (success or error) -->
-    <?php if (!empty($message)): ?>
-        <div class="message">
-            <?php echo $message; ?>
-        </div>
-    <?php endif; ?>
+</main>
 
-  </main>
 
 </body>
 </html>
