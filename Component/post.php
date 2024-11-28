@@ -17,7 +17,7 @@ class PostRender{
     private function fetchPosts() {
         if (!empty($this->categoryName)) {
             $sql = "
-                SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.image, 
+                SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.image, posts.is_question,
                        categories.name AS category_name, users.username AS author_name,
                        COUNT(user_likes.likes_id) AS like_count
                 FROM posts
@@ -35,7 +35,7 @@ class PostRender{
             return $stmt->get_result();
         } else {
             $sql = "
-                SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.image, 
+                SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.image, posts.is_question,
                        categories.name AS category_name, users.username AS author_name,
                        COUNT(user_likes.id_likes) AS like_count
                 FROM posts
@@ -46,10 +46,10 @@ class PostRender{
                 ORDER BY posts.created_at DESC
             ";
         }
-
+    
         return $this->dbConnection->query($sql);
     }
-
+    
     public function like($userId){
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like'])) {
             $post_id = $_POST['post_id']; 
@@ -82,14 +82,19 @@ class PostRender{
             if ($this->posts->num_rows > 0) {
                 while ($row = $this->posts->fetch_assoc()) {
                     $post_url = 'post.php?id=' . $row['post_id'];
+                    $isQuestionClass = $row['is_question'] == 1 ? 'question-post' : ''; // Klasa CSS dla pytań
                     ?>
                     <a href="<?php echo $post_url; ?>" class="post-link">
-                        <div class="post">
+                        <div class="post <?php echo $isQuestionClass; ?>">
                             <img src="data:image/jpeg;base64,<?php echo base64_encode($row['image']); ?>" alt="Post Image">
                             <div>
                                 <h2><?php echo htmlspecialchars($row['title']); ?></h2>
                                 <p>Category: <?php echo htmlspecialchars($row['category_name']); ?></p>
+
+                                <p>Posted by: <?php echo htmlspecialchars($row['author_name']); ?></p>
+
                                 <p>By: <?php echo htmlspecialchars($row['author_name']); ?></p> <!-- Displaying username -->
+
                                 <p><?php echo $row['content']; ?></p>
                                 <p>Date: <?php echo $row['created_at']; ?></p>
                                 <form method="POST" action="">
@@ -115,9 +120,10 @@ class PostRender{
             ?>
         </div>
         <?php
-
+    
         return ob_get_clean(); 
     }
+    
 }
 ?>
 <script>
