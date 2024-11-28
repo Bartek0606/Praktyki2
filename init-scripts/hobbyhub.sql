@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Nov 28, 2024 at 07:52 AM
+-- Generation Time: Nov 28, 2024 at 10:46 AM
 -- Server version: 5.7.44
 -- PHP Version: 8.2.8
 
@@ -106,7 +106,9 @@ INSERT INTO `comments` (`comment_id`, `post_id`, `parent_comment_id`, `user_id`,
 (10, 1, NULL, 9, 'AI technology is growing so fast. ItÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾Ãƒâ€šÃ‚Â¢s exciting to learn more.', '2024-11-19 09:45:23'),
 (11, 2, 5, 7, 'Italy is such a beautiful destination. I love your travel blog!', '2024-11-19 09:50:23'),
 (12, 3, NULL, 8, 'This is a great fitness routine! Will try it this week!', '2024-11-19 09:55:23'),
-(13, 1, NULL, 8, 'AI is transforming everything! Exciting times ahead.', '2024-11-19 10:00:23');
+(13, 1, NULL, 8, 'AI is transforming everything! Exciting times ahead.', '2024-11-19 10:00:23'),
+(14, 23, NULL, 4, 'a', '2024-11-28 08:06:35'),
+(15, 23, 14, 4, 'a', '2024-11-28 09:58:12');
 
 -- --------------------------------------------------------
 
@@ -154,7 +156,8 @@ CREATE TABLE `event_registrations` (
 INSERT INTO `event_registrations` (`registration_id`, `user_id`, `event_id`, `registration_date`) VALUES
 (2, 4, 1, '2024-11-26 12:00:04'),
 (3, 4, 3, '2024-11-26 12:03:08'),
-(4, 4, 2, '2024-11-26 12:05:09');
+(4, 4, 2, '2024-11-26 12:05:09'),
+(5, 4, 4, '2024-11-28 08:37:59');
 
 -- --------------------------------------------------------
 
@@ -233,7 +236,7 @@ INSERT INTO `users` (`user_id`, `username`, `full_name`, `email`, `password_hash
 (1, 'user1', 'User One', 'user1@example.com', 'hashed_password_1', '2024-11-20 11:56:58', 'Bio for User One', NULL),
 (2, 'user2', 'User Two', 'user2@example.com', 'hashed_password_2', '2024-11-20 11:56:58', 'Bio for User Two', NULL),
 (3, 'user3', 'User Three', 'user3@example.com', 'hashed_password_3', '2024-11-20 11:56:58', 'Bio for User Three', NULL),
-(4, 'user4', 'User Four', 'user4@example.com', '$2y$10$ASVPw2I4SegRLj.k2XGe5OBh5hsOKe1RNm3rTj7rU15tkhdWXebX.', '2024-11-20 12:03:29', 'Bio for User', NULL),
+(4, 'user4', 'User Four', 'user4@example.com', '$2y$10$ASVPw2I4SegRLj.k2XGe5OBh5hsOKe1RNm3rTj7rU15tkhdWXebX.', '2024-11-20 12:03:29', 'Bio for User', 0x64656661756c742e706e67),
 (5, 'user5', 'User Five', 'user5@example.com', 'hashed_password_5', '2024-11-25 08:00:56', 'Bio of User Five', NULL),
 (6, 'user6', 'User Six', 'user6@example.com', 'hashed_password_6', '2024-11-25 08:00:56', 'Bio of User Six', NULL),
 (7, 'user7', 'User Seven', 'user7@example.com', 'hashed_password_7', '2024-11-25 08:00:56', 'Bio of User Seven', NULL),
@@ -254,6 +257,25 @@ INSERT INTO `users` (`user_id`, `username`, `full_name`, `email`, `password_hash
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `user_follows`
+--
+
+CREATE TABLE `user_follows` (
+  `follower_id` int(10) UNSIGNED NOT NULL,
+  `following_id` int(10) UNSIGNED NOT NULL,
+  `followed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `user_follows`
+--
+
+INSERT INTO `user_follows` (`follower_id`, `following_id`, `followed_at`) VALUES
+(1, 3, '2024-11-28 10:31:04');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `user_likes`
 --
 
@@ -263,6 +285,14 @@ CREATE TABLE `user_likes` (
   `id_post` int(10) UNSIGNED NOT NULL,
   `like_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `user_likes`
+--
+
+INSERT INTO `user_likes` (`id_likes`, `id_user`, `id_post`, `like_date`) VALUES
+(1, 4, 23, '2024-11-28 08:36:02'),
+(3, 4, 22, '2024-11-28 09:42:28');
 
 --
 -- Indexes for dumped tables
@@ -314,6 +344,13 @@ ALTER TABLE `users`
   ADD PRIMARY KEY (`user_id`);
 
 --
+-- Indexes for table `user_follows`
+--
+ALTER TABLE `user_follows`
+  ADD PRIMARY KEY (`follower_id`,`following_id`),
+  ADD KEY `user_follows_ibfk_2` (`following_id`);
+
+--
 -- Indexes for table `user_likes`
 --
 ALTER TABLE `user_likes`
@@ -335,13 +372,13 @@ ALTER TABLE `blog_information`
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `comment_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `comment_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `event_registrations`
 --
 ALTER TABLE `event_registrations`
-  MODIFY `registration_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `registration_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `posts`
@@ -359,7 +396,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `user_likes`
 --
 ALTER TABLE `user_likes`
-  MODIFY `id_likes` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_likes` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
@@ -377,6 +414,13 @@ ALTER TABLE `blog_information`
 ALTER TABLE `event_registrations`
   ADD CONSTRAINT `event_registrations_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
   ADD CONSTRAINT `event_registrations_ibfk_2` FOREIGN KEY (`event_id`) REFERENCES `events` (`event_id`);
+
+--
+-- Constraints for table `user_follows`
+--
+ALTER TABLE `user_follows`
+  ADD CONSTRAINT `user_follows_ibfk_1` FOREIGN KEY (`follower_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `user_follows_ibfk_2` FOREIGN KEY (`following_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `user_likes`
