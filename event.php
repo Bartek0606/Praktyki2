@@ -132,6 +132,8 @@ if ($isLoggedIn) {
         <p><?php echo nl2br(htmlspecialchars($event['event_description'], ENT_QUOTES, 'UTF-8')); ?></p>
     </div>
 
+    <br>
+
 <?php if ($isRegistered): ?>
     <div class="registration-message">
         <p>You are already registered for this event.</p>
