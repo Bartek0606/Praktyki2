@@ -90,7 +90,7 @@ class Navbar{
                 <?php 
                 }
                 ?>
-                <a href="profile.php" class="profile-link">
+                <a href="user.php?id=<?php echo $this->userId; ?>" class="profile-link">
                     <?php
                         $image_src = $this->fetchProfilePicture($this->userId);
                     ?>

@@ -115,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="profile.css">
+    <link rel="stylesheet" href="edit_profile.css">
     <script src="profile.js" defer></script>
     <link rel="stylesheet" href="navbar.css">
     <title>Profile • HobbyHub</title>
@@ -186,49 +186,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php unset($_SESSION['success_message']); ?>
     <?php unset($_SESSION['success_message_changes']); ?>
 <?php endif; ?>
-
-
-    <!-- Posty użytkownika -->
-    <div class="container posts-container">
-        <h2>Your Posts</h2>
-        <?php
-        $sql_posts = "
-            SELECT posts.post_id, posts.title, posts.content, posts.image, posts.created_at, categories.name AS category_name 
-            FROM posts 
-            LEFT JOIN categories ON posts.category_id = categories.category_id 
-            WHERE posts.user_id = '$user_id' 
-            ORDER BY posts.created_at DESC
-        ";
-        $result_posts = $conn->query($sql_posts);
-
-        if (!$result_posts) {
-            echo "<p>Error: " . $conn->error . "</p>";
-        }
-
-        if ($result_posts->num_rows > 0): ?>
-            <div class="posts">
-                <?php while ($post = $result_posts->fetch_assoc()): ?>
-                    <a href="post.php?id=<?php echo $post['post_id']; ?>" class="post-link">
-                        <div class="post">
-                            <?php if (!empty($post['image'])): ?>
-                                <img src="data:image/jpeg;base64,<?php echo base64_encode($post['image']); ?>" alt="Post Image" class="post-image">
-                            <?php endif; ?>
-                            <div class="post-content">
-                                <h3><?php echo htmlspecialchars($post['title']); ?></h3>
-                                <p class="category"><strong>Category: <?php echo htmlspecialchars($post['category_name']); ?></strong></p>
-                                <p><?php echo $post['content']; ?></p>
-                                <div class="post-date">
-                                    <strong>Date: </strong><?php echo htmlspecialchars($post['created_at']); ?>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                <?php endwhile; ?>
-            </div>
-        <?php else: ?>
-            <p>No posts yet. Start creating posts!</p>
-        <?php endif; ?>
-    </div>
 </main>
 </body>
 </html>

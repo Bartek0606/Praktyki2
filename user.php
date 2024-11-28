@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
 
 $navbar = new Navbar($conn, $isLoggedIn, $userId, $userName);
 
-// Pobierz `user_id` z URL-a
+// Get the `user_id` from the URL
 if (!isset($_GET['id'])) {
     echo "User ID not specified.";
     exit();
@@ -25,7 +25,7 @@ if (!isset($_GET['id'])) {
 
 $profileUserId = intval($_GET['id']);
 
-// Pobierz dane użytkownika
+// Get user data
 $sql_user = "SELECT username, email, full_name, bio, profile_picture FROM users WHERE user_id = ?";
 $stmt_user = $conn->prepare($sql_user);
 $stmt_user->bind_param("i", $profileUserId);
@@ -38,7 +38,7 @@ if (!$user) {
     exit();
 }
 
-// Pobierz posty użytkownika
+// Get user's posts
 $sql_posts = "
     SELECT posts.post_id, posts.title, posts.content, posts.image, posts.created_at, categories.name AS category_name 
     FROM posts 
@@ -51,7 +51,7 @@ $stmt_posts->bind_param("i", $profileUserId);
 $stmt_posts->execute();
 $result_posts = $stmt_posts->get_result();
 
-// Sprawdź, czy użytkownik jest już obserwowany
+// Check if the user is already being followed
 $isFollowing = false;
 if ($isLoggedIn) {
     $sql_follow_check = "SELECT * FROM user_follows WHERE follower_id = ? AND following_id = ?";
@@ -62,7 +62,7 @@ if ($isLoggedIn) {
     $isFollowing = $result_follow_check->num_rows > 0;
 }
 
-// Pobierz liczbę followersów
+// Get the number of followers
 $sql_followers_count = "SELECT COUNT(*) AS followers_count FROM user_follows WHERE following_id = ?";
 $stmt_followers_count = $conn->prepare($sql_followers_count);
 $stmt_followers_count->bind_param("i", $profileUserId);
@@ -70,7 +70,15 @@ $stmt_followers_count->execute();
 $result_followers_count = $stmt_followers_count->get_result();
 $followers_count = $result_followers_count->fetch_assoc()['followers_count'];
 
-// Obsługuje follow/unfollow
+// Get the number of users the profile user is following
+$sql_following_count = "SELECT COUNT(*) AS following_count FROM user_follows WHERE follower_id = ?";
+$stmt_following_count = $conn->prepare($sql_following_count);
+$stmt_following_count->bind_param("i", $profileUserId);
+$stmt_following_count->execute();
+$result_following_count = $stmt_following_count->get_result();
+$following_count = $result_following_count->fetch_assoc()['following_count'];
+
+// Handle follow/unfollow action
 if ($isLoggedIn && isset($_POST['follow'])) {
     if ($isFollowing) {
         // Unfollow
@@ -104,7 +112,7 @@ if ($isLoggedIn && isset($_POST['follow'])) {
     <?php echo $navbar->render(); ?>
 </header>
 <main>
-    <!-- Informacje o użytkowniku -->
+    <!-- User information -->
     <div class="container user-info">
         <div class="user-profile">
             <?php if ($user['profile_picture'] && $user['profile_picture'] !== 'default.png'): ?>
@@ -114,24 +122,31 @@ if ($isLoggedIn && isset($_POST['follow'])) {
             <?php endif; ?>
         </div>
         <div class="user-details">
-            <h2><?php echo htmlspecialchars($user['username']); ?></h2>
-            <p><strong>Full Name:</strong> <?php echo htmlspecialchars($user['full_name']); ?></p>
-            <p><strong>Bio:</strong> <?php echo nl2br(htmlspecialchars($user['bio'])); ?></p>
-            <p><strong>Followers: </strong><?php echo $followers_count; ?></p>
+    <h2><?php echo htmlspecialchars($user['username']); ?></h2>
+    <p><strong>Full Name:</strong> <?php echo htmlspecialchars($user['full_name']); ?></p>
+    <p><strong>Bio:</strong> <?php echo nl2br(htmlspecialchars($user['bio'])); ?></p>
+    <p><strong>Followers: </strong><?php echo $followers_count; ?> <strong>Following: </strong><?php echo $following_count; ?></p>
 
-            <!-- Only show Follow button if the user is logged in and is not following the profile user -->
-<?php if ($isLoggedIn && $userId != $profileUserId): ?>
-    <form method="POST">
-        <button type="submit" name="follow" class="follow-btn <?php echo $isFollowing ? 'unfollow' : ''; ?>">
-            <?php echo $isFollowing ? 'Unfollow' : 'Follow'; ?>
-        </button>
-    </form>
-<?php endif; ?>
+    <!-- Only show Follow button if the user is logged in and is not following the profile user -->
+    <?php if ($isLoggedIn && $userId != $profileUserId): ?>
+        <form method="POST">
+            <button type="submit" name="follow" class="follow-btn <?php echo $isFollowing ? 'unfollow' : ''; ?>">
+                <?php echo $isFollowing ? 'Unfollow' : 'Follow'; ?>
+            </button>
+        </form>
+    <?php endif; ?>
 
-        </div>
+    <!-- Show Edit Profile button if viewing own profile -->
+    <?php if ($isLoggedIn && $userId == $profileUserId): ?>
+        <a href="edit_profile.php" class="edit-profile-btn">
+            <button class="btn edit-btn">Edit Profile</button>
+        </a>
+    <?php endif; ?>
+</div>
+
     </div>
 
-    <!-- Posty użytkownika -->
+    <!-- User's posts -->
     <div class="container posts-container">
         <h2><?php echo htmlspecialchars($user['username']); ?>'s Posts</h2>
         <?php if ($result_posts->num_rows > 0): ?>
