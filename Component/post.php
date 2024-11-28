@@ -82,17 +82,18 @@ class PostRender{
             if ($this->posts->num_rows > 0) {
                 while ($row = $this->posts->fetch_assoc()) {
                     $post_url = 'post.php?id=' . $row['post_id'];
-                    $isQuestionClass = $row['is_question'] == 1 ? 'question-post' : ''; // Klasa CSS dla pytań
+                    $hasImage = !empty($row['image']);
+                    $isQuestionClass = $row['is_question'] == 1 ? 'question-post' : ''; // Klasa dla pytania
                     ?>
                     <a href="<?php echo $post_url; ?>" class="post-link">
-                        <div class="post <?php echo $isQuestionClass; ?>">
-                            <img src="data:image/jpeg;base64,<?php echo base64_encode($row['image']); ?>" alt="Post Image">
-                            <div>
+                        <div class="post <?php echo $hasImage ? '' : 'no-image'; ?> <?php echo $isQuestionClass; ?>">
+                            <?php if ($hasImage): ?>
+                                <img src="data:image/jpeg;base64,<?php echo base64_encode($row['image']); ?>" alt="Post Image">
+                            <?php endif; ?>
+                            <div class="post-content">
                                 <h2><?php echo htmlspecialchars($row['title']); ?></h2>
                                 <p>Category: <?php echo htmlspecialchars($row['category_name']); ?></p>
-
-                                <p>By: <?php echo htmlspecialchars($row['author_name']); ?></p> <!-- Displaying username -->
-
+                                <p>By: <?php echo htmlspecialchars($row['author_name']); ?></p>
                                 <p><?php echo $row['content']; ?></p>
                                 <p>Date: <?php echo $row['created_at']; ?></p>
                                 <form method="POST" action="">
@@ -121,6 +122,7 @@ class PostRender{
     
         return ob_get_clean(); 
     }
+    
     
 }
 ?>
