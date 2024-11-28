@@ -146,10 +146,25 @@ if ($isLoggedIn && isset($_POST['follow'])) {
 
     </div>
 
-    <!-- User's posts -->
-    <div class="container posts-container">
-        <h2><?php echo htmlspecialchars($user['username']); ?>'s Posts</h2>
-        <?php if ($result_posts->num_rows > 0): ?>
+    <div class="toggle-buttons">
+    <button id="show-posts" class="toggle-btn">Your Posts</button>
+    <button id="show-likes" class="toggle-btn">Your Likes</button>
+</div>
+
+    <!-- Posty użytkownika -->
+    <div class="container posts-container" id="posts-container">
+        <h2>Your Posts</h2>
+        <?php
+        $sql_posts = "
+            SELECT posts.post_id, posts.title, posts.content, posts.image, posts.created_at, categories.name AS category_name 
+            FROM posts 
+            LEFT JOIN categories ON posts.category_id = categories.category_id 
+            WHERE posts.user_id = '$userId' 
+            ORDER BY posts.created_at DESC
+        ";
+        $result_posts = $conn->query($sql_posts);
+
+        if ($result_posts->num_rows > 0): ?>
             <div class="posts">
                 <?php while ($post = $result_posts->fetch_assoc()): ?>
                     <a href="post.php?id=<?php echo $post['post_id']; ?>" class="post-link">
@@ -160,9 +175,9 @@ if ($isLoggedIn && isset($_POST['follow'])) {
                             <div class="post-content">
                                 <h3><?php echo htmlspecialchars($post['title']); ?></h3>
                                 <p class="category"><strong>Category: <?php echo htmlspecialchars($post['category_name']); ?></strong></p>
-                                <p><?php echo $post['content']; ?></p>
+                                <p><?php echo htmlspecialchars($post['content']); ?></p>
                                 <div class="post-date">
-                                    <strong>Date: </strong><?php echo date("F j, Y, g:i a", strtotime($post['created_at'])); ?>
+                                    <strong>Date: </strong><?php echo htmlspecialchars($post['created_at']); ?>
                                 </div>
                             </div>
                         </div>
@@ -170,7 +185,80 @@ if ($isLoggedIn && isset($_POST['follow'])) {
                 <?php endwhile; ?>
             </div>
         <?php else: ?>
-            <p>No posts available for this user.</p>
+            <p>No posts yet. Start creating posts!</p>
+        <?php endif; ?>
+    </div>
+    <div class="container posts-container" id="likes-container" style="display: none;">
+   
+        <h2>Your Like</h2>
+        <?php
+        $sql_like = "
+        SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.image, categories.name AS category_name,
+            COUNT(user_likes.id_likes) AS like_count,users.user_id, users.username
+            FROM posts
+            JOIN categories ON posts.category_id = categories.category_id
+            LEFT JOIN user_likes ON posts.post_id = user_likes.id_post
+            LEFT JOIN users ON user_likes.id_user = users.user_id
+            WHERE users.user_id = ?
+            GROUP BY posts.post_id, users.user_id, users.username, categories.name
+            ORDER BY posts.created_at DESC
+    ";
+    $stmt_like = $conn->prepare($sql_like);
+    $stmt_like->bind_param("i", $userId);
+    $stmt_like->execute();
+    $result_like = $stmt_like->get_result();
+    
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like'])) {
+        $post_id = $_POST['post_id']; 
+        $sql_check = "SELECT * FROM `user_likes` WHERE id_user = ? AND id_post = ?";
+        $stmt_check = $conn->prepare($sql_check);
+        $stmt_check->bind_param("ii", $userId, $post_id);
+        $stmt_check->execute();
+        $result_check = $stmt_check->get_result();
+        if ($result_check->num_rows > 0) {
+            $sql_delete = "DELETE FROM `user_likes` WHERE id_user = ? AND id_post = ?";
+            $stmt_delete = $conn->prepare($sql_delete);
+            $stmt_delete->bind_param("ii", $userId, $post_id);
+            $stmt_delete->execute();
+        } else {
+            $sql_register = "INSERT INTO `user_likes`(`id_user`, `id_post`) VALUES (?, ?)";
+            $stmt_register = $conn->prepare($sql_register);
+            $stmt_register->bind_param("ii", $userId, $post_id);
+            $stmt_register->execute();
+        }
+        header("Location: " . $_SERVER['REQUEST_URI']);
+        exit();
+    }
+
+ 
+
+        if ($result_like->num_rows > 0): ?>
+            <div class="posts">
+                <?php while ($like = $result_like->fetch_assoc()): ?>
+                    <a href="post.php?id=<?php echo $like['post_id']; ?>" class="post-link">
+                        <div class="post">
+                            <?php if (!empty($like['image'])): ?>
+                                <img src="data:image/jpeg;base64,<?php echo base64_encode($like['image']); ?>" alt="Post Image" class="post-image">
+                            <?php endif; ?>
+                            <div class="post-content">
+                                <h3><?php echo htmlspecialchars($like['title']); ?></h3>
+                                <p class="category"><strong>Category: <?php echo htmlspecialchars($like['category_name']); ?></strong></p>
+                                <p><?php echo htmlspecialchars($like['content']); ?></p>
+                                <div class="post-date">
+                                    <strong>Date: </strong><?php echo htmlspecialchars($like['created_at']); ?>
+                                </div>
+                                <form method="POST" action="">
+                                    <div>Likes: <?php echo $like['like_count']; ?></div> 
+                                    <input type="hidden" name="post_id" value="<?php echo $like['post_id']; ?>">
+                                    <button class="heart" name="like" ></button>
+                                </form>
+                            </div>
+                        </div>
+                    </a>
+                <?php endwhile; ?>
+            </div>
+        <?php else: ?>
+            <p>No posts yet. Start creating posts!</p>
         <?php endif; ?>
     </div>
 </main>
@@ -182,3 +270,14 @@ if ($isLoggedIn && isset($_POST['follow'])) {
 $conn->close();
 ob_end_flush();
 ?>
+<script>
+    document.getElementById('show-posts').addEventListener('click', function() {
+        document.getElementById('posts-container').style.display = 'block';
+        document.getElementById('likes-container').style.display = 'none';
+    });
+
+    document.getElementById('show-likes').addEventListener('click', function() {
+        document.getElementById('posts-container').style.display = 'none';
+        document.getElementById('likes-container').style.display = 'block';
+    });
+</script>
