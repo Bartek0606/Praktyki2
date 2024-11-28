@@ -13,13 +13,16 @@ class PostRender{
         $this->posts = $this->fetchPosts();
         $this->userId = $userId;
     }
+
     private function fetchPosts() {
         if (!empty($this->categoryName)) {
             $sql = "
-                SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.image, categories.name AS category_name,
-                COUNT(user_likes.likes_id) AS like_count
+                SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.image, 
+                       categories.name AS category_name, users.username AS author_name,
+                       COUNT(user_likes.likes_id) AS like_count
                 FROM posts
                 JOIN categories ON posts.category_id = categories.category_id
+                JOIN users ON posts.user_id = users.user_id
                 LEFT JOIN user_likes ON posts.post_id = user_likes.post_id
                 WHERE categories.name LIKE ?
                 GROUP BY posts.post_id
@@ -32,10 +35,12 @@ class PostRender{
             return $stmt->get_result();
         } else {
             $sql = "
-                SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.image, categories.name AS category_name,
-                COUNT(user_likes.id_likes) AS like_count
+                SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.image, 
+                       categories.name AS category_name, users.username AS author_name,
+                       COUNT(user_likes.id_likes) AS like_count
                 FROM posts
                 JOIN categories ON posts.category_id = categories.category_id
+                JOIN users ON posts.user_id = users.user_id
                 LEFT JOIN user_likes ON posts.post_id = user_likes.id_post
                 GROUP BY posts.post_id
                 ORDER BY posts.created_at DESC
@@ -44,30 +49,31 @@ class PostRender{
 
         return $this->dbConnection->query($sql);
     }
+
     public function like($userId){
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like'])) {
-                $post_id = $_POST['post_id']; 
-                $sql_check = "SELECT * FROM `user_likes` WHERE id_user = ? AND id_post = ?";
-                $stmt_check = $this->dbConnection->prepare($sql_check);
-                $stmt_check->bind_param("ii", $userId, $post_id);
-                $stmt_check->execute();
-                $result_check = $stmt_check->get_result();
-                if ($result_check->num_rows > 0) {
-                    $sql_delete = "DELETE FROM `user_likes` WHERE id_user = ? AND id_post = ?";
-                    $stmt_delete = $this->dbConnection->prepare($sql_delete);
-                    $stmt_delete->bind_param("ii", $userId, $post_id);
-                    $stmt_delete->execute();
-                } else {
-                    $sql_register = "INSERT INTO `user_likes`(`id_user`, `id_post`) VALUES (?, ?)";
-                    $stmt_register = $this->dbConnection->prepare($sql_register);
-                    $stmt_register->bind_param("ii", $userId, $post_id);
-                    $stmt_register->execute();
-                }
+            $post_id = $_POST['post_id']; 
+            $sql_check = "SELECT * FROM `user_likes` WHERE id_user = ? AND id_post = ?";
+            $stmt_check = $this->dbConnection->prepare($sql_check);
+            $stmt_check->bind_param("ii", $userId, $post_id);
+            $stmt_check->execute();
+            $result_check = $stmt_check->get_result();
+            if ($result_check->num_rows > 0) {
+                $sql_delete = "DELETE FROM `user_likes` WHERE id_user = ? AND id_post = ?";
+                $stmt_delete = $this->dbConnection->prepare($sql_delete);
+                $stmt_delete->bind_param("ii", $userId, $post_id);
+                $stmt_delete->execute();
+            } else {
+                $sql_register = "INSERT INTO `user_likes`(`id_user`, `id_post`) VALUES (?, ?)";
+                $stmt_register = $this->dbConnection->prepare($sql_register);
+                $stmt_register->bind_param("ii", $userId, $post_id);
+                $stmt_register->execute();
+            }
         }
         header("Location: " . $_SERVER['REQUEST_URI']);
         exit();
-
     }
+
     public function render() {
         ob_start(); 
         ?>
@@ -83,6 +89,7 @@ class PostRender{
                             <div>
                                 <h2><?php echo htmlspecialchars($row['title']); ?></h2>
                                 <p>Category: <?php echo htmlspecialchars($row['category_name']); ?></p>
+                                <p>Posted by: <?php echo htmlspecialchars($row['author_name']); ?></p> <!-- Displaying username -->
                                 <p><?php echo $row['content']; ?></p>
                                 <p>Date: <?php echo $row['created_at']; ?></p>
                                 <form method="POST" action="">
