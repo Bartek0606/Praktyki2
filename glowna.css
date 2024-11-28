@@ -479,3 +479,11 @@ body {
   .heart:hover::after {
     box-shadow: 0 0 6px 1px rgba(255, 0, 0, 0.5); 
   }
+  .posts .post.question-post {
+    background-color: #fffbea; /* Jasno żółte tło */
+    border-left: 4px solid #f39c12; /* Akcent pytań */
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

@@ -16,8 +16,8 @@ class PostRender{
     private function fetchPosts() {
         if (!empty($this->categoryName)) {
             $sql = "
-                SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.image, categories.name AS category_name,
-                COUNT(user_likes.likes_id) AS like_count
+                SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.image, posts.is_question, 
+                categories.name AS category_name, COUNT(user_likes.likes_id) AS like_count
                 FROM posts
                 JOIN categories ON posts.category_id = categories.category_id
                 LEFT JOIN user_likes ON posts.post_id = user_likes.post_id
@@ -32,8 +32,8 @@ class PostRender{
             return $stmt->get_result();
         } else {
             $sql = "
-                SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.image, categories.name AS category_name,
-                COUNT(user_likes.id_likes) AS like_count
+                SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.image, posts.is_question, 
+                categories.name AS category_name, COUNT(user_likes.id_likes) AS like_count
                 FROM posts
                 JOIN categories ON posts.category_id = categories.category_id
                 LEFT JOIN user_likes ON posts.post_id = user_likes.id_post
@@ -41,9 +41,10 @@ class PostRender{
                 ORDER BY posts.created_at DESC
             ";
         }
-
+    
         return $this->dbConnection->query($sql);
     }
+    
     public function like($userId){
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like'])) {
                 $post_id = $_POST['post_id']; 
@@ -76,9 +77,10 @@ class PostRender{
             if ($this->posts->num_rows > 0) {
                 while ($row = $this->posts->fetch_assoc()) {
                     $post_url = 'post.php?id=' . $row['post_id'];
+                    $isQuestionClass = $row['is_question'] == 1 ? 'question-post' : ''; // Dodajemy klasę dla pytań
                     ?>
                     <a href="<?php echo $post_url; ?>" class="post-link">
-                        <div class="post">
+                        <div class="post <?php echo $isQuestionClass; ?>">
                             <img src="data:image/jpeg;base64,<?php echo base64_encode($row['image']); ?>" alt="Post Image">
                             <div>
                                 <h2><?php echo htmlspecialchars($row['title']); ?></h2>
@@ -108,9 +110,10 @@ class PostRender{
             ?>
         </div>
         <?php
-
+    
         return ob_get_clean(); 
     }
+    
 }
 ?>
 <script>
