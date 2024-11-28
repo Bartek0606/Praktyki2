@@ -63,11 +63,11 @@ $postManager->handleDeleteRequest();
             </div>
             <nav class="menu">
                 <hr class="hrbutton">
-                <button class="menu-button">Posts</button>
+               <a href="admin.php"> <button class="menu-button">Posts</button></a>
                 <hr class="hrbutton">
-                <button class="menu-button">Events</button>
+               <a href="events.php"> <button class="menu-button">Events</button></a>
                  <hr class="hrbutton">
-                <button class="menu-button">Comments</button>
+                <a href="comments.php"><button class="menu-button">Comments</button></a>
                  <hr class="hrbutton">
                 <button class="menu-button">Add new category</button>
                  <hr class="hrbutton">
