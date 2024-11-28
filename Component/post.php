@@ -91,8 +91,6 @@ class PostRender{
                                 <h2><?php echo htmlspecialchars($row['title']); ?></h2>
                                 <p>Category: <?php echo htmlspecialchars($row['category_name']); ?></p>
 
-                                <p>Posted by: <?php echo htmlspecialchars($row['author_name']); ?></p>
-
                                 <p>By: <?php echo htmlspecialchars($row['author_name']); ?></p> <!-- Displaying username -->
 
                                 <p><?php echo $row['content']; ?></p>
