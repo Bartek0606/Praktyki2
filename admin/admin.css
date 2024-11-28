@@ -90,7 +90,6 @@ header {
   background-color: #c0392b;
 }
 
-/* Główna sekcja */
 .dashboard {
   background-color: white;
   padding: 20px;
@@ -103,34 +102,34 @@ h2 {
 }
 
 .post-list {
-  list-style-type: none; /* Usunięcie punktów przy liście */
+  list-style-type: none;
   padding: 0;
 }
 
 .post-item {
   display: flex;
-  align-items: flex-start; /* Wyrównanie do góry */
+  align-items: flex-start;
   width: 70%;
   margin: auto;
-  gap: 20px; /* Odstęp między zdjęciem a treścią */
+  gap: 20px;
   border: 1px solid #ccc;
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   background-color: #f9f9f9;
-  margin-bottom: 20px; /* Odstęp między postami */
+  margin-bottom: 20px;
 }
 
 .post-image img {
   max-width: 200px;
-  border-radius: 5px; /* Zaokrąglenie rogów obrazu */
+  border-radius: 5px;
 }
 
 .post-content {
   display: flex;
   flex-direction: column;
-  gap: 10px; /* Odstęp między liniami tekstu */
-  flex: 1; /* Sprawia, że treść wypełnia przestrzeń */
+  gap: 10px;
+  flex: 1;
 }
 
 h3 {
@@ -150,9 +149,9 @@ p {
   border: none;
 }
 .logout_icon {
-  width: 20px; /* Dostosowanie szerokości ikony */
-  height: 20px; /* Dostosowanie wysokości ikony */
-  margin-right: 10px; /* Odstęp między ikoną a tekstem */
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
 }
 .logout-button {
   padding: 10px;
@@ -164,9 +163,8 @@ p {
   cursor: pointer;
   transition: background-color 0.3s;
   font-size: 16px;
-  /* To ustawi przycisk na dole sidebaru */
 }
-/* Popup Modal */
+
 #popupModal {
   display: none;
   position: fixed;
@@ -259,7 +257,6 @@ p {
   margin-bottom: 20px;
 }
 
-/* Styl dla każdego wydarzenia */
 .event {
   background-color: #f9f9f9;
   padding: 15px;
@@ -268,37 +265,64 @@ p {
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Nagłówek wydarzenia */
 .event h3 {
   font-size: 22px;
   color: #2c3e50;
   margin-bottom: 10px;
 }
 
-/* Data wydarzenia */
 .event p strong {
   color: #3498db;
 }
 
-/* Ogólny tekst wydarzenia */
 .event p {
   font-size: 16px;
   color: #555;
   line-height: 1.6;
   margin: 5px 0;
 }
+.add-event-btn {
+  background-color: #00a2ff; /* Zielony kolor tła */
+  color: white; /* Biały kolor tekstu */
+  border: none; /* Brak obramowania */
+  padding: 10px 20px; /* Wewnętrzne odstępy */
+  margin-bottom: 20px;
+  font-size: 16px; /* Rozmiar czcionki */
+  cursor: pointer; /* Kursor wskazujący kliknięcie */
+  border-radius: 5px; /* Zaokrąglone rogi */
+  transition: background-color 0.3s, transform 0.3s;
+}
 
-/* Stylowanie daty */
+.edit-btn {
+  background-color: #4caf50; /* Zielony kolor tła */
+  color: white; /* Biały kolor tekstu */
+  border: none; /* Brak obramowania */
+  padding: 10px 20px; /* Wewnętrzne odstępy */
+  font-size: 16px; /* Rozmiar czcionki */
+  cursor: pointer; /* Kursor wskazujący kliknięcie */
+  border-radius: 5px; /* Zaokrąglone rogi */
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.delete-btn {
+  background-color: red; /* Zielony kolor tła */
+  color: white; /* Biały kolor tekstu */
+  border: none; /* Brak obramowania */
+  padding: 10px 20px; /* Wewnętrzne odstępy */
+  font-size: 16px; /* Rozmiar czcionki */
+  cursor: pointer; /* Kursor wskazujący kliknięcie */
+  border-radius: 5px; /* Zaokrąglone rogi */
+  transition: background-color 0.3s, transform 0.3s;
+}
+
 .event p strong + span {
   font-weight: normal;
 }
 
-/* Dodanie marginesów do wydarzeń */
 .event:last-child {
   margin-bottom: 0;
 }
 
-/* Style dla popupu */
 .popup {
   display: none;
   position: fixed;
@@ -319,18 +343,22 @@ p {
 }
 
 .popup input {
-  width: 100%;
+  width: 80%;
   padding: 10px;
-  margin: 10px 0;
+  margin-top: 10px;
 }
 
+.popup textarea {
+  margin-top: 10px;
+  width: 80%;
+}
 .popup button {
   padding: 10px;
   margin: 5px;
+  float: left;
 }
 
 /* Sekcja komentarzy */
-
 .comments-container {
   margin-top: 20px;
 }
@@ -359,4 +387,15 @@ p {
 
 .comment-body {
   font-size: 16px;
+}
+.delete-button {
+  background-color: red; /* Zielony kolor tła */
+  color: white; /* Biały kolor tekstu */
+  border: none; /* Brak obramowania */
+  padding: 10px 20px; /* Wewnętrzne odstępy */
+  font-size: 16px; /* Rozmiar czcionki */
+  cursor: pointer; /* Kursor wskazujący kliknięcie */
+  border-radius: 5px; /* Zaokrąglone rogi */
+  text-align: right;
+  transition: background-color 0.3s, transform 0.3s;
 }

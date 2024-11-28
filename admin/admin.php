@@ -99,11 +99,7 @@ $postManager->handleDeleteRequest();
                 <p><strong>Category:</strong> <?php echo htmlspecialchars($post['category_name']); ?></p>
                 <p><em>Created at: <?php echo htmlspecialchars($post['created_at']); ?></em></p>
             </div>
-
-            <!-- Przycisk edycji -->
             <button class="editpost_button" data-post-id="<?php echo $post['post_id']; ?>">Edit</button>
-            
-            <!-- Przycisk usuwania -->
             <form method="post" style="display:inline;">
                 <input type="hidden" name="delete_post_id" value="<?php echo $post['post_id']; ?>">
                 <button type="submit" class="deletepost_button">Delete</button>
@@ -116,10 +112,7 @@ $postManager->handleDeleteRequest();
     </main>
 </div>
 
-<!-- Overlay -->
 <div id="overlay"></div>
-
-<!-- Popup Modal -->
 <div id="popupModal">
     <h2>Edit Post</h2>
     <?php if ($postToEdit): ?>
@@ -156,7 +149,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const overlay = document.getElementById("overlay");
     const cancelEdit = document.getElementById("cancelEdit");
 
-    // Pokaż popup
     editButtons.forEach(button => {
         button.addEventListener("click", () => {
             const postId = button.getAttribute("data-post-id");
@@ -164,13 +156,11 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // Obsługa wyświetlenia popupu, gdy mamy `edit_post_id`
     <?php if ($postToEdit): ?>
     popupModal.style.display = "block";
     overlay.style.display = "block";
     <?php endif; ?>
 
-    // Obsługa anulowania edycji
     if (cancelEdit) {
         cancelEdit.addEventListener("click", () => {
             popupModal.style.display = "none";

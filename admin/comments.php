@@ -70,7 +70,6 @@ if (isset($_GET['delete_comment_id'])) {
                 <?php foreach ($comments as $comment): ?>
                     <div class="comment">
                         <div class="comment-header">
-                            <!-- Wyświetlamy pełne imię użytkownika -->
                             <p class="comment-user">User: <?php echo htmlspecialchars($comment['full_name']); ?></p>
                             <p class="comment-date"><?php echo date('Y-m-d H:i:s', strtotime($comment['created_at'])); ?></p>
                         </div>

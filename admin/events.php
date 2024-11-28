@@ -1,12 +1,9 @@
 <?php
-// Łączenie z bazą danych
 include __DIR__ . '/../db_connection.php';
 
-// Zapytanie do bazy danych, aby pobrać wszystkie wydarzenia
 $query = "SELECT * FROM events ORDER BY event_date DESC";
 $result = $conn->query($query);
 
-// Sprawdzamy, czy zapytanie o usunięcie wydarzenia zostało wysłane
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_event_id'])) {
     $event_id_to_delete = $_POST['delete_event_id'];
     $delete_query = "DELETE FROM events WHERE event_id = ?";
@@ -23,8 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_event_id'])) {
         echo "Błąd: Nie udało się przygotować zapytania.";
     }
 }
-
-// Sprawdzamy, czy zapytanie o dodanie wydarzenia zostało wysłane
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_event'])) {
     $event_name = $_POST['event_name'];
     $event_date = $_POST['event_date'];
@@ -94,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_event'])) {
 
     <main class="dashboard">
         <h2>Upcoming Events</h2>
-        <button class="add-event-btn" onclick="openAddEventPopup()">Dodaj Wydarzenie</button>
+        <button class="add-event-btn" onclick="openAddEventPopup()">Add Event</button>
         <?php
         if ($result->num_rows > 0) {
             while ($event = $result->fetch_assoc()) {
@@ -120,15 +115,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_event'])) {
 
 <div id="add-event-popup" class="popup">
     <div class="popup-content">
-        <h3>Dodaj Wydarzenie</h3>
+        <h3>Add Event</h3>
         <form method="POST" action="events.php">
             <input type="hidden" name="add_event" value="1">
-            <input type="text" name="event_name" placeholder="Nazwa wydarzenia" required>
+            <input type="text" name="event_name" placeholder="Event Name" required>
             <input type="datetime-local" name="event_date" required>
-            <input type="text" name="event_location" placeholder="Lokalizacja" required>
-            <textarea name="event_description" placeholder="Opis wydarzenia" required></textarea>
-            <button type="submit">Zatwierdź</button>
-            <button type="button" onclick="closeAddEventPopup()">Anuluj</button>
+            <input type="text" name="event_location" placeholder="Location" required>
+            <textarea name="event_description" placeholder="Description" required></textarea>
+            <button type="submit">Save</button>
+            <button type="button" onclick="closeAddEventPopup()">Cancel</button>
         </form>
     </div>
 </div>
@@ -142,8 +137,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_event'])) {
             <input type="datetime-local" id="event-date" name="event_date" required>
             <input type="text" id="event-location" name="event_location" placeholder="Location" required>
             <textarea id="event-description" name="event_description" placeholder="Event Description" required></textarea>
-            <button type="submit">Zatwierdź</button>
-            <button type="button" onclick="closePopup()">Anuluj</button>
+            <button type="submit">Save</button>
+            <button type="button" onclick="closePopup()">Cancel</button>
         </form>
     </div>
 </div>
