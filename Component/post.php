@@ -2,12 +2,14 @@
 class PostRender{
     private $dbConnection;
     private $categoryName;
+    private $isLoggedIn;
     private $posts;
     private $userId;
 
-    public function __construct($dbConnection, $categoryName = null, $userId = null) {
+    public function __construct($dbConnection, $isLoggedIn = false, $categoryName = null, $userId = null) {
         $this->dbConnection = $dbConnection;
         $this->categoryName = $categoryName;
+        $this->isLoggedIn = $isLoggedIn;
         $this->posts = $this->fetchPosts();
         $this->userId = $userId;
     }
@@ -42,9 +44,9 @@ class PostRender{
 
         return $this->dbConnection->query($sql);
     }
-    public function like($userId){
+    public function like($userId, $isLoggedIn){
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like'])) {
-            //if ($isLoggedIn) {
+            if ($isLoggedIn) {
                 $post_id = $_POST['post_id']; 
                 $sql_check = "SELECT * FROM `user_likes` WHERE user_id = ? AND post_id = ?";
                 $stmt_check = $this->dbConnection->prepare($sql_check);
@@ -65,9 +67,10 @@ class PostRender{
                     }
         
                 }
-            // } else {
-            //     $message = "<p>You must be logged in to register for this event.</p>";
-            // }
+            } else {
+                echo "nie jestes zalogowany";
+                
+            }
         }
 
     }
