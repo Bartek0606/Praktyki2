@@ -106,6 +106,17 @@ h2 {
   padding: 0;
 }
 
+.deletepost_button {
+  background-color: red; /* Zielony kolor tła */
+  color: white; /* Biały kolor tekstu */
+  border: none; /* Brak obramowania */
+  padding: 7px 12px; /* Wewnętrzne odstępy */
+  font-size: 16px; /* Rozmiar czcionki */
+  cursor: pointer; /* Kursor wskazujący kliknięcie */
+  border-radius: 5px; /* Zaokrąglone rogi */
+  transition: background-color 0.3s, transform 0.3s;
+}
+
 .post-item {
   display: flex;
   align-items: flex-start;
@@ -142,11 +153,15 @@ p {
   margin: 0;
   font-size: 1rem;
 }
-#editpost_button {
-  width: 40px;
-  height: 40px;
-  background-color: transparent;
-  border: none;
+.editpost_button {
+  background-color: #4caf50; /* Zielony kolor tła */
+  color: white; /* Biały kolor tekstu */
+  border: none; /* Brak obramowania */
+  padding: 7px 12px; /* Wewnętrzne odstępy */
+  font-size: 16px; /* Rozmiar czcionki */
+  cursor: pointer; /* Kursor wskazujący kliknięcie */
+  border-radius: 5px; /* Zaokrąglone rogi */
+  transition: background-color 0.3s, transform 0.3s;
 }
 .logout_icon {
   width: 20px;
@@ -282,36 +297,36 @@ p {
   margin: 5px 0;
 }
 .add-event-btn {
-  background-color: #00a2ff; /* Zielony kolor tła */
-  color: white; /* Biały kolor tekstu */
-  border: none; /* Brak obramowania */
-  padding: 10px 20px; /* Wewnętrzne odstępy */
+  background-color: #00a2ff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
   margin-bottom: 20px;
-  font-size: 16px; /* Rozmiar czcionki */
-  cursor: pointer; /* Kursor wskazujący kliknięcie */
-  border-radius: 5px; /* Zaokrąglone rogi */
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
   transition: background-color 0.3s, transform 0.3s;
 }
 
 .edit-btn {
-  background-color: #4caf50; /* Zielony kolor tła */
-  color: white; /* Biały kolor tekstu */
-  border: none; /* Brak obramowania */
-  padding: 10px 20px; /* Wewnętrzne odstępy */
-  font-size: 16px; /* Rozmiar czcionki */
-  cursor: pointer; /* Kursor wskazujący kliknięcie */
-  border-radius: 5px; /* Zaokrąglone rogi */
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
   transition: background-color 0.3s, transform 0.3s;
 }
 
 .delete-btn {
-  background-color: red; /* Zielony kolor tła */
-  color: white; /* Biały kolor tekstu */
-  border: none; /* Brak obramowania */
-  padding: 10px 20px; /* Wewnętrzne odstępy */
-  font-size: 16px; /* Rozmiar czcionki */
-  cursor: pointer; /* Kursor wskazujący kliknięcie */
-  border-radius: 5px; /* Zaokrąglone rogi */
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
   transition: background-color 0.3s, transform 0.3s;
 }
 
@@ -323,79 +338,159 @@ p {
   margin-bottom: 0;
 }
 
+/* Popup do dodawania eventow */
+
 .popup {
-  display: none;
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  justify-content: center;
-  align-items: center;
-}
-
-.popup-content {
-  background: white;
+  display: none;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
   padding: 20px;
-  border-radius: 5px;
-  width: 300px;
-}
-
-.popup input {
-  width: 80%;
-  padding: 10px;
-  margin-top: 10px;
-}
-
-.popup textarea {
-  margin-top: 10px;
-  width: 80%;
-}
-.popup button {
-  padding: 10px;
-  margin: 5px;
-  float: left;
-}
-
-/* Sekcja komentarzy */
-.comments-container {
-  margin-top: 20px;
-}
-
-.comment {
-  border: 1px solid #ccc;
-  padding: 15px;
-  margin-bottom: 10px;
-  background-color: #f9f9f9;
-}
-
-.comment-header {
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.comment-user {
-  font-size: 14px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  z-index: 1000;
+  font-family: Arial, sans-serif;
   color: #333;
 }
 
-.comment-date {
-  font-size: 12px;
-  color: #777;
+.popup h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  text-align: center;
 }
 
+.popup label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.popup input[type="text"],
+.popup input[type="datetime-local"],
+.popup textarea,
+.popup select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+}
+
+.popup textarea {
+  height: 100px;
+  resize: none;
+}
+
+.popup button {
+  display: inline-block;
+  padding: 10px 20px;
+  margin-right: 10px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.popup button[type="submit"] {
+  background-color: #007bff;
+  color: white;
+}
+
+.popup button[type="button"] {
+  background-color: #6c757d;
+  color: white;
+}
+
+.popup button:hover {
+  opacity: 0.9;
+}
+
+/* Sekcja komentarzy */
+.search-form {
+  margin-bottom: 20px;
+  width: 100%;
+  gap: 10px;
+}
+
+.search-form input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.search-form button {
+  padding: 8px 12px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.search-form button:hover {
+  background-color: #0056b3;
+}
+
+/* Stylizacja kontenera komentarzy */
+.comments-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Stylizacja pojedynczego komentarza */
+.comment {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  display: flex;
+  padding: 15px;
+  background-color: #f9f9f9;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Stylizacja nagłówka komentarza */
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #555;
+}
+
+/* Stylizacja treści komentarza */
 .comment-body {
   font-size: 16px;
+  color: #333;
+  line-height: 1.5;
 }
+
+/* Stylizacja stopki komentarza */
+.comment-footer {
+  display: flex;
+  justify-content: flex-end; /* Ustawienie przycisku po prawej stronie */
+}
+
 .delete-button {
-  background-color: red; /* Zielony kolor tła */
-  color: white; /* Biały kolor tekstu */
-  border: none; /* Brak obramowania */
-  padding: 10px 20px; /* Wewnętrzne odstępy */
-  font-size: 16px; /* Rozmiar czcionki */
-  cursor: pointer; /* Kursor wskazujący kliknięcie */
-  border-radius: 5px; /* Zaokrąglone rogi */
-  text-align: right;
-  transition: background-color 0.3s, transform 0.3s;
+  color: #d9534f;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 6px 10px;
+  border: 1px solid #d9534f;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  background-color: #d9534f;
+  color: #fff;
 }

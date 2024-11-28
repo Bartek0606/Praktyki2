@@ -98,11 +98,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_event'])) {
                 echo "<p><strong>Date:</strong> " . htmlspecialchars($event['event_date']) . "</p>";
                 echo "<p><strong>Location:</strong> " . htmlspecialchars($event['location']) . "</p>";
                 echo "<p><strong>Description:</strong> " . nl2br(htmlspecialchars($event['event_description'])) . "</p>";
-                echo "<button class='edit-btn' onclick='openEditPopup(" . $event['event_id'] . ", \"" . addslashes($event['event_name']) . "\", \"" . addslashes($event['event_date']) . "\", \"" . addslashes($event['location']) . "\", \"" . addslashes($event['event_description']) . "\")'>Edytuj</button>";
+                echo "<button class='edit-btn' onclick='openEditPopup(" . $event['event_id'] . ", \"" . addslashes($event['event_name']) . "\", \"" . addslashes($event['event_date']) . "\", \"" . addslashes($event['location']) . "\", \"" . addslashes($event['event_description']) . "\")'>Edit</button>";
 
                 echo "<form method='POST' action='events.php' style='display:inline;'>
                         <input type='hidden' name='delete_event_id' value='" . $event['event_id'] . "'>
-                        <button type='submit' class='delete-btn'>Usuń</button>
+                        <button type='submit' class='delete-btn'>Delete</button>
                     </form>";
                 echo "</div>";
             }
@@ -112,30 +112,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_event'])) {
         ?>
     </main>
 </div>
-
+<div id="overlay"></div>
 <div id="add-event-popup" class="popup">
     <div class="popup-content">
         <h3>Add Event</h3>
         <form method="POST" action="events.php">
             <input type="hidden" name="add_event" value="1">
+            <label for="event-name">Event name:</label>
             <input type="text" name="event_name" placeholder="Event Name" required>
+            <label for="event-date">Event date:</label>
             <input type="datetime-local" name="event_date" required>
+            <label for="event-location">Event location:</label>
             <input type="text" name="event_location" placeholder="Location" required>
+            <label for="event-description">Event description:</label>
             <textarea name="event_description" placeholder="Description" required></textarea>
             <button type="submit">Save</button>
             <button type="button" onclick="closeAddEventPopup()">Cancel</button>
         </form>
     </div>
 </div>
-
+<div id="overlay"></div>
 <div id="edit-popup" class="popup">
     <div class="popup-content">
         <h3>Edit Event</h3>
         <form method="POST" id="edit-form" action="edit_event.php">
             <input type="hidden" id="event-id" name="event_id">
+            <label for="event-name">Event name:</label>
             <input type="text" id="event-name" name="event_name" placeholder="Event Name" required>
+            <label for="event-date">Event date:</label>
             <input type="datetime-local" id="event-date" name="event_date" required>
+            <label for="event-location">Event location:</label>
             <input type="text" id="event-location" name="event_location" placeholder="Location" required>
+            <label for="event-description">Event description:</label>
             <textarea id="event-description" name="event_description" placeholder="Event Description" required></textarea>
             <button type="submit">Save</button>
             <button type="button" onclick="closePopup()">Cancel</button>
@@ -144,30 +152,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_event'])) {
 </div>
 
 <script>
-    // Funkcja otwierająca popup dla dodawania wydarzenia
-    function openAddEventPopup() {
-        document.getElementById('add-event-popup').style.display = 'flex';
-    }
+ // Funkcja otwierająca popup dla dodawania wydarzenia
+function openAddEventPopup() {
+    document.getElementById('add-event-popup').style.display = 'flex';
+    document.getElementById('overlay').style.display = 'block'; // Pokazuje overlay
+}
 
-    // Funkcja zamykająca popup dla dodawania wydarzenia
-    function closeAddEventPopup() {
-        document.getElementById('add-event-popup').style.display = 'none';
-    }
+// Funkcja zamykająca popup dla dodawania wydarzenia
+function closeAddEventPopup() {
+    document.getElementById('add-event-popup').style.display = 'none';
+    document.getElementById('overlay').style.display = 'none'; // Ukrywa overlay
+}
 
-    // Funkcja otwierająca popup i wypełniająca formularz danymi wydarzenia (do edycji)
-    function openEditPopup(eventId, name, date, location, description) {
-        document.getElementById('event-id').value = eventId;
-        document.getElementById('event-name').value = name;
-        document.getElementById('event-date').value = date;
-        document.getElementById('event-location').value = location;
-        document.getElementById('event-description').value = description;
-        document.getElementById('edit-popup').style.display = 'flex';
-    }
+// Funkcja otwierająca popup i wypełniająca formularz danymi wydarzenia (do edycji)
+function openEditPopup(eventId, name, date, location, description) {
+    document.getElementById('event-id').value = eventId;
+    document.getElementById('event-name').value = name;
+    document.getElementById('event-date').value = date;
+    document.getElementById('event-location').value = location;
+    document.getElementById('event-description').value = description;
+    document.getElementById('edit-popup').style.display = 'flex';
+    document.getElementById('overlay').style.display = 'block'; // Pokazuje overlay
+}
 
-    // Funkcja zamykająca popup dla edycji
-    function closePopup() {
-        document.getElementById('edit-popup').style.display = 'none';
-    }
+// Funkcja zamykająca popup dla edycji
+function closePopup() {
+    document.getElementById('edit-popup').style.display = 'none';
+    document.getElementById('overlay').style.display = 'none'; // Ukrywa overlay
+}
+
 </script>
 
 </body>
