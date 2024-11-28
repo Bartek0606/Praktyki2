@@ -496,3 +496,40 @@ body {
     transform: scale(1.02);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+.posts .post {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.posts .post.no-image {
+  flex-direction: column;
+  text-align: center;
+}
+
+.posts .post img {
+  width: 40%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-right: 20px;
+  flex-shrink: 0;
+  border: 1px solid #ddd;
+}
+
+.posts .post.no-image img {
+  display: none;
+}
+
+.posts .post .post-content {
+  flex-grow: 1;
+}
+
+.posts .post.no-image .post-content {
+  margin: 0 auto;
+}
