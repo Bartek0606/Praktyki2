@@ -216,7 +216,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="post-content">
                                 <h3><?php echo htmlspecialchars($post['title']); ?></h3>
                                 <p class="category"><strong>Category: <?php echo htmlspecialchars($post['category_name']); ?></strong></p>
-                                <p><?php echo htmlspecialchars($post['content']); ?></p>
+                                <p><?php echo $post['content']; ?></p>
                                 <div class="post-date">
                                     <strong>Date: </strong><?php echo htmlspecialchars($post['created_at']); ?>
                                 </div>
