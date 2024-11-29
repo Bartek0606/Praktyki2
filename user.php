@@ -40,12 +40,15 @@ if (!$user) {
 
 // Get user's posts
 $sql_posts = "
-    SELECT posts.post_id, posts.title, posts.content, posts.image, posts.created_at, categories.name AS category_name 
-    FROM posts 
-    LEFT JOIN categories ON posts.category_id = categories.category_id 
+    SELECT posts.post_id, posts.title, posts.content, posts.image, posts.created_at, 
+           categories.name AS category_name, users.username AS author_username
+    FROM posts
+    LEFT JOIN categories ON posts.category_id = categories.category_id
+    LEFT JOIN users ON posts.user_id = users.user_id
     WHERE posts.user_id = ? 
     ORDER BY posts.created_at DESC
 ";
+
 $stmt_posts = $conn->prepare($sql_posts);
 $stmt_posts->bind_param("i", $profileUserId);
 $stmt_posts->execute();
@@ -105,6 +108,7 @@ if ($isLoggedIn && isset($_POST['follow'])) {
     <meta charset="UTF-8">
     <link rel="stylesheet" href="user.css">
     <link rel="stylesheet" href="navbar.css">
+    <script src="user.js" defer></script>
     <title><?php echo htmlspecialchars($user['username']); ?>'s Profile • HobbyHub</title>
 </head>
 <body>
@@ -122,87 +126,88 @@ if ($isLoggedIn && isset($_POST['follow'])) {
             <?php endif; ?>
         </div>
         <div class="user-details">
-    <h2><?php echo htmlspecialchars($user['username']); ?></h2>
-    <p><strong>Full Name:</strong> <?php echo htmlspecialchars($user['full_name']); ?></p>
-    <p><strong>Bio:</strong> <?php echo nl2br(htmlspecialchars($user['bio'])); ?></p>
-    <p><strong>Followers: </strong><?php echo $followers_count; ?> <strong>Following: </strong><?php echo $following_count; ?></p>
+            <h2><?php echo htmlspecialchars($user['username']); ?></h2>
+            <p><strong>Full Name:</strong> <?php echo htmlspecialchars($user['full_name']); ?></p>
+            <p><strong>Bio:</strong> <?php echo nl2br(htmlspecialchars($user['bio'])); ?></p>
+            <p><strong>Followers: </strong><?php echo $followers_count; ?> <strong>Following: </strong><?php echo $following_count; ?></p>
 
-    <!-- Only show Follow button if the user is logged in and is not following the profile user -->
-    <?php if ($isLoggedIn && $userId != $profileUserId): ?>
-        <form method="POST">
-            <button type="submit" name="follow" class="follow-btn <?php echo $isFollowing ? 'unfollow' : ''; ?>">
-                <?php echo $isFollowing ? 'Unfollow' : 'Follow'; ?>
-            </button>
-        </form>
-    <?php endif; ?>
+            <!-- Only show Follow button if the user is logged in and is not following the profile user -->
+            <?php if ($isLoggedIn && $userId != $profileUserId): ?>
+                <form method="POST">
+                    <button type="submit" name="follow" class="follow-btn <?php echo $isFollowing ? 'unfollow' : ''; ?>">
+                        <?php echo $isFollowing ? 'Unfollow' : 'Follow'; ?>
+                    </button>
+                </form>
+            <?php endif; ?>
 
-    <!-- Show Edit Profile button if viewing own profile -->
-    <?php if ($isLoggedIn && $userId == $profileUserId): ?>
-        <a href="profile.php" class="edit-profile-btn">
-            <button class="btn edit-btn">Edit Profile</button>
-        </a>
-    <?php endif; ?>
-</div>
-
+            <!-- Show Edit Profile button if viewing own profile -->
+            <?php if ($isLoggedIn && $userId == $profileUserId): ?>
+                <a href="profile.php" class="edit-profile-btn">
+                    <button class="btn edit-btn">Edit Profile</button>
+                </a>
+            <?php endif; ?>
+        </div>
     </div>
 
     <div class="toggle-buttons">
-    <button id="show-posts" class="toggle-btn">Your Posts</button>
-    <button id="show-likes" class="toggle-btn">Your Likes</button>
-</div>
+        <?php if ($isLoggedIn && $userId == $profileUserId): ?>
+            <button id="show-posts" class="toggle-btn">Your Posts</button>
+            <button id="show-likes" class="toggle-btn">Your Likes</button>
+        <?php endif; ?>
+    </div>
 
     <!-- Posty użytkownika -->
     <div class="container posts-container" id="posts-container">
-        <h2>Your Posts</h2>
+        <h2>
+            <?php 
+            if ($isLoggedIn && $userId == $profileUserId) {
+                echo "Your Posts";
+            } else {
+                echo htmlspecialchars($user['username']) . "'s Posts";
+            }
+            ?>
+        </h2>
         <?php
-        $sql_posts = "
-            SELECT posts.post_id, posts.title, posts.content, posts.image, posts.created_at, categories.name AS category_name 
-            FROM posts 
-            LEFT JOIN categories ON posts.category_id = categories.category_id 
-            WHERE posts.user_id = '$userId' 
-            ORDER BY posts.created_at DESC
-        ";
-        $result_posts = $conn->query($sql_posts);
-
         if ($result_posts->num_rows > 0): ?>
             <div class="posts">
-                <?php while ($post = $result_posts->fetch_assoc()): ?>
-                    <a href="post.php?id=<?php echo $post['post_id']; ?>" class="post-link">
-                        <div class="post">
-                            <?php if (!empty($post['image'])): ?>
-                                <img src="data:image/jpeg;base64,<?php echo base64_encode($post['image']); ?>" alt="Post Image" class="post-image">
-                            <?php endif; ?>
-                            <div class="post-content">
-                                <h3><?php echo htmlspecialchars($post['title']); ?></h3>
-                                <p class="category"><strong>Category: <?php echo htmlspecialchars($post['category_name']); ?></strong></p>
-                                <p><?php echo htmlspecialchars($post['content']); ?></p>
-                                <div class="post-date">
-                                    <strong>Date: </strong><?php echo htmlspecialchars($post['created_at']); ?>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                <?php endwhile; ?>
+    <?php while ($post = $result_posts->fetch_assoc()): ?>
+        <a href="post.php?id=<?php echo $post['post_id']; ?>" class="post-link">
+            <div class="post">
+                <?php if (!empty($post['image'])): ?>
+                    <img src="data:image/jpeg;base64,<?php echo base64_encode($post['image']); ?>" alt="Post Image" class="post-image">
+                <?php endif; ?>
+                <div class="post-content">
+                    <h3><?php echo htmlspecialchars($post['title']); ?></h3>
+                    <p class="category"><strong>Category: <?php echo htmlspecialchars($post['category_name']); ?></strong></p>
+                    <p><strong class="post-autor">By: <?php echo htmlspecialchars($post['author_username']); ?></strong></p>
+                    <p><?php echo $post['content']; ?></p>
+                    <p class="post-date"><strong>Date: </strong><?php echo htmlspecialchars($post['created_at']); ?></p>
+                </div>
             </div>
+        </a>
+    <?php endwhile; ?>
+</div>
+
         <?php else: ?>
             <p>No posts yet. Start creating posts!</p>
         <?php endif; ?>
     </div>
+    
     <div class="container posts-container" id="likes-container" style="display: none;">
-   
-        <h2>Your Like</h2>
-        <?php
-        $sql_like = "
-        SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.image, categories.name AS category_name,
-            COUNT(user_likes.id_likes) AS like_count,users.user_id, users.username
-            FROM posts
-            JOIN categories ON posts.category_id = categories.category_id
-            LEFT JOIN user_likes ON posts.post_id = user_likes.id_post
-            LEFT JOIN users ON user_likes.id_user = users.user_id
-            WHERE users.user_id = ?
-            GROUP BY posts.post_id, users.user_id, users.username, categories.name
-            ORDER BY posts.created_at DESC
-    ";
+    <h2>Your Likes</h2>
+    <?php
+   $sql_like = "
+    SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.image, categories.name AS category_name,
+           COUNT(user_likes.id_likes) AS like_count, users.username AS author_username
+    FROM posts
+    JOIN categories ON posts.category_id = categories.category_id
+    LEFT JOIN user_likes ON posts.post_id = user_likes.id_post
+    LEFT JOIN users ON posts.user_id = users.user_id  -- Corrected: This should join on the `posts.user_id`, not `user_likes.id_user`
+    WHERE user_likes.id_user = ?   -- We need to check the `user_likes.id_user` here
+    GROUP BY posts.post_id, users.user_id, categories.name
+    ORDER BY posts.created_at DESC
+";
+
     $stmt_like = $conn->prepare($sql_like);
     $stmt_like->bind_param("i", $userId);
     $stmt_like->execute();
@@ -230,39 +235,36 @@ if ($isLoggedIn && isset($_POST['follow'])) {
         exit();
     }
 
- 
-
-        if ($result_like->num_rows > 0): ?>
-            <div class="posts">
-                <?php while ($like = $result_like->fetch_assoc()): ?>
-                    <a href="post.php?id=<?php echo $like['post_id']; ?>" class="post-link">
-                        <div class="post">
-                            <?php if (!empty($like['image'])): ?>
-                                <img src="data:image/jpeg;base64,<?php echo base64_encode($like['image']); ?>" alt="Post Image" class="post-image">
-                            <?php endif; ?>
-                            <div class="post-content">
-                                <h3><?php echo htmlspecialchars($like['title']); ?></h3>
-                                <p class="category"><strong>Category: <?php echo htmlspecialchars($like['category_name']); ?></strong></p>
-                                <p><?php echo htmlspecialchars($like['content']); ?></p>
-                                <div class="post-date">
-                                    <strong>Date: </strong><?php echo htmlspecialchars($like['created_at']); ?>
-                                </div>
-                                <form method="POST" action="">
-                                    <div>Likes: <?php echo $like['like_count']; ?></div> 
-                                    <input type="hidden" name="post_id" value="<?php echo $like['post_id']; ?>">
-                                    <button class="heart" name="like" ></button>
-                                </form>
-                            </div>
+    if ($result_like->num_rows > 0): ?>
+        <div class="posts">
+            <?php while ($like = $result_like->fetch_assoc()): ?>
+                <a href="post.php?id=<?php echo $like['post_id']; ?>" class="post-link">
+                    <div class="post">
+                        <?php if (!empty($like['image'])): ?>
+                            <img src="data:image/jpeg;base64,<?php echo base64_encode($like['image']); ?>" alt="Post Image" class="post-image">
+                        <?php endif; ?>
+                        <div class="post-content">
+                            <h3><?php echo htmlspecialchars($like['title']); ?></h3>
+                            <p class="category"><strong>Category: <?php echo htmlspecialchars($like['category_name']); ?></strong></p>
+                            <p><strong class="post-author">By: <?php echo htmlspecialchars($like['author_username']); ?></strong></p>
+                            <p><?php echo $like['content']; ?></p>
+                            <p class="post-date"><strong>Date: </strong><?php echo htmlspecialchars($like['created_at']); ?></p>
+                            <form method="POST" action="">
+                                <p>Likes: <?php echo $like['like_count']; ?></p> 
+                                <input type="hidden" name="post_id" value="<?php echo $like['post_id']; ?>">
+                                <button class="heart" name="like" ></button>
+                            </form>
                         </div>
-                    </a>
-                <?php endwhile; ?>
-            </div>
-        <?php else: ?>
-            <p>No posts yet. Start creating posts!</p>
-        <?php endif; ?>
-    </div>
-</main>
+                    </div>
+                </a>
+            <?php endwhile; ?>
+        </div>
+    <?php else: ?>
+        <p>No posts liked yet. </p>
+    <?php endif; ?>
+</div>
 
+</main>
 </body>
 </html>
 
@@ -270,14 +272,3 @@ if ($isLoggedIn && isset($_POST['follow'])) {
 $conn->close();
 ob_end_flush();
 ?>
-<script>
-    document.getElementById('show-posts').addEventListener('click', function() {
-        document.getElementById('posts-container').style.display = 'block';
-        document.getElementById('likes-container').style.display = 'none';
-    });
-
-    document.getElementById('show-likes').addEventListener('click', function() {
-        document.getElementById('posts-container').style.display = 'none';
-        document.getElementById('likes-container').style.display = 'block';
-    });
-</script>
