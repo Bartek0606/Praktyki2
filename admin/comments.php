@@ -45,7 +45,7 @@ if (isset($_GET['delete_comment_id'])) {
                  <hr class="hrbutton">
                 <a href="comments.php"><button class="menu-button">Comments</button></a>
                  <hr class="hrbutton">
-                <button class="menu-button">Add new category</button>
+                  <a href="categories.php"> <button class="menu-button">Add new category</button></a>
                  <hr class="hrbutton">
             </nav>
             <hr class="hrbutton">

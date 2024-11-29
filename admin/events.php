@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_event'])) {
                  <hr class="hrbutton">
                 <a href="comments.php"><button class="menu-button">Comments</button></a>
                  <hr class="hrbutton">
-                <button class="menu-button">Add new category</button>
+                  <a href="categories.php"> <button class="menu-button">Add new category</button></a>
                  <hr class="hrbutton">
             </nav>
             <hr class="hrbutton">
@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_event'])) {
     </div>
         </aside>
 
-    <main class="dashboard">
+   <main class="dashboard">
         <h2>Upcoming Events</h2>
         <button class="add-event-btn" onclick="openAddEventPopup()">Add Event</button>
         <?php
@@ -111,6 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_event'])) {
         }
         ?>
     </main>
+
 </div>
 <div id="overlay"></div>
 <div id="add-event-popup" class="popup">
