@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($conn->query($sql_update) === TRUE) {
             $_SESSION['success_message'] = "Profile picture has been reset.";
             $_SESSION['success_message_type'] = 'reset'; // Typ komunikatu - reset
-            header("Location: profile.php");
+            header("Location: edit_profile.php");
             exit();
         } else {
             echo "Error resetting profile picture: " . $conn->error;
@@ -52,62 +52,83 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $full_name = $_POST['full_name'];
     $bio = $_POST['bio'];
 
-    // Sprawdzenie, czy zdjęcie profilowe zostało przesłane
-    $profile_picture = isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === 0
-        ? addslashes(file_get_contents($_FILES['profile_picture']['tmp_name']))
-        : $user['profile_picture'];
+    // Sprawdzanie, czy username lub email już istnieją
+    $sql_check_username = "SELECT * FROM users WHERE username = '$username' AND user_id != '$user_id'";
+    $result_username = $conn->query($sql_check_username);
 
-    // Sprawdź, czy dokonano zmian
-    $noChanges = $username === $user['username'] &&
-                 $email === $user['email'] &&
-                 $full_name === $user['full_name'] &&
-                 $bio === $user['bio'] &&
-                 $profile_picture === $user['profile_picture'];
+    $sql_check_email = "SELECT * FROM users WHERE email = '$email' AND user_id != '$user_id'";
+    $result_email = $conn->query($sql_check_email);
 
-    // Zmienna do przechowywania informacji o zmianach
-    $changes_made = [];
+    // Debugging - Sprawdź, czy zapytania zwróciły wiersze
+    if ($result_username === false) {
+        die("SQL error checking username: " . $conn->error);
+    }
+    if ($result_email === false) {
+        die("SQL error checking email: " . $conn->error);
+    }
 
-    if (!$noChanges) {
-        if ($username !== $user['username']) {
-            $changes_made[] = "Username: $user[username] → $username";
-        }
-        if ($email !== $user['email']) {
-            $changes_made[] = "Email: $user[email] → $email";
-        }
-        if ($full_name !== $user['full_name']) {
-            $changes_made[] = "Full Name: $user[full_name] → $full_name";
-        }
-        if ($bio !== $user['bio']) {
-            $changes_made[] = "Bio: " . ($user['bio'] ? $user['bio'] : 'None') . " → $bio";
-        }
-        if ($profile_picture !== $user['profile_picture']) {
-            $changes_made[] = "Profile Picture: Changed";
-        }
-
-        // Tworzenie zapytania SQL do aktualizacji
-        $sql_update = isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == 0
-            ? "UPDATE users SET username = '$username', email = '$email', full_name = '$full_name', bio = '$bio', profile_picture = '$profile_picture' WHERE user_id = '$user_id'"
-            : "UPDATE users SET username = '$username', email = '$email', full_name = '$full_name', bio = '$bio' WHERE user_id = '$user_id'";
-
-        // Wykonanie zapytania
-        if ($conn->query($sql_update) === TRUE) {
-            $_SESSION['username'] = $username;
-            $_SESSION['success_message'] = "Your profile has been successfully updated.";
-            $_SESSION['success_message_changes'] = implode("<br>", $changes_made); // Dodajemy zmiany do komunikatu
-            $_SESSION['success_message_type'] = 'success'; // Typ komunikatu - sukces
-            header("Location: profile.php");
-            exit();
-        } else {
-            echo "Error updating record: " . $conn->error;
-        }
+    // Jeżeli username lub email są już zajęte, wyświetl błąd
+    if ($result_username->num_rows > 0) {
+        $_SESSION['error_message'] = "Username is already taken.";
+    } elseif ($result_email->num_rows > 0) {
+        $_SESSION['error_message'] = "Email is already taken.";
     } else {
-        $_SESSION['success_message'] = "No changes were made.";
-        $_SESSION['success_message_type'] = 'warning'; // Typ komunikatu - brak zmian
-        header("Location: profile.php");
-        exit();
+        // Sprawdzenie, czy zdjęcie profilowe zostało przesłane
+        $profile_picture = isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === 0
+            ? addslashes(file_get_contents($_FILES['profile_picture']['tmp_name']))
+            : $user['profile_picture'];
+
+        // Sprawdź, czy dokonano zmian
+        $noChanges = $username === $user['username'] &&
+                     $email === $user['email'] &&
+                     $full_name === $user['full_name'] &&
+                     $bio === $user['bio'] &&
+                     $profile_picture === $user['profile_picture'];
+
+        // Zmienna do przechowywania informacji o zmianach
+        $changes_made = [];
+
+        if (!$noChanges) {
+            if ($username !== $user['username']) {
+                $changes_made[] = "Username: $user[username] → $username";
+            }
+            if ($email !== $user['email']) {
+                $changes_made[] = "Email: $user[email] → $email";
+            }
+            if ($full_name !== $user['full_name']) {
+                $changes_made[] = "Full Name: $user[full_name] → $full_name";
+            }
+            if ($bio !== $user['bio']) {
+                $changes_made[] = "Bio: " . ($user['bio'] ? $user['bio'] : 'None') . " → $bio";
+            }
+            if ($profile_picture !== $user['profile_picture']) {
+                $changes_made[] = "Profile Picture: Changed";
+            }
+
+            // Tworzenie zapytania SQL do aktualizacji
+            $sql_update = isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == 0
+                ? "UPDATE users SET username = '$username', email = '$email', full_name = '$full_name', bio = '$bio', profile_picture = '$profile_picture' WHERE user_id = '$user_id'"
+                : "UPDATE users SET username = '$username', email = '$email', full_name = '$full_name', bio = '$bio' WHERE user_id = '$user_id'";
+
+            // Wykonanie zapytania
+            if ($conn->query($sql_update) === TRUE) {
+                $_SESSION['username'] = $username;
+                $_SESSION['success_message'] = "Your profile has been successfully updated.";
+                $_SESSION['success_message_changes'] = implode("<br>", $changes_made); // Dodajemy zmiany do komunikatu
+                $_SESSION['success_message_type'] = 'success'; // Typ komunikatu - sukces
+                header("Location: edit_profile.php");
+                exit();
+            } else {
+                echo "Error updating record: " . $conn->error;
+            }
+        } else {
+            $_SESSION['success_message'] = "No changes were made.";
+            $_SESSION['success_message_type'] = 'warning'; // Typ komunikatu - brak zmian
+            header("Location: edit_profile.php");
+            exit();
+        }
     }
 }
-
 
 ?>
 
@@ -115,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="profile.css">
+    <link rel="stylesheet" href="edit_profile.css">
     <script src="profile.js" defer></script>
     <link rel="stylesheet" href="navbar.css">
     <title>Profile • HobbyHub</title>
@@ -172,10 +193,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
     </div>
 
-    <!-- Wiadomość o sukcesie -->
-<?php if (isset($_SESSION['success_message'])): ?>
-    <div class="success-message <?php echo isset($_SESSION['success_message_type']) ? $_SESSION['success_message_type'] : ''; ?>">
-        <p><?php echo htmlspecialchars($_SESSION['success_message']); ?></p>
+    <!-- Wiadomość o błędach i sukcesie -->
+<?php
+$message_class = '';
+$message_text = '';
+
+if (isset($_SESSION['error_message'])) {
+    $message_class = 'error-message'; // Define class for error
+    $message_text = $_SESSION['error_message'];
+    unset($_SESSION['error_message']);
+} elseif (isset($_SESSION['success_message'])) {
+    $message_class = 'success-message ' . ($_SESSION['success_message_type'] ?? ''); // Add success class and type
+    $message_text = $_SESSION['success_message'];
+    unset($_SESSION['success_message']);
+    unset($_SESSION['success_message_changes']);
+}
+?>
+
+<?php if ($message_text): ?>
+    <div class="<?php echo $message_class; ?>">
+        <p><?php echo htmlspecialchars($message_text); ?></p>
         <?php if (isset($_SESSION['success_message_changes'])): ?>
             <div class="changes-made">
                 <strong>Changes made:</strong>
@@ -183,9 +220,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         <?php endif; ?>
     </div>
-    <?php unset($_SESSION['success_message']); ?>
-    <?php unset($_SESSION['success_message_changes']); ?>
 <?php endif; ?>
+
 
 </main>
 </body>
@@ -194,5 +230,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php
 $conn->close();
 ob_end_flush();
-?>
-
