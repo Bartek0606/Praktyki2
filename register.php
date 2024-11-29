@@ -50,9 +50,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $emailError = "Email or username is already taken.";
         } else {
             
+            // Domyślnie ustawiamy is_admin na 0 (zwykły użytkownik)
             $defaultProfilePicture = file_get_contents('default.png'); 
 
-            $stmt = $conn->prepare("INSERT INTO users (username, email, password_hash, full_name, created_at, profile_picture) VALUES (?, ?, ?, ?, NOW(), ?)");
+            // Ustawienie is_admin na 0 (zwykły użytkownik)
+            $stmt = $conn->prepare("INSERT INTO users (username, email, password_hash, full_name, created_at, profile_picture, is_admin) VALUES (?, ?, ?, ?, NOW(), ?, 0)");
             $stmt->bind_param('sssss', $username, $email, $passwordHash, $fullname, $defaultProfilePicture);
 
             if ($stmt->execute()) {
