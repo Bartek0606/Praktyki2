@@ -77,9 +77,10 @@ $postManager->handleDeleteRequest();
 <div class="admin-panel">
    <?php $sidebar->render(); ?>
 
-   <main class="dashboard p-8 bg-gray-50 ml-64 min-h-screen">
-    <h2 class="text-xl font-semibold text-center text-gray-800 mb-4">All Posts</h2>
-    <ul class="post-list m-auto space-y-4 w-4/6">
+   <main class="dashboard p-8 bg-gray-50 ml-64 min-h-screen" style="padding-top: 6rem;">
+
+    <h2 class="text-xl font-semibold text-center text-gray-800 mt-3 mb-4">All Posts</h2>
+    <ul class="post-list m-auto space-y-4 w-4/6 mt-3">
         <?php if (empty($posts)): ?>
             <li class="text-gray-500 italic">No posts found.</li>
         <?php else: ?>
