@@ -68,6 +68,7 @@ class PostRender{
                 $stmt_register = $this->dbConnection->prepare($sql_register);
                 $stmt_register->bind_param("ii", $userId, $post_id);
                 $stmt_register->execute();
+                
             }
         }
         header("Location: " . $_SERVER['REQUEST_URI']);
@@ -84,6 +85,13 @@ class PostRender{
                     $post_url = 'post.php?id=' . $row['post_id'];
                     $hasImage = !empty($row['image']);
                     $isQuestionClass = $row['is_question'] == 1 ? 'question-post' : ''; // Klasa dla pytania
+
+                    $sql_check_like = "SELECT * FROM `user_likes` WHERE id_user = ? AND id_post = ?";
+                    $stmt_check_like = $this->dbConnection->prepare($sql_check_like);
+                    $stmt_check_like->bind_param("ii", $this->userId, $row['post_id']);
+                    $stmt_check_like->execute();
+                    $result_check_like = $stmt_check_like->get_result();
+                    $isLiked = $result_check_like->num_rows > 0;
                     ?>
                     <a href="<?php echo $post_url; ?>" class="post-link">
                         <div class="post <?php echo $hasImage ? '' : 'no-image'; ?> <?php echo $isQuestionClass; ?>">
@@ -99,7 +107,7 @@ class PostRender{
                                 <form method="POST" action="">
                                     <div>Likes: <?php echo $row['like_count']; ?></div> 
                                     <input type="hidden" name="post_id" value="<?php echo $row['post_id']; ?>">
-                                    <button class="heart" name="like" 
+                                    <button class="heart <?php echo $isLiked ? 'liked' : ''; ?>" name="like" 
                                         <?php if (!$this->isLoggedIn) : ?>
                                             onclick="return alert('You need to log in to like a post.');"
                                         <?php endif; ?>
