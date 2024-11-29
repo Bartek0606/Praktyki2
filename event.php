@@ -9,7 +9,6 @@ $isLoggedIn = isset($_SESSION['user_id']);
 $userId = $isLoggedIn ? $_SESSION['user_id'] : null;
 $userName = $isLoggedIn ? $_SESSION['username'] : null;
 
-
 $navbar = new Navbar($conn, $isLoggedIn, $userId, $userName);
 
 $message = "";
@@ -134,36 +133,32 @@ if ($isLoggedIn) {
 
     <br>
 
-<?php if ($isRegistered): ?>
-    <div class="registration-message">
-        <p>You are already registered for this event.</p>
-    </div>
-  
-    <div class="unregistration-form">
-    <form method="POST">
-        <input type="hidden" name="event_id" value="<?php echo $event['event_id']; ?>">
-        <button type="submit" name="unregister" class="btn-unregister">Unregister from Event</button>
-    </form>
-</div>
-
-<?php else: ?>
+<?php if (!$isRegistered): ?>
     <?php if ($isLoggedIn): ?>
-   
-    <div class="registration-form">
-        <form method="POST">
-            <input type="hidden" name="event_id" value="<?php echo $event['event_id']; ?>">
-            <button type="submit" name="register" class="btn-register">Register for Event</button>
-        </form>
-    </div>
+        <div class="registration-form">
+            <form method="POST">
+                <input type="hidden" name="event_id" value="<?php echo $event['event_id']; ?>">
+                <button type="submit" name="register" class="btn-register">Register for Event</button>
+            </form>
+        </div>
     <?php else: ?>
         <div class="login-message">
             <p>You need to <a href="login.php" class="login-link">log in</a> to register for this event.</p>
         </div>
     <?php endif; ?>
+<?php else: ?>
+    <div class="registration-message">
+        <p>You are already registered for this event.</p>
+    </div>
+    <div class="unregistration-form">
+        <form method="POST">
+            <input type="hidden" name="event_id" value="<?php echo $event['event_id']; ?>">
+            <button type="submit" name="unregister" class="btn-unregister">Unregister from Event</button>
+        </form>
+    </div>
 <?php endif; ?>
 
 </main>
-
 
 </body>
 </html>
