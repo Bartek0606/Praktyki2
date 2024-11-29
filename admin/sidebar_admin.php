@@ -5,11 +5,13 @@ class Sidebar {
     public function render() {
         // Zwróć cały HTML dla sidebaru
         echo '
-   <header class="bg-gray-800 text-white p-4 shadow-md flex items-center justify-center h-24">
-    <h1 class="text-lg font-bold tracking-wide">HOBBYHUB</h1>
+<!-- Header -->
+<header class="bg-gray-800 text-white p-4 shadow-md fixed w-full z-10 h-24 flex items-center">
+    <h1 class="text-lg font-bold tracking-wide mx-auto">HOBBYHUB</h1>
 </header>
 
-<aside class="sidebar bg-gray-800 w-64 h-full fixed top-0 left-0 flex flex-col text-white shadow-lg">
+<!-- Sidebar -->
+<aside class="sidebar bg-gray-800 w-64 h-full fixed top-24 left-0 flex flex-col text-white shadow-lg z-10">
     <div class="profile-section py-6 px-4 border-b border-gray-700">
         <div class="profile-pic bg-gray-600 w-16 h-16 rounded-full mx-auto"></div>
         <p class="username mt-3 text-center font-semibold text-gray-300">Username</p>
