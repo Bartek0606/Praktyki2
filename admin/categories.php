@@ -39,74 +39,124 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-
-
 <!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
-    <link rel="stylesheet" href="admin.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @tailwind base;
+        @tailwind components;
+        @tailwind utilities;
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fade-in 0.5s ease-in-out;
+        }
+    </style>
 </head>
 
-<body>
+<body class="bg-gray-50 text-gray-700">
 <div class="admin-panel">
     <?php $sidebar->render(); ?>
 
-     <main class="dashboard">
-        <div class="form-container">
-            <!-- Formularz edycji -->
-            <form method="POST">
-                <h3>Edytuj kategorię</h3>
+    <main class="dashboard ml-64 min-h-screen bg-gray-50 p-8" style="padding-top: 6rem;">
+        <div class="form-container mt-12 max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8 space-y-12">
+
+            <form method="POST" class="space-y-6">
+                <h3 class="text-lg font-semibold text-gray-800">Edytuj kategorię</h3>
                 <div class="form-group">
-                    <label for="edit-category-select">Wybierz kategorię:</label>
-                    <select id="edit-category-select" name="category_id" required>
+                    <label for="edit-category-select" class="block text-sm font-medium text-gray-600 mb-2">
+                        Wybierz kategorię:
+                    </label>
+                    <select id="edit-category-select" name="category_id" required
+                            class="block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
                         <option value="">-- Wybierz kategorię --</option>
                         <?php foreach ($categories as $category): ?>
-                            <option value="<?= htmlspecialchars($category['category_id']) ?>"><?= htmlspecialchars($category['name']) ?></option>
+                            <option value="<?= htmlspecialchars($category['category_id']) ?>">
+                                <?= htmlspecialchars($category['name']) ?>
+                            </option>
                         <?php endforeach; ?>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="edit-category-input">Nowa nazwa kategorii:</label>
-                    <input type="text" id="edit-category-input" name="new_category_name" required>
+                    <label for="edit-category-input" class="block text-sm font-medium text-gray-600 mb-2">
+                        Nowa nazwa kategorii:
+                    </label>
+                    <input type="text" id="edit-category-input" name="new_category_name" required
+                           class="block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
                 </div>
                 <div class="form-group">
-                    <label for="edit-description-input">Nowy opis kategorii:</label>
-                    <input id="edit-description-input" name="new_description" required></i>
+                    <label for="edit-description-input" class="block text-sm font-medium text-gray-600 mb-2">
+                        Nowy opis kategorii:
+                    </label>
+                    <input id="edit-description-input" name="new_description" required
+                           class="block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
                 </div>
-                <button type="submit" name="edit_category">Zapisz</button>
+                <button type="submit" name="edit_category"
+                        class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition">
+                    Zapisz
+                </button>
             </form>
 
             <!-- Formularz usuwania -->
-            <form method="POST">
-                <h3>Usuń kategorię</h3>
+            <form method="POST" class="space-y-6">
+                <h3 class="text-lg font-semibold text-gray-800">Usuń kategorię</h3>
                 <div class="form-group">
-                    <label for="delete-category-select">Wybierz kategorię:</label>
-                    <select id="delete-category-select" name="category_id" required>
+                    <label for="delete-category-select" class="block text-sm font-medium text-gray-600 mb-2">
+                        Wybierz kategorię:
+                    </label>
+                    <select id="delete-category-select" name="category_id" required
+                            class="block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
                         <option value="">-- Wybierz kategorię --</option>
                         <?php foreach ($categories as $category): ?>
-                            <option value="<?= htmlspecialchars($category['category_id']) ?>"><?= htmlspecialchars($category['name']) ?></option>
+                            <option value="<?= htmlspecialchars($category['category_id']) ?>">
+                                <?= htmlspecialchars($category['name']) ?>
+                            </option>
                         <?php endforeach; ?>
                     </select>
                 </div>
-                <button type="submit" name="delete_category">Usuń</button>
+                <button type="submit" name="delete_category"
+                        class="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition">
+                    Usuń
+                </button>
             </form>
 
             <!-- Formularz dodawania -->
-            <form method="POST">
-                <h3>Dodaj nową kategorię</h3>
+            <form method="POST" class="space-y-6">
+                <h3 class="text-lg font-semibold text-gray-800">Dodaj nową kategorię</h3>
                 <div class="form-group">
-                    <label for="add-category-input">Nazwa kategorii:</label>
-                    <input type="text" id="add-category-input" name="category_name" required>
+                    <label for="add-category-input" class="block text-sm font-medium text-gray-600 mb-2">
+                        Nazwa kategorii:
+                    </label>
+                    <input type="text" id="add-category-input" name="category_name" required
+                           class="block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
                 </div>
                 <div class="form-group">
-                    <label for="add-description-input">Opis kategorii:</label>
-                    <input id="add-description-input" name="description" class="add-description-input" required></i>
+                    <label for="add-description-input" class="block text-sm font-medium text-gray-600 mb-2">
+                        Opis kategorii:
+                    </label>
+                    <input id="add-description-input" name="description" required
+                           class="block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
                 </div>
-                <button type="submit" name="add_category">Zatwierdź</button>
+                <button type="submit" name="add_category"
+                        class="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition">
+                    Zatwierdź
+                </button>
             </form>
+
         </div>
     </main>
 </div>

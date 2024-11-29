@@ -11,17 +11,17 @@ class Sidebar {
         </header>
 
         <!-- Sidebar -->
-        <aside class="sidebar bg-gray-800 text-white shadow-lg h-screen pt-24 fixed left-0 w-64 z-10">
+        <aside class="sidebar bg-gray-800 text-white shadow-lg h-screen pt-6 fixed left-0 w-64 z-10">
             <div class="profile-section py-6 px-4 border-b border-gray-700">
                 <div class="profile-pic bg-gray-600 w-16 h-16 rounded-full mx-auto"></div>
                 <p class="username mt-3 text-center font-semibold text-gray-300">Username</p>
             </div>
-            <nav class="menu flex flex-col mt-4">
+            <nav class="menu flex flex-col ">
                 <a href="admin.php" class="menu-item px-4 py-3 hover:bg-gray-700 transition">
                     Posts
                 </a>
                 <hr class="border-gray-700">
-                <a href="events.php" class="menu-item px-4 py-3 hover:bg-gray-700 transition">
+                <a href="events.php" class=" menu-item px-4 py-3 hover:bg-gray-700 transition">
                     Events
                 </a>
                 <hr class="border-gray-700">
