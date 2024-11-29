@@ -138,8 +138,11 @@ if ($isLoggedIn && isset($_POST['follow'])) {
                         <?php echo $isFollowing ? 'Unfollow' : 'Follow'; ?>
                     </button>
                 </form>
+                <a href="message.php?id=<?php echo $profileUserId; ?>" class="message-btn">
+                    <button class="edit-btn">Message</button>
+                </a>    
             <?php endif; ?>
-
+            
             <!-- Show Edit Profile button if viewing own profile -->
             <?php if ($isLoggedIn && $userId == $profileUserId): ?>
                 <a href="edit_profile.php" class="edit-profile-btn">
