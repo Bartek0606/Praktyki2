@@ -15,18 +15,25 @@ class PostRender{
     }
 
     private function fetchPosts() {
+        $sort = isset($_GET['sort']) ? $_GET['sort'] : 'newest';
+        $orderBy = "posts.created_at DESC"; 
+    
+        if ($sort === 'oldest') {
+            $orderBy = "posts.created_at ASC";
+        } elseif ($sort === 'likes') {
+            $orderBy = "like_count DESC";
+        }
+    
         if (!empty($this->categoryName)) {
             $sql = "
-                SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.image, posts.is_question,
-                       categories.name AS category_name, users.username AS author_name,
-                       COUNT(user_likes.likes_id) AS like_count
+                SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.image, posts.is_question, categories.name AS category_name, users.username AS author_name, COUNT(user_likes.likes_id) AS like_count
                 FROM posts
                 JOIN categories ON posts.category_id = categories.category_id
                 JOIN users ON posts.user_id = users.user_id
                 LEFT JOIN user_likes ON posts.post_id = user_likes.post_id
                 WHERE categories.name LIKE ?
                 GROUP BY posts.post_id
-                ORDER BY posts.created_at DESC
+                ORDER BY $orderBy
             ";
             $stmt = $this->dbConnection->prepare($sql);
             $categoryName = "%" . $this->categoryName . "%";
@@ -43,7 +50,7 @@ class PostRender{
                 JOIN users ON posts.user_id = users.user_id
                 LEFT JOIN user_likes ON posts.post_id = user_likes.id_post
                 GROUP BY posts.post_id
-                ORDER BY posts.created_at DESC
+                ORDER BY $orderBy
             ";
         }
     
@@ -83,7 +90,7 @@ class PostRender{
                 while ($row = $this->posts->fetch_assoc()) {
                     $post_url = 'post.php?id=' . $row['post_id'];
                     $hasImage = !empty($row['image']);
-                    $isQuestionClass = $row['is_question'] == 1 ? 'question-post' : ''; // Klasa dla pytania
+                    $isQuestionClass = $row['is_question'] == 1 ? 'question-post' : '';
                     ?>
                     <a href="<?php echo $post_url; ?>" class="post-link">
                         <div class="post <?php echo $hasImage ? '' : 'no-image'; ?> <?php echo $isQuestionClass; ?>">
@@ -122,8 +129,6 @@ class PostRender{
     
         return ob_get_clean(); 
     }
-    
-    
 }
 ?>
 <script>
