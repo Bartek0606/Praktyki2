@@ -181,6 +181,7 @@
 
 /* Style for Follow/Unfollow Button */
 .follow-btn {
+    float: left;
     background-color: #4CAF50; /* Green color */
     color: white;
     border: none;
@@ -216,6 +217,8 @@
 
 /* Styl dla przycisku 'Edit Profile' */
 .edit-btn {
+    display: left;
+    margin-left: 20px;
     background-color: #4CAF50; /* Zielony kolor tła */
     color: white;              /* Biały kolor tekstu */
     border: none;              /* Brak ramki */
@@ -237,6 +240,7 @@
     background-color: #388e3c; /* Zmiana koloru tła podczas kliknięcia */
 }
 .toggle-buttons {
+    
     display: flex;
     justify-content: center;
     gap: 20px;
@@ -297,3 +301,5 @@
   transform: rotate(45deg);
   transform-origin: 100% 100%;
 }
+
+
