@@ -5,34 +5,40 @@ class Sidebar {
     public function render() {
         // Zwróć cały HTML dla sidebaru
         echo '
-        <header>
-            <h1 class="tittle">HOBBYHUB</h1>
-        </header>
-        <aside class="sidebar">
-            <hr class="hr_nav">
-            <div class="profile-section">
-                <div class="profile-pic"></div>
-                <p class="username">Username</p>
-            </div>
-            <nav class="menu">
-                <hr class="hrbutton">
-                <a href="admin.php"> <button class="menu-button">Posts</button></a>
-                <hr class="hrbutton">
-                <a href="events.php"> <button class="menu-button">Events</button></a>
-                <hr class="hrbutton">
-                <a href="comments.php"><button class="menu-button">Comments</button></a>
-                <hr class="hrbutton">
-                <a href="categories.php"> <button class="menu-button">Add new category</button></a>
-                <hr class="hrbutton">
-            </nav>
-            <hr class="hrbutton">
-            <div class="sidebar-bottom">
-                <button class="logout-button">
-                    <span>Log Out</span>
-                </button>
-            </div>
-        </aside>';
+   <header class="bg-gray-800 text-white p-4 shadow-md flex items-center justify-center h-24">
+    <h1 class="text-lg font-bold tracking-wide">HOBBYHUB</h1>
+</header>
+
+<aside class="sidebar bg-gray-800 w-64 h-full fixed top-0 left-0 flex flex-col text-white shadow-lg">
+    <div class="profile-section py-6 px-4 border-b border-gray-700">
+        <div class="profile-pic bg-gray-600 w-16 h-16 rounded-full mx-auto"></div>
+        <p class="username mt-3 text-center font-semibold text-gray-300">Username</p>
+    </div>
+    <nav class="menu flex flex-col mt-4">
+        <a href="admin.php" class="menu-item px-4 py-3 hover:bg-gray-700 transition">
+            Posts
+        </a>
+        <hr class="border-gray-700">
+        <a href="events.php" class="menu-item px-4 py-3 hover:bg-gray-700 transition">
+            Events
+        </a>
+        <hr class="border-gray-700">
+        <a href="comments.php" class="menu-item px-4 py-3 hover:bg-gray-700 transition">
+            Comments
+        </a>
+        <hr class="border-gray-700">
+        <a href="categories.php" class="menu-item px-4 py-3 hover:bg-gray-700 transition">
+            Add new category
+        </a>
+    </nav>
+    <div class="sidebar-bottom mt-auto px-4 py-6 border-t border-gray-700">
+        <button class="w-full text-left px-4 py-3 hover:bg-red-600 rounded transition">
+            Log Out
+        </button>
+    </div>
+</aside>
+
+';
     }
 }
-
 ?>
