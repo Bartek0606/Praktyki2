@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 
 services:
   web:
@@ -7,29 +7,32 @@ services:
       - "8000:80"
     volumes:
       - .:/var/www/html
+    depends_on:
+      - mysql
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    links:
+    depends_on:
       - mysql
     environment:
-      - PMA_ARBITRARY=1
+      PMA_ARBITRARY: 1
     ports:
       - "8082:80"
     restart: always
 
   mysql:
     image: mysql:5.7
+    container_name: mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=your_root_password    # Hasło root
-      - MYSQL_DATABASE=hobbyhub                    # Nazwa bazy danych
-      - MYSQL_USER=user                            # Użytkownik bazy danych
-      - MYSQL_PASSWORD=user123                     # Hasło użytkownika
+      MYSQL_ROOT_PASSWORD: your_root_password  # Hasło root
+      MYSQL_DATABASE: hobbyhub                # Nazwa bazy danych
+      MYSQL_USER: user                        # Użytkownik bazy danych
+      MYSQL_PASSWORD: user123                 # Hasło użytkownika
     ports:
       - "3306:3306"
     volumes:
-      - db_data:/var/lib/mysql
-      - ./init-scripts:/docker-entrypoint-initdb.d  # Pliki do załadowania przy pierwszym uruchomieniu
+      - db_data:/var/lib/mysql                # Wolumen na dane bazy
+      - ./init-scripts:/docker-entrypoint-initdb.d  # Skrypty do inicjalizacji
     restart: always
 
 volumes:
