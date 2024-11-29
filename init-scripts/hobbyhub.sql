@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Nov 28, 2024 at 12:39 PM
+-- Generation Time: Nov 29, 2024 at 08:04 AM
 -- Server version: 5.7.44
 -- PHP Version: 8.2.8
 
@@ -107,7 +107,9 @@ INSERT INTO `comments` (`comment_id`, `post_id`, `parent_comment_id`, `user_id`,
 (11, 2, 5, 7, 'Italy is such a beautiful destination. I love your travel blog!', '2024-11-19 09:50:23'),
 (12, 3, NULL, 8, 'This is a great fitness routine! Will try it this week!', '2024-11-19 09:55:23'),
 (14, 23, NULL, 4, 'a', '2024-11-28 08:06:35'),
-(15, 23, 14, 4, 'a', '2024-11-28 09:58:12');
+(15, 23, 14, 4, 'a', '2024-11-28 09:58:12'),
+(16, 7, NULL, 4, 'a', '2024-11-28 12:44:23'),
+(17, 7, 16, 4, 'a', '2024-11-28 12:44:26');
 
 -- --------------------------------------------------------
 
@@ -153,7 +155,6 @@ CREATE TABLE `event_registrations` (
 --
 
 INSERT INTO `event_registrations` (`registration_id`, `user_id`, `event_id`, `registration_date`) VALUES
-(2, 4, 1, '2024-11-26 12:00:04'),
 (3, 4, 3, '2024-11-26 12:03:08'),
 (4, 4, 2, '2024-11-26 12:05:09'),
 (5, 4, 4, '2024-11-28 08:37:59');
@@ -291,7 +292,6 @@ CREATE TABLE `user_likes` (
 --
 
 INSERT INTO `user_likes` (`id_likes`, `id_user`, `id_post`, `like_date`) VALUES
-(1, 4, 23, '2024-11-28 08:36:02'),
 (3, 4, 22, '2024-11-28 09:42:28');
 
 --
@@ -372,7 +372,7 @@ ALTER TABLE `blog_information`
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `comment_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `comment_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `event_registrations`
