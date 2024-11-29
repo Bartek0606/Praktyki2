@@ -235,9 +235,17 @@ if ($isLoggedIn && isset($_POST['follow'])) {
         exit();
     }
 
+
     if ($result_like->num_rows > 0): ?>
         <div class="posts">
-            <?php while ($like = $result_like->fetch_assoc()): ?>
+            <?php while ($like = $result_like->fetch_assoc()): 
+                 $sql_check_like = "SELECT * FROM `user_likes` WHERE id_user = ? AND id_post = ?";
+                    $stmt_check_like = $conn->prepare($sql_check_like);
+                    $stmt_check_like->bind_param("ii", $userId, $like['post_id']);
+                    $stmt_check_like->execute();
+                    $result_check_like = $stmt_check_like->get_result();
+                    $isLiked = $result_check_like->num_rows > 0;
+                ?>
                 <a href="post.php?id=<?php echo $like['post_id']; ?>" class="post-link">
                     <div class="post">
                         <?php if (!empty($like['image'])): ?>
@@ -252,8 +260,9 @@ if ($isLoggedIn && isset($_POST['follow'])) {
                             <form method="POST" action="">
                                 <p>Likes: <?php echo $like['like_count']; ?></p> 
                                 <input type="hidden" name="post_id" value="<?php echo $like['post_id']; ?>">
-                                <button class="heart" name="like" ></button>
+                                <button class="heart <?php echo $isLiked ? 'liked' : ''; ?>"" name="like" ></button>
                             </form>
+
                         </div>
                     </div>
                 </a>

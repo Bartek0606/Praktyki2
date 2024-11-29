@@ -278,3 +278,22 @@
     }
 }
 
+.heart.liked::before,
+.heart.liked::after {
+  position: absolute;
+  content: "";
+  left: 15px; 
+  top: 0;
+  width: 15px; 
+  height: 24px;
+  background: red;
+  border-radius: 15px 15px 0 0;
+  transform: rotate(-45deg);
+  transform-origin: 0 100%;
+  transition: box-shadow 0.3s ease;
+}
+.heart.liked::after {
+  left: 0;
+  transform: rotate(45deg);
+  transform-origin: 100% 100%;
+}
