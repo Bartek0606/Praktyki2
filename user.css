@@ -85,7 +85,11 @@
 
 /* Treść posta */
 .post-content {
-    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;  /* Centers the content inside the post */
+    text-align: center;   /* Ensures all text inside is centered */
+    height:auto;
 }
 
 .post-content h3 {
@@ -117,6 +121,15 @@
     font-weight: bold;
     color: #333;
     margin: 10px 0;
+}
+
+/* Styl dla autora posta */
+.post-author {
+    font-size: 18px;     /* Font size */
+    font-weight: bold;   /* Bold text */
+    color: #333;         /* Color of the author's name */
+    margin: 10px 0;      /* Vertical margin for spacing */
+    text-align: center;  /* Center the author's name */
 }
 
 /* Linkowanie do posta */
@@ -264,6 +277,7 @@
         margin-bottom: 10px;
     }
 }
+
 .heart.liked::before,
 .heart.liked::after {
   position: absolute;
