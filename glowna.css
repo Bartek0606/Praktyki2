@@ -502,8 +502,8 @@ body {
 
 
   .posts .post.question-post {
-    background-color: #fffbea; /* Jasno żółte tło */
-    border-left: 4px solid #f39c12; /* Akcent po lewej stronie */
+    background-color: #fffbea; 
+    border-left: 4px solid #f39c12; 
     padding: 15px;
     margin-bottom: 20px;
     border-radius: 8px;
@@ -551,4 +551,37 @@ body {
 
 .posts .post.no-image .post-content {
   margin: 0 auto;
+}
+
+.sort-menu {
+  display: flex;
+  justify-content: flex-end; 
+  margin-bottom: 20px; 
+}
+
+.sort-menu form {
+  display: flex;
+  align-items: center;
+  gap: 10px; 
+}
+
+.sort-menu label {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.sort-menu select {
+  padding: 8px 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.sort-menu select:hover {
+  background-color: #f1f1f1;
+  border-color: #bbb;
 }

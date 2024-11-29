@@ -59,11 +59,13 @@ if (isset($_GET['delete_comment_id'])) {
   <main class="dashboard">
         <h2>All Comments</h2>
 
-        <!-- Formularz wyszukiwania -->
+       <div id="serachdiv">
+ <!-- Formularz wyszukiwania -->
         <form method="GET" class="search-form">
             <input type="text" name="search_query" placeholder="Search by full name" value="<?php echo htmlspecialchars($search_query); ?>" />
             <button type="submit">Search</button>
         </form>
+       </div>
 
         <div class="comments-container">
             <?php if (count($comments) > 0): ?>

@@ -414,14 +414,18 @@ p {
 }
 
 /* Sekcja komentarzy */
+#searchdiv {
+  width: 100%;
+  margin: auto;
+}
+
 .search-form {
+  text-align: center;
   margin-bottom: 20px;
   width: 100%;
-  gap: 10px;
 }
 
 .search-form input {
-  flex: 1;
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -443,6 +447,8 @@ p {
 /* Stylizacja kontenera komentarzy */
 .comments-container {
   display: flex;
+  width: 80%;
+  margin: auto;
   flex-direction: column;
   gap: 15px;
 }
@@ -480,13 +486,13 @@ p {
 }
 
 .delete-button {
-  color: #d9534f;
+  color: white;
   text-decoration: none;
   font-weight: bold;
   padding: 6px 10px;
-  border: 1px solid #d9534f;
+  border: none;
   border-radius: 4px;
-  background-color: #fff;
+  background-color: red;
   cursor: pointer;
 }
 
