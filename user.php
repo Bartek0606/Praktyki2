@@ -142,7 +142,7 @@ if ($isLoggedIn && isset($_POST['follow'])) {
 
             <!-- Show Edit Profile button if viewing own profile -->
             <?php if ($isLoggedIn && $userId == $profileUserId): ?>
-                <a href="profile.php" class="edit-profile-btn">
+                <a href="edit_profile.php" class="edit-profile-btn">
                     <button class="btn edit-btn">Edit Profile</button>
                 </a>
             <?php endif; ?>
