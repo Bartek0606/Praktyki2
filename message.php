@@ -31,7 +31,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message_content'])) {
     $stmt_message = $conn->prepare($sql_message);
     $stmt_message->bind_param("iis", $userId, $profileUserId, $messageContent);
     $stmt_message->execute();
+    header("Location: " . $_SERVER['PHP_SELF'] . "?id=" . $profileUserId); 
+    exit;
 }
+$sql_messages = "SELECT m.message_id, m.sender_id, m.receiver_id, m.content, m.created_at, u.username AS sender_name
+                 FROM messages m
+                 JOIN users u ON m.sender_id = u.user_id
+                 WHERE (sender_id = ? AND receiver_id = ?) 
+                    OR (sender_id = ? AND receiver_id = ?)
+                 ORDER BY `created_at` ASC";
+
+$stmt_messages = $conn->prepare($sql_messages);
+$stmt_messages->bind_param("iiii", $userId, $profileUserId, $profileUserId, $userId);
+$stmt_messages->execute();
+$result_messages = $stmt_messages->get_result();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -40,18 +53,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message_content'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="navbar.css">
     <link rel="stylesheet" href="glowna.css">
-    <title>Document</title>
+    <link rel="stylesheet" href="message.css">
+<title>Document</title>
 </head>
 <body>
 <header>
     <?php echo $navbar->render(); ?>
 </header>
 <main>
-    <form method="POST">
-        <label for="message_content">Message:</label>
-        <textarea name="message_content" id="message_content" required></textarea>
-        <button type="submit">Send Message</button>
-    </form>
+    <div class="container">
+        <h1>Send Message</h1>
+        <div class="messages">
+            <?php
+            if ($result_messages->num_rows > 0) {
+                while ($row = $result_messages->fetch_assoc()) {
+                    $isSender = $row['sender_id'] == $userId; 
+                    ?>
+                    <div class="message <?php echo $isSender ? 'sent' : 'received'; ?>">
+                        <div class="message-content">
+                            <strong><?php echo htmlspecialchars($row['sender_name']); ?>:</strong>
+                            <p><?php echo htmlspecialchars($row['content']); ?></p>
+                            <small><?php echo $row['created_at']; ?></small>
+                        </div>
+                    </div>
+                    <?php
+                }
+            } else {
+                echo "<p>No messages yet.</p>";
+            }
+            ?>
+        </div>
+        <form method="POST">
+            <label for="message_content">Message:</label>
+            <textarea name="message_content" id="message_content" required></textarea>
+            <button type="submit">Send</button>
+        </form>
+    </div>
 </main>
 </body>
 </html>
