@@ -2,9 +2,20 @@
 include __DIR__ . '/../db_connection.php';
 
 include_once 'sidebar_admin.php';
+// Upewnij się, że sesja jest uruchomiona
+session_start();
 
-// Tworzenie obiektu klasy Sidebar
-$sidebar = new Sidebar();
+$isLoggedIn = isset($_SESSION['user_id']);
+$userId = $isLoggedIn ? $_SESSION['user_id'] : null;
+
+if (!$isLoggedIn) {
+    header("Location: /../login.php");
+    exit;
+}
+
+// Utworzenie instancji sidebaru
+$sidebar = new Sidebar($conn, $userId);
+
 
 $query = "SELECT * FROM events ORDER BY event_date DESC";
 $result = $conn->query($query);
@@ -85,8 +96,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_event'])) {
 </style>
 <body>
 <div class="admin-panel flex">
-    <!-- Sidebar -->
-    <?php $sidebar->render(); ?>
+      <!-- Renderowanie sidebaru -->
+      <?php echo $sidebar->getSidebarHtml(); ?>
 
     <main class="dashboard bg-gray-50 ml-64 mt-24 p-8 min-h-screen w-full">
     <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Upcoming Events</h2>

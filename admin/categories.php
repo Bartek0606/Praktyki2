@@ -4,8 +4,20 @@ include __DIR__ . '/Category.php';
 
 include_once 'sidebar_admin.php';
 
-// Tworzenie obiektu klasy Sidebar
-$sidebar = new Sidebar();
+// Upewnij się, że sesja jest uruchomiona
+session_start();
+
+$isLoggedIn = isset($_SESSION['user_id']);
+$userId = $isLoggedIn ? $_SESSION['user_id'] : null;
+
+if (!$isLoggedIn) {
+    header("Location: /../login.php");
+    exit;
+}
+
+// Utworzenie instancji sidebaru
+$sidebar = new Sidebar($conn, $userId);
+
 
 $categoryManager = new Category($conn);
 $categories = $categoryManager->getCategories();
@@ -70,7 +82,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body class="bg-gray-50 text-gray-700">
 <div class="admin-panel">
-    <?php $sidebar->render(); ?>
+   <!-- Renderowanie sidebaru -->
+   <?php echo $sidebar->getSidebarHtml(); ?>
 
     <main class="dashboard ml-64 min-h-screen bg-gray-50 p-8" style="padding-top: 6rem;">
         <div class="form-container mt-12 max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8 space-y-12">

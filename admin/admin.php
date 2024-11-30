@@ -5,8 +5,19 @@ include 'Post.php';
 include 'delete_post.php';
 include_once 'sidebar_admin.php';
 
-// Tworzenie obiektu klasy Sidebar
-$sidebar = new Sidebar();
+// Upewnij się, że sesja jest uruchomiona
+session_start();
+
+$isLoggedIn = isset($_SESSION['user_id']);
+$userId = $isLoggedIn ? $_SESSION['user_id'] : null;
+
+if (!$isLoggedIn) {
+    header("Location: /../login.php");
+    exit;
+}
+
+// Utworzenie instancji sidebaru
+$sidebar = new Sidebar($conn, $userId);
 
 // Pobieranie wszystkich postów
 $post = new Post($conn);
@@ -75,7 +86,8 @@ $postManager->handleDeleteRequest();
 </style>
 <body>
 <div class="admin-panel">
-   <?php $sidebar->render(); ?>
+   <!-- Renderowanie sidebaru -->
+   <?php echo $sidebar->getSidebarHtml(); ?>
 
    <main class="dashboard p-8 bg-gray-50 ml-64 min-h-screen" style="padding-top: 6rem;">
 
