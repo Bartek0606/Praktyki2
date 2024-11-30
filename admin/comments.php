@@ -5,25 +5,36 @@ include 'Comment.php';  // Klasa Comment
 include 'CommentRenderer.php';
 include_once 'sidebar_admin.php';
 
-// Tworzenie obiektu klasy Sidebar
-$sidebar = new Sidebar();
+// Upewnij się, że sesja jest uruchomiona
+session_start();
+
+// Sprawdzenie, czy użytkownik jest zalogowany
+$isLoggedIn = isset($_SESSION['user_id']);
+$userId = $isLoggedIn ? $_SESSION['user_id'] : null;
+
+if (!$isLoggedIn) {
+    header("Location: /../login.php");
+    exit();
+}
+
+// Obiekt klasy Comment do obsługi komentarzy
+$commentObj = new Comment($conn);
+
+// Sprawdzenie, czy użytkownik chce usunąć komentarz
+if (isset($_GET['delete_comment_id'])) {
+    $comment_id = (int)$_GET['delete_comment_id'];
+    $commentObj->deleteComment($comment_id); // Usunięcie komentarza i przekierowanie
+}
 
 // Pobranie danych z formularza wyszukiwania (jeśli zostały wysłane)
 $search_query = isset($_GET['search_query']) ? $_GET['search_query'] : '';
 
-// Utworzenie obiektu klasy Comment i pobranie komentarzy
-$commentObj = new Comment($conn);
-$comments = $commentObj->getAllPCom($search_query);  // Pobranie komentarzy z możliwością filtrowania
+// Pobranie listy komentarzy
+$comments = $commentObj->getAllPCom($search_query);
 
-// Sprawdzamy, czy został wysłany request do usunięcia komentarza
-if (isset($_GET['delete_comment_id'])) {
-    $comment_id = (int)$_GET['delete_comment_id'];
-    // Usuwamy komentarz
-    $commentObj->deleteComment($comment_id);
-}
-// Tworzenie obiektu klasy CommentRenderer i generowanie HTML
-$renderer = new CommentRenderer();
-echo $renderer->renderComments($comments, $search_query);
+// Utworzenie instancji sidebaru
+$sidebar = new Sidebar($conn, $userId);
+
 ?>
 
 <!DOCTYPE html>
@@ -54,21 +65,20 @@ echo $renderer->renderComments($comments, $search_query);
         }
     </style>
 </head>
+<body>
 <div class="admin-panel flex">
-   <?php $sidebar->render(); ?>
+   <!-- Renderowanie sidebaru -->
+   <?php echo $sidebar->getSidebarHtml(); ?>
 
-   <main class="dashboard p-8 bg-gray-50 min-h-screen w-full ml-64">
-
-      <div class="comments-container m-auto space-y-4 w-4/6 mt-28">
+   <main class="dashboard bg-gray-50 ml-64 mt-14 min-h-screen w-full">
+      <div class="comments-container m-auto space-y-4 w-full">
          <?php
+         // Renderowanie komentarzy
          $renderer = new CommentRenderer();
          echo $renderer->renderComments($comments, $search_query);
          ?>
       </div>
    </main>
 </div>
-
-
-
 </body>
 </html>
