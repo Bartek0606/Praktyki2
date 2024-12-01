@@ -1,24 +1,28 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const editButtons = document.querySelectorAll(".editpost_button");
-  const popupModal = document.getElementById("popupModal");
-  const overlay = document.getElementById("overlay");
-  const cancelEdit = document.getElementById("cancelEdit");
+// Funkcja otwierająca popup dla dodawania wydarzenia
+function openAddEventPopup() {
+  document.getElementById("add-event-popup").style.display = "flex";
+  document.getElementById("overlay").style.display = "block"; // Pokazuje overlay
+}
 
-  // Pokaż popup
-  editButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const postId = button.getAttribute("data-post-id");
-      window.location.href = "?edit_post_id=" + postId;
-    });
-  });
+// Funkcja zamykająca popup dla dodawania wydarzenia
+function closeAddEventPopup() {
+  document.getElementById("add-event-popup").style.display = "none";
+  document.getElementById("overlay").style.display = "none"; // Ukrywa overlay
+}
 
-  // Obsługa anulowania edycji
-  if (cancelEdit) {
-    cancelEdit.addEventListener("click", () => {
-      popupModal.style.display = "none";
-      overlay.style.display = "none";
-      window.location.href = "admin.php";
-    });
-  }
-});
+// Funkcja otwierająca popup i wypełniająca formularz danymi wydarzenia (do edycji)
+function openEditPopup(eventId, name, date, location, description) {
+  document.getElementById("event-id").value = eventId;
+  document.getElementById("event-name").value = name;
+  document.getElementById("event-date").value = date;
+  document.getElementById("event-location").value = location;
+  document.getElementById("event-description").value = description;
+  document.getElementById("edit-popup").style.display = "flex";
+  document.getElementById("overlay").style.display = "block"; // Pokazuje overlay
+}
 
+// Funkcja zamykająca popup dla edycji
+function closePopup() {
+  document.getElementById("edit-popup").style.display = "none";
+  document.getElementById("overlay").style.display = "none"; // Ukrywa overlay
+}
