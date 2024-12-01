@@ -5,6 +5,7 @@ class Category {
         $this->conn = $conn;
     }
 
+      // Pobieranie kategorii do listy rozwijanej w formularzach
     public function getCategories() {
         $sql = "SELECT category_id, name FROM categories";
         $result = $this->conn->query($sql);
@@ -22,6 +23,8 @@ class Category {
         return $categories;
     }
 
+    
+  // Dodawanie kategorii zapytanie
     public function addCategory($categoryName, $description) {
         $sql = "SELECT MAX(category_id) AS max_id FROM categories";
         $result = $this->conn->query($sql);
@@ -38,7 +41,20 @@ class Category {
         return $stmt->execute();
     }
 
-    // Metoda do edytowania kategorii
+   // Dodawanie kategorii formularz
+   public function handleAddCategoryForm($postData) {
+    if (isset($postData['category_name']) && isset($postData['description'])) {
+        $categoryName = trim($postData['category_name']);
+        $description = trim($postData['description']);
+        if (!empty($categoryName)) {
+            return $this->addCategory($categoryName, $description);
+        }
+    }
+    return false;
+}
+
+
+    // Edytowanie kategorii zapytanie
     public function editCategory($categoryId, $newCategoryName, $newDescription) {
         $sql = "UPDATE categories SET name = ?, description = ? WHERE category_id = ?";
         $stmt = $this->conn->prepare($sql);
@@ -47,28 +63,7 @@ class Category {
         return $stmt->execute();
     }
 
-    // Metoda do usuwania kategorii
-    public function deleteCategory($categoryId) {
-        $sql = "DELETE FROM categories WHERE category_id = ?";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param('i', $categoryId);
-
-        return $stmt->execute();
-    }
-
-    // Metoda do obsługi dodawania kategorii z formularza
-    public function handleAddCategoryForm($postData) {
-        if (isset($postData['category_name']) && isset($postData['description'])) {
-            $categoryName = trim($postData['category_name']);
-            $description = trim($postData['description']);
-            if (!empty($categoryName)) {
-                return $this->addCategory($categoryName, $description);
-            }
-        }
-        return false;
-    }
-
-    // Metoda do obsługi edytowania kategorii z formularza
+    // Edytowanie kategorii formularz
     public function handleEditCategoryForm($postData) {
         if (isset($postData['category_id']) && isset($postData['new_category_name']) && isset($postData['new_description'])) {
             $categoryId = $postData['category_id'];
@@ -81,7 +76,16 @@ class Category {
         return false;
     }
 
-    // Metoda do obsługi usuwania kategorii z formularza
+
+    // Usuwanie kategorii zapytanie
+    public function deleteCategory($categoryId) {
+        $sql = "DELETE FROM categories WHERE category_id = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param('i', $categoryId);
+
+        return $stmt->execute();
+    }
+    // Usuwanie kategorii formularz
     public function handleDeleteCategoryForm($postData) {
         if (isset($postData['category_id'])) {
             $categoryId = $postData['category_id'];

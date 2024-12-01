@@ -1,7 +1,6 @@
 <?php
 include __DIR__ . '/../db_connection.php';
 include 'Edit_Post.php'; 
-include 'Post.php';
 include 'delete_post.php';
 include_once 'sidebar_admin.php';
 
@@ -19,9 +18,6 @@ if (!$isLoggedIn) {
 // Utworzenie instancji sidebaru
 $sidebar = new Sidebar($conn, $userId);
 
-// Pobieranie wszystkich postów
-$post = new Post($conn);
-$posts = $post->getAllPosts();
 
 $adminPanel = new Edit_Post($conn);
 
@@ -63,27 +59,6 @@ $postManager->handleDeleteRequest();
     <title>Admin Panel</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<style>
-    @tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@keyframes fade-in {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.animate-fade-in {
-    animation: fade-in 0.5s ease-in-out;
-}
-
-</style>
 <body>
 <div class="admin-panel">
    <!-- Renderowanie sidebaru -->

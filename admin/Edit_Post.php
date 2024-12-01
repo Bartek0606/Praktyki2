@@ -6,14 +6,10 @@ class Edit_Post {
         $this->conn = $conn;
     }
 
-    // Pobiera wszystkie posty wraz z kategoriami
+    // Wszystkie posty z wszystkimi danymi
     public function getAllPosts() {
-        $sql = "
-            SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.image, categories.name AS category_name
-            FROM posts
-            JOIN categories ON posts.category_id = categories.category_id
-            ORDER BY posts.created_at DESC
-        ";
+        $sql =
+"SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.image, categories.name AS category_name FROM posts JOIN categories ON posts.category_id = categories.category_id ORDER BY posts.created_at DESC";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
@@ -22,7 +18,7 @@ class Edit_Post {
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    // Pobiera wszystkie kategorie
+    // wszystkie kategorie
     public function getCategories() {
         $categories = [];
         $categoriesQuery = $this->conn->query("SELECT category_id, name FROM categories");
@@ -34,7 +30,7 @@ class Edit_Post {
         return $categories;
     }
 
-    // Pobiera dane posta do edycji
+    // dane posta do edycji
     public function getPostToEdit($postId) {
         $sql = "SELECT post_id, title, content, category_id FROM posts WHERE post_id = ?";
         $stmt = $this->conn->prepare($sql);
@@ -44,7 +40,7 @@ class Edit_Post {
         return $result->fetch_assoc();
     }
 
-    // Zapisuje zmiany w poście
+    // zmiany w poście
     public function savePostChanges($postId, $newTitle, $newContent, $newCategoryId) {
         $sql = "UPDATE posts SET title = ?, content = ?, category_id = ? WHERE post_id = ?";
         if ($stmt = $this->conn->prepare($sql)) {
@@ -54,7 +50,7 @@ class Edit_Post {
         return false;
     }
 
-    // Obsługuje zapisanie zmian w formularzu (zostało przeniesione z admin.php)
+    // zapisanie zmian w formularzu
     public function handleSaveChanges($postData) {
         $postId = intval($postData['post_id']);
         $newTitle = trim($postData['editTitle']);
@@ -67,7 +63,6 @@ class Edit_Post {
         return false;
     }
 
-    // Przekierowanie po zapisaniu zmian
     public function redirectAfterSave() {
         header("Location: admin.php");
         exit;

@@ -1,12 +1,9 @@
 <?php
 include __DIR__ . '/../db_connection.php'; 
 include __DIR__ . '/Category.php'; 
-
 include_once 'sidebar_admin.php';
 
-// Upewnij się, że sesja jest uruchomiona
 session_start();
-
 $isLoggedIn = isset($_SESSION['user_id']);
 $userId = $isLoggedIn ? $_SESSION['user_id'] : null;
 
@@ -15,10 +12,7 @@ if (!$isLoggedIn) {
     exit;
 }
 
-// Utworzenie instancji sidebaru
 $sidebar = new Sidebar($conn, $userId);
-
-
 $categoryManager = new Category($conn);
 $categories = $categoryManager->getCategories();
 
@@ -58,31 +52,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @tailwind base;
-        @tailwind components;
-        @tailwind utilities;
-
-        @keyframes fade-in {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .animate-fade-in {
-            animation: fade-in 0.5s ease-in-out;
-        }
-    </style>
 </head>
 
 <body class="bg-gray-50 text-gray-700">
 <div class="admin-panel">
-   <!-- Renderowanie sidebaru -->
    <?php echo $sidebar->getSidebarHtml(); ?>
 
     <main class="dashboard ml-64 min-h-screen bg-gray-50 p-8" style="padding-top: 6rem;">
@@ -124,7 +97,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </button>
             </form>
 
-            <!-- Formularz usuwania -->
             <form method="POST" class="space-y-6">
                 <h3 class="text-lg font-semibold text-gray-800">Usuń kategorię</h3>
                 <div class="form-group">
@@ -147,7 +119,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </button>
             </form>
 
-            <!-- Formularz dodawania -->
             <form method="POST" class="space-y-6">
                 <h3 class="text-lg font-semibold text-gray-800">Dodaj nową kategorię</h3>
                 <div class="form-group">

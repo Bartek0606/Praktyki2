@@ -2,13 +2,12 @@
 
 class CommentRenderer {
     public function renderComments($comments, $search_query) {
-        ob_start(); // Rozpoczynamy buforowanie wyjścia
+        ob_start();
         ?>
         <main class="dashboard p-8 bg-gray-50 ml-64 min-h-screen" style="padding-top: 6rem;">
             <h2 class="text-xl font-semibold text-center text-gray-800 mt-3 mb-4">All Comments</h2>
 
             <div class="comments-container m-auto space-y-4 w-4/6 mt-3">
-                <!-- Search Form -->
                 <div id="searchdiv" class="mb-8">
                     <form method="GET" class="flex items-center justify-center space-x-4">
                         <input type="text" name="search_query" placeholder="Search by full name"
@@ -23,18 +22,15 @@ class CommentRenderer {
                 <?php else: ?>
                     <?php foreach ($comments as $comment): ?>
                         <div class="comment bg-white shadow-md rounded-lg p-6">
-                            <!-- Comment Header -->
+
                             <div class="comment-header flex justify-between items-center mb-3">
                                 <p class="font-bold text-gray-800">User: <?php echo htmlspecialchars($comment['full_name']); ?></p>
                                 <p class="text-gray-500 text-sm"><?php echo date('Y-m-d H:i:s', strtotime($comment['created_at'])); ?></p>
                             </div>
-
-                            <!-- Comment Body -->
                             <div class="comment-body mb-4">
                                 <p class="text-gray-600"><?php echo nl2br(htmlspecialchars($comment['content'])); ?></p>
                             </div>
 
-                            <!-- Comment Footer -->
                             <div class="comment-footer text-right">
                                 <a href="?delete_comment_id=<?php echo $comment['comment_id']; ?>"
                                    class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
@@ -48,6 +44,6 @@ class CommentRenderer {
             </div>
         </main>
         <?php
-        return ob_get_clean(); // Zwracamy wygenerowany HTML jako string
+        return ob_get_clean();
     }
 }

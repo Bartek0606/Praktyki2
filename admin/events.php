@@ -1,6 +1,6 @@
 <?php
 include __DIR__ . '/../db_connection.php';
-
+include 'popups_events.php';
 include_once 'sidebar_admin.php';
 // Upewnij się, że sesja jest uruchomiona
 session_start();
@@ -12,6 +12,8 @@ if (!$isLoggedIn) {
     header("Location: /../login.php");
     exit;
 }
+
+$renderer = new Event_Popups_Renderer();
 
 // Utworzenie instancji sidebaru
 $sidebar = new Sidebar($conn, $userId);
@@ -73,41 +75,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_event'])) {
     <script src="admin.js" defer></script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<style>
-    @tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@keyframes fade-in {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.animate-fade-in {
-    animation: fade-in 0.5s ease-in-out;
-}
-
-</style>
 <body>
 <div class="admin-panel flex">
-      <!-- Renderowanie sidebaru -->
       <?php echo $sidebar->getSidebarHtml(); ?>
-
     <main class="dashboard bg-gray-50 ml-64 mt-24 p-8 min-h-screen w-full">
     <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Upcoming Events</h2>
-
-    <!-- Kontener przycisku, który będzie wyśrodkowany -->
     <div class="flex justify-center mb-6">
         <button class="add-event-btn bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition duration-200" onclick="openAddEventPopup()">Add Event</button>
     </div>
-    
-    <!-- Lista wydarzeń -->
+
     <div class="events-list mt-6 mx-auto w-4/6 space-y-6">
         <?php
         if ($result->num_rows > 0) {
@@ -133,64 +109,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_event'])) {
         ?>
     </div>
 </main>
-
-
 </div>
 
-<!-- Overlay -->
 <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"></div>
-
-<!-- Add Event Popup -->
-<div id="add-event-popup" class="popup fixed inset-0 flex justify-center items-center hidden z-50">
-    <div class="popup-content bg-white shadow-lg rounded-lg p-8 w-[40rem]">
-        <h3 class="text-xl font-semibold text-gray-700 mb-4">Add Event</h3>
-        <form method="POST" action="events.php">
-            <input type="hidden" name="add_event" value="1">
-            <label class="block text-sm font-medium text-gray-700">Event name:</label>
-            <input type="text" name="event_name" placeholder="Event Name" required class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 mt-2 mb-4">
-
-            <label class="block text-sm font-medium text-gray-700">Event date:</label>
-            <input type="datetime-local" name="event_date" required class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 mt-2 mb-4">
-
-            <label class="block text-sm font-medium text-gray-700">Event location:</label>
-            <input type="text" name="event_location" placeholder="Location" required class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 mt-2 mb-4">
-
-            <label class="block text-sm font-medium text-gray-700">Event description:</label>
-            <textarea name="event_description" placeholder="Description" required class="w-full h-32 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 mt-2 mb-4"></textarea>
-
-            <div class="flex justify-end space-x-2">
-                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200">Save</button>
-                <button type="button" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 transition duration-200" onclick="closeAddEventPopup()">Cancel</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- Edit Event Popup -->
-<div id="edit-popup" class="popup fixed inset-0 flex justify-center items-center hidden z-50">
-    <div class="popup-content bg-white shadow-lg rounded-lg p-8 w-[40rem]">
-        <h3 class="text-xl font-semibold text-gray-700 mb-4">Edit Event</h3>
-        <form method="POST" id="edit-form" action="edit_event.php">
-            <input type="hidden" id="event-id" name="event_id">
-
-            <label class="block text-sm font-medium text-gray-700">Event name:</label>
-            <input type="text" id="event-name" name="event_name" placeholder="Event Name" required class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 mt-2 mb-4">
-
-            <label class="block text-sm font-medium text-gray-700">Event date:</label>
-            <input type="datetime-local" id="event-date" name="event_date" required class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 mt-2 mb-4">
-
-            <label class="block text-sm font-medium text-gray-700">Event location:</label>
-            <input type="text" id="event-location" name="event_location" placeholder="Location" required class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 mt-2 mb-4">
-
-            <label class="block text-sm font-medium text-gray-700">Event description:</label>
-            <textarea id="event-description" name="event_description" placeholder="Event Description" required class="w-full h-32 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 mt-2 mb-4"></textarea>
-
-            <div class="flex justify-end space-x-2">
-                <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-200">Save</button>
-                <button type="button" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 transition duration-200" onclick="closePopup()">Cancel</button>
-            </div>
-        </form>
-    </div>
-</div>
+<?php echo $renderer->Render_Event_Popups_($comments, $search_query); ?>
 </body>
 </html>
