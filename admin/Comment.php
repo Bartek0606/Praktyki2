@@ -7,7 +7,7 @@ class Comment {
         $this->conn = $conn;
     }
 
-    // Metoda pobierająca wszystkie komentarze z pełnym imieniem użytkownika, posortowane po pełnym imieniu użytkownika
+    // Wszystkie komentarze
     public function getAllPCom($search_query = '') {
         $sql = "
             SELECT comments.comment_id, comments.content, comments.created_at, users.full_name

@@ -2,9 +2,9 @@
 include __DIR__ . '/../db_connection.php';
 include 'popups_events.php';
 include_once 'sidebar_admin.php';
-// Upewnij się, że sesja jest uruchomiona
-session_start();
 
+
+session_start();
 $isLoggedIn = isset($_SESSION['user_id']);
 $userId = $isLoggedIn ? $_SESSION['user_id'] : null;
 
@@ -14,10 +14,7 @@ if (!$isLoggedIn) {
 }
 
 $renderer = new Event_Popups_Renderer();
-
-// Utworzenie instancji sidebaru
 $sidebar = new Sidebar($conn, $userId);
-
 
 $query = "SELECT * FROM events ORDER BY event_date DESC";
 $result = $conn->query($query);
@@ -38,6 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_event_id'])) {
         echo "Błąd: Nie udało się przygotować zapytania.";
     }
 }
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_event'])) {
     $event_name = $_POST['event_name'];
     $event_date = $_POST['event_date'];
