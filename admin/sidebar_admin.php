@@ -2,7 +2,7 @@
 
 class Sidebar {
     private $conn;
-    private $userId;
+     private $userId;
 
     public function __construct($conn, $userId) {
         $this->conn = $conn;
