@@ -4,9 +4,7 @@ include 'Edit_Post.php';
 include 'delete_post.php';
 include_once 'sidebar_admin.php';
 
-// Upewnij się, że sesja jest uruchomiona
 session_start();
-
 $isLoggedIn = isset($_SESSION['user_id']);
 $userId = $isLoggedIn ? $_SESSION['user_id'] : null;
 
@@ -15,39 +13,30 @@ if (!$isLoggedIn) {
     exit;
 }
 
-// Utworzenie instancji sidebaru
 $sidebar = new Sidebar($conn, $userId);
-
-
 $adminPanel = new Edit_Post($conn);
 
-// Pobieranie wszystkich postów
 $posts = $adminPanel->getAllPosts();
 
-// Pobieranie kategorii do listy w formularzu
 $categories = $adminPanel->getCategories();
 
-// Obsługa zapisania zmian w formularzu edycji
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveChanges'])) {
     $isUpdated = $adminPanel->handleSaveChanges($_POST);
     if ($isUpdated) {
-        // Przekierowanie po zapisaniu zmian
         $adminPanel->redirectAfterSave();
     } else {
         echo "Błąd podczas zapisywania danych.";
     }
 }
 
-// Pobieranie danych posta do edycji
 $postToEdit = null;
 if (isset($_GET['edit_post_id'])) {
     $editPostId = intval($_GET['edit_post_id']);
     $postToEdit = $adminPanel->getPostToEdit($editPostId);
 }
 
-$postManager = new Delete_post($conn);
 
-// Obsługa usuwania posta przez wywołanie odpowiedniej metody klasy
+$postManager = new Delete_post($conn);
 $postManager->handleDeleteRequest();
 
 ?>
@@ -61,7 +50,6 @@ $postManager->handleDeleteRequest();
 </head>
 <body>
 <div class="admin-panel">
-   <!-- Renderowanie sidebaru -->
    <?php echo $sidebar->getSidebarHtml(); ?>
 
    <main class="dashboard p-8 bg-gray-50 ml-64 min-h-screen" style="padding-top: 6rem;">
@@ -73,14 +61,12 @@ $postManager->handleDeleteRequest();
         <?php else: ?>
             <?php foreach ($posts as $post): ?>
                 <li class="post-item bg-white shadow-md rounded-lg p-4 flex items-start relative">
-                    <!-- Post Image -->
                     <?php if (!empty($post["image"])): ?>
                         <div class="post-image w-1/6 mr-5 h-full rounded-md overflow-hidden">
                             <img src="data:image/jpeg;base64,<?php echo base64_encode($post["image"]); ?>" alt="Post Image" class="w-full h-full object-cover">
                         </div>
                     <?php endif; ?>
 
-                    <!-- Post Content -->
                     <div class="post-content flex-1">
                         <h3 class="text-lg font-semibold text-gray-700"><?php echo htmlspecialchars($post["tittle"]); ?></h3>
                         <p class="text-gray-600 mt-3"><?php echo ($post["content"]); ?></p>
@@ -88,7 +74,6 @@ $postManager->handleDeleteRequest();
                         <p class="text-sm text-gray-400 mt-3"><em>Created at: <?php echo htmlspecialchars($post["created_at"]); ?></em></p>
                     </div>
 
-                    <!-- Actions -->
                     <div class="actions absolute bottom-4 right-4 flex space-x-2">
                         <button class="editpost_button bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200" data-post-id="<?php echo $post["post_id"]; ?>">Edit</button>
                         <form method="post" class="inline">
