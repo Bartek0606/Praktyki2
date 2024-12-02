@@ -7,6 +7,13 @@ include_once 'sidebar_admin.php';
 session_start();
 $isLoggedIn = isset($_SESSION['user_id']);
 $userId = $isLoggedIn ? $_SESSION['user_id'] : null;
+// Obsługa wylogowania
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
+    session_destroy();
+    header("Location: /../login.php");
+    exit;
+}
+
 
 if (!$isLoggedIn) {
     header("Location: /../login.php");
