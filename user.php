@@ -28,9 +28,13 @@ $profileUserId = intval($_GET['id']);
 // Get user data
 $sql_user = "SELECT username, email, full_name, bio, profile_picture FROM users WHERE user_id = ?";
 $stmt_user = $conn->prepare($sql_user);
+if ($stmt_user === false) {
+    die('MySQL prepare error: ' . $conn->error);
+}
 $stmt_user->bind_param("i", $profileUserId);
 $stmt_user->execute();
 $result_user = $stmt_user->get_result();
+
 $user = $result_user->fetch_assoc();
 
 if (!$user) {
@@ -53,6 +57,16 @@ $stmt_posts = $conn->prepare($sql_posts);
 $stmt_posts->bind_param("i", $profileUserId);
 $stmt_posts->execute();
 $result_posts = $stmt_posts->get_result();
+
+// Get the user's events
+$sql_events = "
+    SELECT events.event_id, events.event_name, events.event_description, events.event_date, events.location FROM events JOIN event_registrations ON events.event_id = event_registrations.event_id WHERE event_registrations.user_id = ? ORDER BY events.event_date DESC;
+";
+$stmt_events = $conn->prepare($sql_events);
+$stmt_events->bind_param("i", $userId);
+$stmt_events->execute();
+$result_events = $stmt_events->get_result();
+
 
 // Check if the user is already being followed
 $isFollowing = false;
@@ -154,8 +168,12 @@ if ($isLoggedIn && isset($_POST['follow'])) {
 
     <div class="toggle-buttons">
         <?php if ($isLoggedIn && $userId == $profileUserId): ?>
+            <div class="toggle-buttons">
             <button id="show-posts" class="toggle-btn">Your Posts</button>
             <button id="show-likes" class="toggle-btn">Your Likes</button>
+            <button id="show-events" class="toggle-btn">Your Events</button>
+        </div>
+
         <?php endif; ?>
     </div>
 
@@ -275,6 +293,30 @@ if ($isLoggedIn && isset($_POST['follow'])) {
         <p>No posts liked yet. </p>
     <?php endif; ?>
 </div>
+
+<div class="container events-container" id="events-container" style="display: none;">
+    <h2>Your Events</h2>
+    <?php if ($result_events->num_rows > 0): ?>
+        <div class="events">
+            <?php while ($event = $result_events->fetch_assoc()): ?>
+                <div class="event-card">
+                    <div class="event-header">
+                        <h3><?php echo htmlspecialchars($event['event_name']); ?></h3>
+                        <p class="event-date"><?php echo htmlspecialchars($event['event_date']); ?></p>
+                    </div>
+                    <div class="event-body">
+                        <p><strong>Description:</strong> <?php echo htmlspecialchars($event['event_description']); ?></p>
+                        <p><strong>Location:</strong> <?php echo htmlspecialchars($event['location']); ?></p>
+                    </div>
+                </div>
+            <?php endwhile; ?>
+        </div>
+    <?php else: ?>
+        <p class="no-events">You are not attending any events yet.</p>
+    <?php endif; ?>
+</div>
+
+
 
 </main>
 </body>
