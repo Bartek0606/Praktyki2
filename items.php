@@ -78,34 +78,40 @@ $categories_result = $conn->query($sql_categories);
     <?php endif; ?>
 
     <div class="filter-menu">
-        <form method="GET" action="">
-            <div class="categories-filter">
-                <label for="categories"><strong>Categories:</strong></label>
-                <select name="categories[]" id="categories" class="categories-select" multiple>
-                    <?php
-                    if ($categories_result->num_rows > 0) {
-                        while ($category = $categories_result->fetch_assoc()) {
-                            $selected = in_array($category['category_id'], $selected_categories) ? 'selected' : '';
-                            echo "<option value='" . $category['category_id'] . "' $selected>";
-                            echo htmlspecialchars($category['name']);
-                            echo "</option>";
-                        }
+    <form method="GET" action="">
+        <div class="categories-filter">
+            <label for="categories"><strong>Categories:</strong></label>
+            <div class="checkbox-group">
+                <?php
+                if ($categories_result->num_rows > 0) {
+                    while ($category = $categories_result->fetch_assoc()) {
+                        $checked = in_array($category['category_id'], $selected_categories) ? 'checked' : '';
+                        echo "<label>";
+                        echo "<input type='checkbox' name='categories[]' value='" . $category['category_id'] . "'>";
+                        echo htmlspecialchars($category['name']);
+                        echo "</label>";
                     }
-                    ?>
-                </select>
+                }
+                ?>
             </div>
-            <div class="sort-filter">
-                <label for="sort"><strong>Sort by:</strong></label>
-                <select name="sort" id="sort">
-                    <option value="newest" <?php echo $sort === 'newest' ? 'selected' : ''; ?>>Date: Newest</option>
-                    <option value="oldest" <?php echo $sort === 'oldest' ? 'selected' : ''; ?>>Date: Oldest</option>
-                    <option value="price" <?php echo $sort === 'price' ? 'selected' : ''; ?>>Price: Low to High</option>
-                    <option value="price_desc" <?php echo $sort === 'price_desc' ? 'selected' : ''; ?>>Price: High to Low</option>
-                </select>
-            </div>
-            <button type="submit">Apply Filters</button>
-        </form>
-    </div>
+        </div>
+        
+        <div class="sort-filter">
+            <label for="sort"><strong>Sort by:</strong></label>
+            <select name="sort" id="sort">
+                <option value="newest" <?php echo $sort === 'newest' ? 'selected' : ''; ?>>Date: Newest</option>
+                <option value="oldest" <?php echo $sort === 'oldest' ? 'selected' : ''; ?>>Date: Oldest</option>
+                <option value="price" <?php echo $sort === 'price' ? 'selected' : ''; ?>>Price: Low to High</option>
+                <option value="price_desc" <?php echo $sort === 'price_desc' ? 'selected' : ''; ?>>Price: High to Low</option>
+            </select>
+        </div>
+
+        <button type="submit" class="apply-filters-btn">Apply Filters</button>
+    </form>
+</div>
+
+
+
 
     <section class="items-list">
     <?php

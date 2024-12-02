@@ -101,9 +101,19 @@ $user_items_result = $stmt_user_items->get_result();
             <p><strong>Category:</strong> <?php echo htmlspecialchars($item['category_name'] ?? 'Uncategorized'); ?></p>
             <p><strong>Price:</strong> <?php echo htmlspecialchars($item['price']); ?> zł</p>
             <p><strong>Posted on:</strong> <?php echo $formatted_date; ?></p>
+
+            <!-- Message Button -->
+            <?php if ($isLoggedIn && $userId != $item['user_id']): ?>
+                <form action="message.php?id=<?php echo $item['user_id']; ?>" method="POST">
+                    <button type="submit" class="message-btn">Message the Seller</button>
+                </form>
+            <?php endif; ?>
         </div>
     </div>
 
+    
+
+    <!-- Related Items Section -->
     <?php if ($related_items_result->num_rows > 0): ?>
         <div class="related-items">
             <h3>Related Items</h3>
@@ -125,6 +135,7 @@ $user_items_result = $stmt_user_items->get_result();
         </div>
     <?php endif; ?>
 
+    <!-- User's Other Items Section -->
     <?php if ($user_items_result->num_rows > 0): ?>
         <div class="user-items">
             <h3>Other Items by <?php echo htmlspecialchars($item['username']); ?></h3>
