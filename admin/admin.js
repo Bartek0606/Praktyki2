@@ -1,16 +1,15 @@
-// Funkcja otwierająca popup dla dodawania wydarzenia
+// Popup do dodawania wydarzenia
 function openAddEventPopup() {
   document.getElementById("add-event-popup").style.display = "flex";
-  document.getElementById("overlay").style.display = "block"; // Pokazuje overlay
+  document.getElementById("overlay").style.display = "block";
 }
 
-// Funkcja zamykająca popup dla dodawania wydarzenia
 function closeAddEventPopup() {
   document.getElementById("add-event-popup").style.display = "none";
-  document.getElementById("overlay").style.display = "none"; // Ukrywa overlay
+  document.getElementById("overlay").style.display = "none";
 }
 
-// Funkcja otwierająca popup i wypełniająca formularz danymi wydarzenia (do edycji)
+// WYpelnianie formularza do edycji danymi wybranego posta
 function openEditPopup(eventId, name, date, location, description) {
   document.getElementById("event-id").value = eventId;
   document.getElementById("event-name").value = name;
@@ -18,11 +17,11 @@ function openEditPopup(eventId, name, date, location, description) {
   document.getElementById("event-location").value = location;
   document.getElementById("event-description").value = description;
   document.getElementById("edit-popup").style.display = "flex";
-  document.getElementById("overlay").style.display = "block"; // Pokazuje overlay
+  document.getElementById("overlay").style.display = "block";
 }
 
-// Funkcja zamykająca popup dla edycji
+// Zamkniecie okna do edycji
 function closePopup() {
   document.getElementById("edit-popup").style.display = "none";
-  document.getElementById("overlay").style.display = "none"; // Ukrywa overlay
+  document.getElementById("overlay").style.display = "none";
 }
