@@ -1,0 +1,134 @@
+/* General Links Styles */
+.user-profile-link {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.user-profile-link:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+/* Item Details Section */
+.item-details {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    justify-content: flex-start;
+    align-items: center;  /* Center content */
+    margin-bottom: 30px;
+    width: 100%;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.item-image {
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 20px; /* Add space below the image */
+}
+
+.item-info {
+    width: 100%;
+    text-align: center;
+}
+
+.item-info h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.item-info p {
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+.item-info strong {
+    font-weight: bold;
+}
+
+/* Related Items Section */
+.related-items,
+.user-items {
+    width: 100%;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin-top: 40px;
+}
+
+.related-items h3,
+.user-items h3 {
+    font-size: 22px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.items-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* Cards for Items */
+.related-item-card,
+.user-item-card {
+    width: 200px;
+    margin: 10px;
+    text-align: center;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+.related-item-card img,
+.user-item-card img {
+    width: 100%;
+    height: auto;
+    max-height: 150px;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+.related-item-card h4,
+.user-item-card h4 {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+.related-item-card p,
+.user-item-card p {
+    font-size: 14px;
+}
+
+.user-item-card a {
+    color: black;
+    text-decoration: none;
+}
+
+.back-button {
+    margin: 20px 0;
+    text-align: left;
+}
+
+.btn-back {
+    display: inline-block;
+    padding: 10px 15px;
+    font-size: 16px;
+    color: white;
+    background-color: #007bff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.btn-back:hover {
+    background-color: #0056b3;
+}
