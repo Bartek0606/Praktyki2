@@ -62,14 +62,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="form-container mt-12 max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8 space-y-12">
 
             <form method="POST" class="space-y-6">
-                <h3 class="text-lg font-semibold text-gray-800">Edytuj kategorię</h3>
+                <h3 class="text-lg font-semibold text-gray-800">Edit Category</h3>
                 <div class="form-group">
                     <label for="edit-category-select" class="block text-sm font-medium text-gray-600 mb-2">
-                        Wybierz kategorię:
+                        Select Category:
                     </label>
                     <select id="edit-category-select" name="category_id" required
                             class="block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
-                        <option value="">-- Wybierz kategorię --</option>
+                        <option value="">-- Select Category --</option>
                         <?php foreach ($categories as $category): ?>
                             <option value="<?= htmlspecialchars($category['category_id']) ?>">
                                 <?= htmlspecialchars($category['name']) ?>
@@ -79,33 +79,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="form-group">
                     <label for="edit-category-input" class="block text-sm font-medium text-gray-600 mb-2">
-                        Nowa nazwa kategorii:
+                        New Category name:
                     </label>
                     <input type="text" id="edit-category-input" name="new_category_name" required
                            class="block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
                 </div>
                 <div class="form-group">
                     <label for="edit-description-input" class="block text-sm font-medium text-gray-600 mb-2">
-                        Nowy opis kategorii:
+                        New Category description:
                     </label>
                     <input id="edit-description-input" name="new_description" required
                            class="block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
                 </div>
                 <button type="submit" name="edit_category"
                         class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition">
-                    Zapisz
+                    Save
                 </button>
             </form>
 
             <form method="POST" class="space-y-6">
-                <h3 class="text-lg font-semibold text-gray-800">Usuń kategorię</h3>
+                <h3 class="text-lg font-semibold text-gray-800">Delete category</h3>
                 <div class="form-group">
                     <label for="delete-category-select" class="block text-sm font-medium text-gray-600 mb-2">
-                        Wybierz kategorię:
+                        Select Category:
                     </label>
                     <select id="delete-category-select" name="category_id" required
                             class="block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
-                        <option value="">-- Wybierz kategorię --</option>
+                        <option value="">-- Select Category --</option>
                         <?php foreach ($categories as $category): ?>
                             <option value="<?= htmlspecialchars($category['category_id']) ?>">
                                 <?= htmlspecialchars($category['name']) ?>
@@ -115,29 +115,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <button type="submit" name="delete_category"
                         class="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition">
-                    Usuń
+                    Delete
                 </button>
             </form>
 
             <form method="POST" class="space-y-6">
-                <h3 class="text-lg font-semibold text-gray-800">Dodaj nową kategorię</h3>
+                <e class="text-lg font-semibold text-gray-800">Add new category</h3>
                 <div class="form-group">
                     <label for="add-category-input" class="block text-sm font-medium text-gray-600 mb-2">
-                        Nazwa kategorii:
+                        Category name:
                     </label>
                     <input type="text" id="add-category-input" name="category_name" required
                            class="block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
                 </div>
                 <div class="form-group">
                     <label for="add-description-input" class="block text-sm font-medium text-gray-600 mb-2">
-                        Opis kategorii:
+                        Category description:
                     </label>
                     <input id="add-description-input" name="description" required
                            class="block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
                 </div>
                 <button type="submit" name="add_category"
                         class="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition">
-                    Zatwierdź
+                    Save
                 </button>
             </form>
 
