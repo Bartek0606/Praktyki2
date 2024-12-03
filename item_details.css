@@ -108,11 +108,31 @@
     font-size: 14px;
 }
 
+/* User's Other Items Section */
+.user-items-list {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping to next row */
+    gap: 20px;
+}
+
+.user-item-card {
+    width: 200px; /* Consistent card width */
+    margin: 0; /* Remove outer margins */
+    text-align: center;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
 .user-item-card a {
     color: black;
     text-decoration: none;
 }
 
+/* Back Button */
 .back-button {
     margin: 20px 0;
     text-align: left;
