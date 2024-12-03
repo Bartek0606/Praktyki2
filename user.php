@@ -121,6 +121,7 @@ if ($isLoggedIn && isset($_POST['follow'])) {
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="user.css">
+    <link rel="stylesheet" href="glowna.css">
     <link rel="stylesheet" href="navbar.css">
     <script src="user.js" defer></script>
     <title><?php echo htmlspecialchars($user['username']); ?>'s Profile • HobbyHub</title>
