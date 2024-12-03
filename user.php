@@ -60,12 +60,18 @@ $result_posts = $stmt_posts->get_result();
 
 // Get the user's events
 $sql_events = "
-    SELECT events.event_id, events.event_name, events.event_description, events.event_date, events.location FROM events JOIN event_registrations ON events.event_id = event_registrations.event_id WHERE event_registrations.user_id = ? ORDER BY events.event_date DESC;
+    SELECT events.event_id, events.event_name, events.event_description, events.event_date, events.location 
+    FROM events 
+    JOIN event_registrations ON events.event_id = event_registrations.event_id 
+    WHERE event_registrations.user_id = ? 
+    ORDER BY events.event_date DESC;
 ";
+
 $stmt_events = $conn->prepare($sql_events);
-$stmt_events->bind_param("i", $userId);
+$stmt_events->bind_param("i", $profileUserId); // Change $userId to $profileUserId
 $stmt_events->execute();
 $result_events = $stmt_events->get_result();
+
 
 
 // Check if the user is already being followed
@@ -167,16 +173,32 @@ if ($isLoggedIn && isset($_POST['follow'])) {
         </div>
     </div>
 
-    <div class="toggle-buttons">
-        <?php if ($isLoggedIn && $userId == $profileUserId): ?>
-            <div class="toggle-buttons">
-            <button id="show-posts" class="toggle-btn">Your Posts</button>
-            <button id="show-likes" class="toggle-btn">Your Likes</button>
-            <button id="show-events" class="toggle-btn">Your Events</button>
-        </div>
+    <<div class="toggle-buttons">
+    <button id="show-posts" class="toggle-btn">
+        <?php 
+        if ($isLoggedIn && $userId == $profileUserId) {
+            echo "Your Posts";
+        } else {
+            echo htmlspecialchars($user['username']) . "'s Posts";
+        }
+        ?>
+    </button>
 
-        <?php endif; ?>
-    </div>
+    <?php if ($isLoggedIn && $userId == $profileUserId): ?>
+        <button id="show-likes" class="toggle-btn">Your Likes</button>
+    <?php endif; ?>
+
+    <button id="show-events" class="toggle-btn">
+        <?php 
+        if ($isLoggedIn && $userId == $profileUserId) {
+            echo "Your Events";
+        } else {
+            echo htmlspecialchars($user['username']) . "'s Events";
+        }
+        ?>
+    </button>
+</div>
+
 
     <!-- Posty użytkownika -->
     <div class="container posts-container" id="posts-container">
@@ -296,26 +318,46 @@ if ($isLoggedIn && isset($_POST['follow'])) {
 </div>
 
 <div class="container events-container" id="events-container" style="display: none;">
-    <h2>Your Events</h2>
+    <h2>
+        <?php 
+        if ($isLoggedIn && $userId == $profileUserId) {
+            echo "Your Events";
+        } else {
+            echo htmlspecialchars($user['username']) . "'s Events";
+        }
+        ?>
+    </h2>
     <?php if ($result_events->num_rows > 0): ?>
         <div class="events">
             <?php while ($event = $result_events->fetch_assoc()): ?>
-                <div class="event-card">
-                    <div class="event-header">
-                        <h3><?php echo htmlspecialchars($event['event_name']); ?></h3>
-                        <p class="event-date"><?php echo htmlspecialchars($event['event_date']); ?></p>
+                <a href="event.php?id=<?php echo $event['event_id']; ?>" class="event-link">
+                    <div class="event-card">
+                        <div class="event-header">
+                            <h3><?php echo htmlspecialchars($event['event_name']); ?></h3>
+                            <p class="event-date"><?php echo htmlspecialchars($event['event_date']); ?></p>
+                        </div>
+                        <div class="event-body">
+                            <p><strong>Description:</strong> <?php echo htmlspecialchars($event['event_description']); ?></p>
+                            <p><strong>Location:</strong> <?php echo htmlspecialchars($event['location']); ?></p>
+                        </div>
                     </div>
-                    <div class="event-body">
-                        <p><strong>Description:</strong> <?php echo htmlspecialchars($event['event_description']); ?></p>
-                        <p><strong>Location:</strong> <?php echo htmlspecialchars($event['location']); ?></p>
-                    </div>
-                </div>
+                </a>
+
             <?php endwhile; ?>
         </div>
     <?php else: ?>
-        <p class="no-events">You are not attending any events yet.</p>
+        <p class="no-events">
+            <?php 
+            if ($isLoggedIn && $userId == $profileUserId) {
+                echo "You are not attending any events yet.";
+            } else {
+                echo htmlspecialchars($user['username']) . " is not attending any events.";
+            }
+            ?>
+        </p>
     <?php endif; ?>
 </div>
+
 
 
 
