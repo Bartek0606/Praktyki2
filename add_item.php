@@ -22,6 +22,9 @@ if (!$isLoggedIn) {
 
 $navbar = new Navbar($conn, $isLoggedIn, $userId, $userName);
 
+$message = null;
+$messageClass = "";
+
 // Obsługa formularza dodawania przedmiotu
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_item'])) {
     $item_name = $conn->real_escape_string($_POST['item_name']);
@@ -42,11 +45,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_item'])) {
 
         if ($conn->query($sql_add_item) === TRUE) {
             $message = "Item added successfully!";
+            $messageClass = "success";
         } else {
             $message = "Error adding item: " . $conn->error;
+            $messageClass = "error";
         }
     } else {
         $message = "Error uploading image. Please try again.";
+        $messageClass = "error";
     }
 }
 ?>
@@ -95,7 +101,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_item'])) {
         <button type="submit" name="add_item">Add Item</button>
     </form>
 
-    <?php if (isset($message)) echo "<p>$message</p>"; ?>
+    <?php if ($message): ?>
+        <div class="message <?php echo $messageClass; ?>">
+            <?php echo htmlspecialchars($message); ?>
+        </div>
+    <?php endif; ?>
 </main>
 </body>
 </html>

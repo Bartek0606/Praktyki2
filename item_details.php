@@ -82,9 +82,9 @@ $user_items_result = $stmt_user_items->get_result();
 </header>
 <main class="container">
     <!-- Back Button -->
-    <div class="back-button">
+    <!-- <div class="back-button">
         <a href="items.php" class="btn-back">← Back to Items</a>
-    </div>
+    </div> -->
 
     <div class="item-details">
         <div class="item-image">

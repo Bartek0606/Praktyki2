@@ -69,6 +69,7 @@ class Navbar{
         <?php 
         }
         ?>
+        <button class="btn items-btn" onclick="window.location.href='items.php'">Items</button>
         </div>
         <?php
         if ($_SERVER['REQUEST_URI'] == '/' || $_SERVER['REQUEST_URI'] == '' || $_SERVER['PHP_SELF'] == '/index.php') {

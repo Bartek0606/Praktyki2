@@ -295,3 +295,24 @@ header {
 .new-post-btn:hover {
     background-color: #218838; /* Darker green on hover */
 }
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Odstęp między napisem a przyciskiem */
+}
+
+.items-btn {
+  padding: 10px 15px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.items-btn:hover {
+  background-color: #0056b3;
+}
