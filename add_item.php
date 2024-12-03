@@ -46,6 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_item'])) {
         if ($conn->query($sql_add_item) === TRUE) {
             $message = "Item added successfully!";
             $messageClass = "success";
+            header("Location: items.php");
         } else {
             $message = "Error adding item: " . $conn->error;
             $messageClass = "error";
