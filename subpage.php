@@ -101,6 +101,31 @@ $result_posts = $stmt_posts->get_result();
     <script src="fotografia.js"></script>
     <title>Blog o fotografii</title>
 </head>
+<style>
+        .card:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease-in-out;
+        }
+        .user-photo:hover {
+            transform: rotate(360deg);
+            transition: transform 0.5s ease-in-out;
+        }
+        .bg-gradient {
+            background: linear-gradient(135deg, #6B73FF 0%, #000DFF 100%);
+        }
+        .text-shadow {
+            text-shadow: 1px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        .card {
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .card-content {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(2px);
+        }
+    </style>
+
 <body>
     
 <header>
@@ -134,37 +159,36 @@ $result_posts = $stmt_posts->get_result();
 </section>
 
 
-<div class="tlo_posty">
-    <section id="posty" class="posts-section">
-    <h1 class="posts-title">Posts about <?php echo $category_name; ?></h1>
-        <a href="#" class="see-more">See more posts</a>
-
-        <div class="posts-container">
+<div class="max-w-7xl mx-auto py-12">
+        <div class="text-center">
+            <h1 class="text-4xl font-extrabold text-gray-900 text-shadow">Posts about <?php echo $category_name; ?></h1>
+        </div>
+        <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">
             <?php
             if ($result_posts->num_rows > 0) {
                 while ($post = $result_posts->fetch_assoc()) {
                     $post_url = 'post.php?id=' . $post['post_id'];
-
-                    echo "<div class='post'>";
-                    echo '<a href="' . $post_url . '" class="post-link">'; 
-                    echo "<img src='" . $post['image_url'] . "' alt='" . $post['title'] . "'>";
-                    echo "<h3>" . $post['title'] . "</h3>";
-                    echo "<br />";
-                    echo "<p>" . $post['content']. "</p>";
-                    echo "<br />";
-                    echo "<p>Add by: <strong>" . $post['username'] . "</strong></p>";
-                    echo "<p>Category: <strong>" . $post['category_name'] . "</strong></p>";
+                    
+                    echo "<div class='relative bg-white shadow-lg rounded-lg overflow-hidden h-80 card'>";
+                    echo "<a href='{$post_url}' class='block h-full'>";
+                    echo "<img src='data:image/jpeg;base64," . base64_encode($post['image']) . "' alt='Post Image' class='absolute inset-0 w-full h-full object-cover'>";
+                    echo "<div class='absolute inset-0 card-content p-6 flex flex-col justify-end'>";
+                    echo "<div class='flex items-center'>";
+                    echo "<img class='w-8 h-8 rounded-full user-photo' src='data:image/jpeg;base64," . base64_encode($post['profile_picture']) . "' alt='User photo'>";
+                    echo "<span class='ml-2 text-gray-300 text-sm'>" . $post['created_at'] . "</span>";
+                    echo "<span class='ml-2 text-white font-medium text-sm'>" . $post['username'] . "</span>";
+                    echo "</div>";
+                    echo "<h3 class='mt-2 text-xl font-semibold text-white'>" . $post['title'] . "</h3>";
+                    echo "</div>";
                     echo "</a>";
                     echo "</div>";
                 }
             } else {
-                echo "<p>Brak postów w tej kategorii.</p>";
+                echo "<p class='text-white'>Brak postów w tej kategorii.</p>";
             }
-
             ?>
         </div>
-    </section>
-</div>
+    </div>
 
 <section id="opinie" class="reviews-section">
     <h2 class="reviews-title">User opinions about the blog</h2>
