@@ -380,7 +380,7 @@ if ($isLoggedIn && isset($_POST['follow'])) {
         </p>
     <?php endif; ?>
 </div>
-<<div class="container items-container" id="items-container" style="display: none;">
+<div class="container items-container" id="items-container" style="display: none;">
   <h2>
     <?php 
     if ($isLoggedIn && $userId == $profileUserId) {
