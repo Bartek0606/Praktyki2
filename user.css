@@ -384,50 +384,96 @@
     cursor: pointer;
 }
 
-
-.items {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+/* Styl dla sekcji User Items */
+.items-container h2 {
+    text-align: center;
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: bold;
 }
 
-.item-card {
-    width: 300px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    padding: 15px;
-    background-color: #f9f9f9;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.item-image {
+/* Kontener dla przedmiotów */
+.items-container {
     width: 100%;
+    max-width: 1200px; /* Maksymalna szerokość kontenera */
+    margin: 0 auto; /* Wyrównanie kontenera do środka */
+    padding: 20px; /* Padding wokół zawartości */
+    background-color: #f9f9f9; /* Tło kontenera */
+    border-radius: 8px; /* Zaokrąglone rogi */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Cień kontenera */
+}
+
+/* Styl dla siatki przedmiotów */
+.items {
+    display: grid; /* Ustawienie siatki */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Elastyczna siatka dla kart */
+    gap: 20px; /* Odstęp między kartami */
+}
+
+/* Styl dla karty przedmiotu */
+.item-card {
+    background-color: white; /* Tło karty */
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.item-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Styl dla obrazu przedmiotu */
+.item-card .item-image {
+    width: 100%; /* Obraz zajmuje pełną szerokość */
     height: 200px;
-    object-fit: cover;
-    border-radius: 10px;
+    object-fit: cover; /* Zachowanie proporcji obrazu */
+    border-radius: 8px; /* Zaokrąglone rogi */
+    margin-bottom: 15px;
 }
 
-.item-details {
-    margin-top: 10px;
+/* Szczegóły przedmiotu */
+.item-card .item-details {
+    text-align: left;
 }
 
-.item-details h3 {
-    margin: 0 0 10px;
+.item-card .item-details h3 {
+    font-size: 22px;
+    color: #f39c12;
+    font-weight: bold;
+    margin-bottom: 10px;
 }
 
-.item-details p {
-    margin: 5px 0;
-    font-size: 14px;
+.item-card .item-details p {
+    font-size: 16px;
     color: #555;
+    margin-bottom: 8px;
+    line-height: 1.5;
 }
 
+/* Link dla karty przedmiotu */
 .item-link {
-    text-decoration: none;
-    color: inherit;
+    text-decoration: none; /* Brak podkreślenia */
+    color: inherit; /* Dziedziczenie koloru */
+    display: block; /* Klikalność na całej karcie */
 }
 
 .item-link:hover .item-card {
-    transform: scale(1.02);
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    background-color: #f9f9f9; /* Opcjonalny efekt hover */
+    cursor: pointer;
 }
+
+/* Responsywność dla mniejszych ekranów */
+@media (max-width: 768px) {
+    .items {
+        grid-template-columns: 1fr; /* Jedna kolumna na mniejszych ekranach */
+    }
+
+    .item-card .item-image {
+        height: 150px; /* Zmniejszenie wysokości obrazu */
+    }
+}
+
