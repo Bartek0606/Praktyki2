@@ -47,7 +47,7 @@ class Navbar{
         ob_start(); // Rozpoczynamy buforowanie
     ?>
     <nav class="bg-white border-gray-200 dark:bg-gray-900">
-            <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+            <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4 m-0">
                 <a href="index.php" class="flex items-center space-x-3">
                     <span class="text-2xl font-semibold whitespace-nowrap dark:text-white">HobbyHub</span>
                 </a>
@@ -75,6 +75,18 @@ class Navbar{
                         <?php if ($this->isLoggedIn): ?>
                             <li><a href="new_post.php" class="block py-2 px-3 text-gray-900 hover:text-blue-700 dark:text-white">New Post</a></li>
                         <?php endif; ?>
+                        <?php
+                        if ($_SERVER['REQUEST_URI'] == '/' || $_SERVER['REQUEST_URI'] == '' || $_SERVER['PHP_SELF'] == '/index.php') {
+                        ?>
+                        <li class="flex items-center">
+                            <form class="search-form flex items-center gap-2" method="GET" action="">
+                                <input type="text" name="category" placeholder="Search by category" value="<?php echo $search_category ?? ''; ?>" class="px-3 py-2 border rounded-md dark:bg-gray-700 dark:text-white">
+                                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Search</button>
+                            </form>
+                        </li>
+                        <?php 
+                        }
+                        ?>
                     </ul>
                 </div>
 

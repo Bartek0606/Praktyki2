@@ -40,6 +40,7 @@ $events_result = $conn->query($sql_events);
     <meta charset="UTF-8">
     <link rel="stylesheet" href="glowna.css">
     <link rel="stylesheet" href="navbar.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="glowna.js" defer></script>
     <title>HobbyHub</title>
 </head>
