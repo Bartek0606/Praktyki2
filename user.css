@@ -466,14 +466,3 @@
     cursor: pointer;
 }
 
-/* Responsywność dla mniejszych ekranów */
-@media (max-width: 768px) {
-    .items {
-        grid-template-columns: 1fr; /* Jedna kolumna na mniejszych ekranach */
-    }
-
-    .item-card .item-image {
-        height: 150px; /* Zmniejszenie wysokości obrazu */
-    }
-}
-
