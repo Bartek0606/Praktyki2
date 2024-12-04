@@ -400,7 +400,7 @@ if ($isLoggedIn && isset($_POST['follow'])) {
                     <?php endif; ?>
                     <div class="item-details">
                         <h3><?php echo htmlspecialchars($item['title']); ?></h3>
-                        <p><strong>Description:</strong> <?php echo htmlspecialchars($item['description']); ?></p>
+                        <p><strong>Name:</strong> <?php echo htmlspecialchars($item['name']); ?></p>
                         <p><strong>Price:</strong> $<?php echo number_format($item['price'], 2); ?></p>
                         <p><strong>Added on:</strong> <?php echo htmlspecialchars($item['created_at']); ?></p>
                     </div>
