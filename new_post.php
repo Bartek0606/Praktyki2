@@ -13,13 +13,13 @@ $navbar = new Navbar($conn, $isLoggedIn, $userId, $userName);
 
 // Handle logout
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
-  session_destroy(); // Destroy the session
-  header("Location: index.php"); // Redirect to homepage
-  exit;
+    session_destroy();
+    header("Location: index.php");
+    exit;
 }
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php"); // Redirect to login if not logged in
+    header("Location: login.php");
     exit;
 }
 
@@ -58,63 +58,59 @@ $categories_result = $conn->query($categories_sql);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="glowna.css">
-    <link rel="stylesheet" href="post.css">
-    <link rel="stylesheet" href="new_post.css">
-    <link rel="stylesheet" href="navbar.css">
-    <title>Create New Post</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Create New Post • HobbyHub</title>
 </head>
-<body>
-    <header>
-        <?php 
-            echo $navbar->render();
-        ?>
-  </header> 
+<body class="bg-gray-900 text-white">
+<header>
+    <?php echo $navbar->render(); ?>
+</header>
+<main class="container mx-auto max-w-4xl px-6 py-12">
+    <div class="bg-gray-800 p-8 rounded-lg shadow-lg">
+        <h2 class="text-3xl font-bold text-orange-400 mb-6">Create New Post</h2>
 
-    <main class="container">
-        <div class="post-details">
-            <h2>Create New Post</h2>
+        <?php if (isset($error)): ?>
+            <div class="bg-red-600 text-white p-4 rounded-lg mb-6">
+                <?php echo $error; ?>
+            </div>
+        <?php endif; ?>
 
-            <?php if (isset($error)): ?>
-                <p class="error-message"><?php echo $error; ?></p>
-            <?php endif; ?>
+        <form method="POST" enctype="multipart/form-data" class="space-y-6">
+            <div class="space-y-2">
+                <label for="title" class="block text-lg font-semibold">Title:</label>
+                <input type="text" name="title" id="title" class="w-full p-3 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-orange-400" required>
+            </div>
 
-            <form method="POST" enctype="multipart/form-data" class="new-post-form">
-                <div class="form-group">
-                    <label for="title">Title:</label>
-                    <input type="text" name="title" id="title" required>
-                </div>
+            <div class="space-y-2">
+                <label for="content" class="block text-lg font-semibold">Content:</label>
+                <textarea name="content" id="content" rows="6" class="w-full p-3 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-orange-400" required></textarea>
+            </div>
 
-                <div class="form-group">
-                    <label for="content">Content:</label>
-                    <textarea name="content" id="content" rows="6" required></textarea>
-                </div>
+            <div class="space-y-2">
+                <label for="category" class="block text-lg font-semibold">Category:</label>
+                <select name="category" id="category" class="w-full p-3 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-orange-400" required>
+                    <?php while ($category = $categories_result->fetch_assoc()): ?>
+                        <option value="<?php echo $category['category_id']; ?>">
+                            <?php echo htmlspecialchars($category['name']); ?>
+                        </option>
+                    <?php endwhile; ?>
+                </select>
+            </div>
 
-                <div class="form-group">
-                    <label for="category">Category:</label>
-                    <select name="category" id="category" required>
-                        <?php while ($category = $categories_result->fetch_assoc()): ?>
-                            <option value="<?php echo $category['category_id']; ?>">
-                                <?php echo htmlspecialchars($category['name']); ?>
-                            </option>
-                        <?php endwhile; ?>
-                    </select>
-                </div>
+            <div class="flex items-center space-x-3">
+                <input type="checkbox" name="is_question" id="is_question" value="1" class="h-5 w-5 text-orange-400 bg-gray-700 rounded border-gray-600 focus:ring-orange-400">
+                <label for="is_question" class="text-lg">Is this a question?</label>
+            </div>
 
-                <div class="form-group">
-                    <label for="is_question">Is this a question?</label>
-                    <input type="checkbox" name="is_question" id="is_question" value="1">
-                </div>
+            <div class="space-y-2">
+                <label for="image" class="block text-lg font-semibold">Upload Image:</label>
+                <input type="file" name="image" id="image" accept="image/*" class="block w-full text-gray-400">
+            </div>
 
-                <div class="form-group">
-                    <label for="image">Upload Image:</label>
-                    <input type="file" name="image" id="image" accept="image/*">
-                </div>
-
-                <button type="submit" name="submit_post" class="btn new-post-btn">Post</button>
-            </form>
-        </div>
-    </main>
+            <button type="submit" name="submit_post" class="w-full py-3 bg-orange-500 text-white font-bold rounded-lg hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-400">Post</button>
+        </form>
+    </div>
+</main>
 </body>
 </html>
 
