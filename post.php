@@ -88,6 +88,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+$image_src = '../default.png'; 
+
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+
+    if (!empty($row['profile_picture']) && $row['profile_picture'] != 'default.png') {
+        $image_src = 'data:image/png;base64,' . base64_encode($row['profile_picture']); 
+    }
+} else {
+    $image_src = '../default.png';
+}
 ?>
 
 <!DOCTYPE html>
@@ -96,8 +107,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="glowna.css">
-    <link rel="stylesheet" href="post.css">
+    
     <link rel="stylesheet" href="navbar.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="post.js" defer></script>
     <title><?php echo htmlspecialchars($post['title'], ENT_QUOTES, 'UTF-8'); ?></title>
 </head>
@@ -106,84 +118,84 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php echo $navbar->render(); ?>
 </header>
 
-<main class="container">
-    <div class="post-details">
-        <div class="post-header">
-            <div class="post-info">
-                <h1><?php echo htmlspecialchars($post['title'], ENT_QUOTES, 'UTF-8'); ?></h1>
-                <p><strong>Category:</strong> <?php echo htmlspecialchars($post['category_name'], ENT_QUOTES, 'UTF-8'); ?></p>
-                <p>
-                    <strong>By:</strong> 
-                    <a href="user.php?id=<?php echo urlencode($post['user_id']); ?>" class="username-link">
-                        <?php echo htmlspecialchars($post['username'], ENT_QUOTES, 'UTF-8'); ?>
-                    </a>
-                </p>
-                <p><strong>Date:</strong> <?php echo htmlspecialchars($post['created_at'], ENT_QUOTES, 'UTF-8'); ?></p>
-            </div>
-
-            <?php if (!empty($post['image'])): ?>
-                <?php $imageSrc = 'data:image/jpeg;base64,' . base64_encode($post['image']); ?>
-                <img src="<?php echo $imageSrc; ?>" alt="Post Image" class="post-image">
-            <?php endif; ?>
+    <main class="container mx-auto p-6">
+    <article class="bg-gray-100 p-6 rounded-lg border border-gray-200 shadow-md">
+        <div class="flex justify-between items-center mb-5 text-gray-500">
+            <span class="bg-primary-100 text-primary-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-primary-200 dark:text-primary-800">
+                <svg class="mr-1 w-3 h-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"></path>
+                </svg>
+                Category: <?php echo htmlspecialchars($post['category_name'], ENT_QUOTES, 'UTF-8'); ?>
+            </span>
+            <span class="text-sm"><?php echo htmlspecialchars($post['created_at'], ENT_QUOTES, 'UTF-8'); ?></span>
         </div>
 
-        <?php if ($post['is_question']): ?>
-            <div class="question-highlight">
-                <strong>Question:</strong>
-            </div>
+        <h2 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">
+            <?php echo htmlspecialchars($post['title'], ENT_QUOTES, 'UTF-8'); ?>
+        </h2>
+
+        <?php if (!empty($post['image'])): ?>
+            <?php $imageSrc = 'data:image/jpeg;base64,' . base64_encode($post['image']); ?>
+            <img src="<?php echo $imageSrc; ?>" alt="Post Image" class="w-24 h-auto rounded-lg shadow-md mr-4 float-left">
         <?php endif; ?>
+        
+        <p class="mb-5 font-light text-gray-500">
+            <?php echo htmlspecialchars($post['content'], ENT_QUOTES, 'UTF-8'); ?>
+        </p>
 
-        <p><?php echo $post['content']; ?></p>
-    </div>
+        <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <img src="<?php echo htmlspecialchars($image_src, ENT_QUOTES, 'UTF-8'); ?>" alt="Profile Image" class="w-8 h-8 rounded-full">
+                <span class="font-medium text-gray-900">
+                    <?php echo htmlspecialchars($post['username'], ENT_QUOTES, 'UTF-8'); ?>
+                </span>
+            </div>
+        </div>
+    </article>
 
-    <div class="comments-section">
-        <h2>Comments</h2>
+
+    <div class="comments-section mt-12">
+        <h2 class="text-2xl font-semibold text-gray-900 mb-6">Comments</h2>
 
         <?php if ($isLoggedIn): ?>
-            <form method="POST" class="comment-form">
-                <textarea name="comment_content" placeholder="Write your comment..." required class="comment-input"></textarea>
-                <br><br>              
-                <button type="submit" name="submit_comment" class="btn comment-btn">Post Comment</button>
+            <form method="POST" class="comment-form mb-6">
+                <textarea name="comment_content" placeholder="Write your comment..." required class="w-full p-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"></textarea>
+                <button type="submit" name="submit_comment" class="px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition duration-200">Post Comment</button>
             </form>
         <?php else: ?>
-            <p class="error-message">You must be logged in to post a comment.</p>
+            <p class="text-red-600">You must be logged in to post a comment.</p>
         <?php endif; ?>
-
-        <br>
 
         <?php if (isset($_SESSION['comment_success'])): ?>
-            <p class="success-message"><?php echo $_SESSION['comment_success']; unset($_SESSION['comment_success']); ?></p>
+            <p class="text-green-800 bg-green-100 p-4 rounded-md mb-4"><?php echo $_SESSION['comment_success']; unset($_SESSION['comment_success']); ?></p>
         <?php endif; ?>
-
-        <br>
 
         <?php
         // Display comments with replies nested under their respective parents
         while ($comment = $resultComments->fetch_assoc()) {
-            echo "<div class='comment'>";
-            echo "<div class='comment-content'>";
-            echo "<p><strong><a href='user.php?id=" . urlencode($comment['user_id']) . "' class='username-link'>" . htmlspecialchars($comment['username'], ENT_QUOTES, 'UTF-8') . " " . "</a></strong><span class='comment-date'>" . htmlspecialchars($comment['created_at'], ENT_QUOTES, 'UTF-8') . "</span></p>";
-            echo "<p>" . htmlspecialchars($comment['content'], ENT_QUOTES, 'UTF-8') . "</p>";
+            echo "<div class='comment bg-gray-100 p-4 rounded-lg shadow-md mb-6'>";
+            echo "<div class='comment-content mb-4'>";
+            echo "<p><strong><a href='user.php?id=" . urlencode($comment['user_id']) . "' class='text-blue-600 hover:underline'>" . htmlspecialchars($comment['username'], ENT_QUOTES, 'UTF-8') . "</a></strong> <span class='text-gray-500 text-sm'>" . htmlspecialchars($comment['created_at'], ENT_QUOTES, 'UTF-8') . "</span></p>";
+            echo "<p class='text-gray-700'>" . htmlspecialchars($comment['content'], ENT_QUOTES, 'UTF-8') . "</p>";
             echo "</div>";
 
             // Show the reply form immediately after the main comment, if logged in
             if ($isLoggedIn) {
-                echo "<button class='btn reply-btn' onclick='toggleReplyForm({$comment['comment_id']})'>Reply</button>";
-                echo "<form method='POST' id='reply-form-{$comment['comment_id']}' style='display:none;' class='reply-form'>";
-                echo "<textarea name='comment_content' placeholder='Write your reply...' required class='reply-input'></textarea>";
+                echo "<button class='mt-4 px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200' onclick='toggleReplyForm({$comment['comment_id']})'>Reply</button>";
+                echo "<form method='POST' id='reply-form-{$comment['comment_id']}' style='display:none;' class='mt-4'>";
+                echo "<textarea name='comment_content' placeholder='Write your reply...' required class='w-full p-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4'></textarea>";
                 echo "<input type='hidden' name='parent_comment_id' value='{$comment['comment_id']}'>";
-                echo "<br><br>";
-                echo "<button type='submit' name='submit_comment' class='btn reply-submit-btn'>Post Reply</button>";
+                echo "<button type='submit' name='submit_comment' class='px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200'>Post Reply</button>";
                 echo "</form>";
             }
 
             // Check if there are replies to this comment
             if (isset($replies[$comment['comment_id']])) {
                 foreach ($replies[$comment['comment_id']] as $reply) {
-                    echo "<div class='comment reply'>";
-                    echo "<div class='comment-content'>";
-                    echo "<p><strong><a href='user.php?id=" . urlencode($reply['user_id']) . "' class='username-link'>" . htmlspecialchars($reply['username'], ENT_QUOTES, 'UTF-8') . " " . "</a></strong><span class='comment-date'>" . htmlspecialchars($reply['created_at'], ENT_QUOTES, 'UTF-8') . "</span></p>";
-                    echo "<p>" . htmlspecialchars($reply['content'], ENT_QUOTES, 'UTF-8') . "</p>";
+                    echo "<div class='comment reply mt-4 pl-6 bg-gray-200 p-4 rounded-lg shadow-sm'>";
+                    echo "<div class='comment-content mb-4'>";
+                    echo "<p><strong><a href='user.php?id=" . urlencode($reply['user_id']) . "' class='text-blue-600 hover:underline'>" . htmlspecialchars($reply['username'], ENT_QUOTES, 'UTF-8') . "</a></strong> <span class='text-gray-500 text-sm'>" . htmlspecialchars($reply['created_at'], ENT_QUOTES, 'UTF-8') . "</span></p>";
+                    echo "<p class='text-gray-700'>" . htmlspecialchars($reply['content'], ENT_QUOTES, 'UTF-8') . "</p>";
                     echo "</div>";
                     echo "</div>";
                 }
@@ -194,6 +206,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ?>
     </div>
 </main>
+
 </body>
 </html>
 
