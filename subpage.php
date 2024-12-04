@@ -97,8 +97,7 @@ $result_posts = $stmt_posts->get_result();
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="fotografia.css">
-    <link rel="stylesheet" href="glowna.css">
-    <link rel="stylesheet" href="navbar.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="fotografia.js"></script>
     <title>Blog o fotografii</title>
 </head>
@@ -110,25 +109,25 @@ $result_posts = $stmt_posts->get_result();
     ?>
 </header>
 
-<section id="podstawy-fotografii" class="hero-section">
-    <div class="hero-container">
-
-
+<section id="podstawy-fotografii" class="bg-gray-900 text-white relative z-10">
+    <div class="relative h-[60vh] overflow-hidden">
         <?php 
         if ($result_category->num_rows > 0) {
             while ($category = $result_category->fetch_assoc()) {
-                 // Wyświetlanie obrazu kategorii
                 if (!empty($category['image'])) {
-                    echo "<img src='" . 'data:image/jpeg;base64,' . base64_encode($category['image']) . "' alt='" . htmlspecialchars($category['title']) . "' class='hero-image'>";
-                            }
-                echo "<div class='hero-content'>";
-               echo "<h1>" . htmlspecialchars($category['title']) . "</h1>";
-               echo "<hr class='hero-divider'>";
-               echo "<p>" . $category['content'] . "</p>";
+                    // Displaying category image as a background
+                    echo "<div class='absolute inset-0 bg-cover bg-center' style=\"background-image: url('data:image/jpeg;base64," . base64_encode($category['image']) . "'); filter: blur(8px); opacity: 0.6;\"></div>";
+                }
+                echo "<div class='relative z-10 flex flex-col items-center justify-center h-full px-6 text-center'>";
+                echo "<h1 class='text-4xl font-extrabold md:text-6xl'>" . htmlspecialchars($category['title']) . "</h1>";
+                echo "<hr class='my-4 w-1/4 border-t-4 border-blue-500'>";
+                echo "<p class='text-lg md:text-xl max-w-3xl'>" . $category['content'] . "</p>";
                 echo "</div>";
             }
         } else {
-            echo "<p>Brak postów w tej kategorii.</p>";
+            echo "<div class='relative z-10 flex items-center justify-center h-full text-center'>";
+            echo "<p class='text-2xl font-semibold'>Brak postów w tej kategorii.</p>";
+            echo "</div>";
         }
         ?>
     </div>
