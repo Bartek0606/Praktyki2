@@ -90,7 +90,15 @@ $stmt_posts->execute();
 // Pobranie wyników
 $result_posts = $stmt_posts->get_result();
 
-
+// Funkcja do pobrania zdjęcia profilowego
+function getProfilePicture($profile_picture) {
+    $default_image_src = '../default.png'; // Ścieżka do domyślnego zdjęcia profilowego
+    
+    if (!empty($profile_picture)) {
+        return 'data:image/jpeg;base64,' . base64_encode($profile_picture);
+    }
+    return $default_image_src;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -100,8 +108,7 @@ $result_posts = $stmt_posts->get_result();
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="fotografia.js"></script>
     <title>Blog o fotografii</title>
-</head>
-<style>
+    <style>
         .card:hover {
             transform: scale(1.05);
             transition: transform 0.3s ease-in-out;
@@ -125,16 +132,15 @@ $result_posts = $stmt_posts->get_result();
             backdrop-filter: blur(2px);
         }
     </style>
-
-<body>
-    
+</head>
+<body class="bg-gray-100 dark:bg-gray-900">
 <header>
     <?php
         echo $navbar->render();
     ?>
 </header>
 
-<section id="podstawy-fotografii" class="bg-gray-900 text-white relative z-10">
+<section id="podstawy-fotografii" class="bg-gray-900 text-white">
     <div class="relative h-[60vh] overflow-hidden">
         <?php 
         if ($result_category->num_rows > 0) {
@@ -158,37 +164,37 @@ $result_posts = $stmt_posts->get_result();
     </div>
 </section>
 
-
-<div class="max-w-7xl mx-auto py-12">
-        <div class="text-center">
-            <h1 class="text-4xl font-extrabold text-gray-900 text-shadow">Posts about <?php echo $category_name; ?></h1>
-        </div>
-        <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">
-            <?php
-            if ($result_posts->num_rows > 0) {
-                while ($post = $result_posts->fetch_assoc()) {
-                    $post_url = 'post.php?id=' . $post['post_id'];
-                    
-                    echo "<div class='relative bg-white shadow-lg rounded-lg overflow-hidden h-80 card'>";
-                    echo "<a href='{$post_url}' class='block h-full'>";
-                    echo "<img src='data:image/jpeg;base64," . base64_encode($post['image']) . "' alt='Post Image' class='absolute inset-0 w-full h-full object-cover'>";
-                    echo "<div class='absolute inset-0 card-content p-6 flex flex-col justify-end'>";
-                    echo "<div class='flex items-center'>";
-                    echo "<img class='w-8 h-8 rounded-full user-photo' src='data:image/jpeg;base64," . base64_encode($post['profile_picture']) . "' alt='User photo'>";
-                    echo "<span class='ml-2 text-gray-300 text-sm'>" . $post['created_at'] . "</span>";
-                    echo "<span class='ml-2 text-white font-medium text-sm'>" . $post['username'] . "</span>";
-                    echo "</div>";
-                    echo "<h3 class='mt-2 text-xl font-semibold text-white'>" . $post['title'] . "</h3>";
-                    echo "</div>";
-                    echo "</a>";
-                    echo "</div>";
-                }
-            } else {
-                echo "<p class='text-white'>Brak postów w tej kategorii.</p>";
-            }
-            ?>
-        </div>
+<div class="max-w-7xl mx-auto py-12 dark:bg-gray-900">
+    <div class="text-center dark:bg-gray-900">
+        <h1 class="text-4xl font-extrabold text-white text-shadow">Posts about <?php echo $category_name; ?></h1>
     </div>
+    <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <?php
+        if ($result_posts->num_rows > 0) {
+            while ($post = $result_posts->fetch_assoc()) {
+                $post_url = 'post.php?id=' . $post['post_id'];
+                $profile_picture = getProfilePicture($post['profile_picture']);
+                
+                echo "<div class='relative bg-white shadow-lg rounded-lg overflow-hidden h-80 card'>";
+                echo "<a href='{$post_url}' class='block h-full'>";
+                echo "<img src='data:image/jpeg;base64," . base64_encode($post['image']) . "' alt='Post Image' class='absolute inset-0 w-full h-full object-cover'>";
+                echo "<div class='absolute inset-0 card-content p-6 flex flex-col justify-end'>";
+                echo "<div class='flex items-center'>";
+                echo "<img class='w-8 h-8 rounded-full user-photo' src='{$profile_picture}' alt='User photo'>";
+                echo "<span class='ml-2 text-gray-300 text-sm'>" . $post['created_at'] . "</span>";
+                echo "<span class='ml-2 text-white font-medium text-sm'>" . $post['username'] . "</span>";
+                echo "</div>";
+                echo "<h3 class='mt-2 text-xl font-semibold text-white'>" . $post['title'] . "</h3>";
+                echo "</div>";
+                echo "</a>";
+                echo "</div>";
+            }
+        } else {
+            echo "<p class='text-white'>Brak postów w tej kategorii.</p>";
+        }
+        ?>
+    </div>
+</div>
 
 <section id="opinie" class="reviews-section">
     <h2 class="reviews-title">User opinions about the blog</h2>
@@ -212,9 +218,6 @@ $result_posts = $stmt_posts->get_result();
         <button class="reviews-next-button">&rarr;</button> <!-- Strzałka w prawo -->
     </div>
 </section>
-
-
-
 
 </body>
 </html>
