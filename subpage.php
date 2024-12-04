@@ -1,4 +1,5 @@
 <?php
+ob_start();
 session_start();
 include 'db_connection.php';
 include 'Component/navbar.php';
@@ -218,3 +219,7 @@ $result_posts = $stmt_posts->get_result();
 
 </body>
 </html>
+<?php
+$conn->close();
+ob_end_flush();
+?>
