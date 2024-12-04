@@ -46,68 +46,79 @@ class Navbar{
     public function render() {
         ob_start(); // Rozpoczynamy buforowanie
     ?>
-    <nav class="navbar">
-      <div class="logo">
-        <h1><a href="index.php">HobbyHub</a></h1>
-        <?php 
-        if ($_SERVER['REQUEST_URI'] != '/profile.php' && $_SERVER['REQUEST_URI'] != '/new_post.php') {
-        ?>
-            <div class="dropdown">
-                <button class="dropdown-button" onclick="toggleDropdown()">Select Category</button>
-                <div class="dropdown-menu" id="dropdownMenu">
-                    <?php if (!empty($this->categories)): ?>
-                        <?php foreach ($this->categories as $category): ?>
-                            <a href="subpage.php?id=<?php echo $category['category_id']; ?>">
-                                <?php echo htmlspecialchars($category['name']); ?>
-                            </a>
-                        <?php endforeach; ?>
+    <nav class="bg-white border-gray-200 dark:bg-gray-900">
+            <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+                <a href="index.php" class="flex items-center space-x-3">
+                    <span class="text-2xl font-semibold whitespace-nowrap dark:text-white">HobbyHub</span>
+                </a>
+
+                <button
+                    data-collapse-toggle="navbar-default"
+                    type="button"
+                    class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                    aria-controls="navbar-default"
+                    aria-expanded="false"
+                >
+                    <span class="sr-only">Open main menu</span>
+                    <svg
+                        class="w-5 h-5"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 17 14"
+                    >
+                        <path
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M1 1h15M1 7h15M1 13h15"
+                        />
+                    </svg>
+                </button>
+
+                <div class="hidden w-full md:block md:w-auto" id="navbar-default">
+                    <ul class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-8 p-4 md:p-0 bg-gray-50 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900">
+                        <li><a href="index.php" class="block py-2 px-3 text-gray-900 hover:text-blue-700 dark:text-white">Home</a></li>
+                        <li>
+                            <div class="relative">
+                                <button
+                                    class="block py-2 px-3 text-gray-900 hover:text-blue-700 dark:text-white"
+                                    onclick="toggleDropdown()"
+                                >
+                                    Categories
+                                </button>
+                                <div id="dropdownMenu" class="absolute hidden bg-white shadow-lg dark:bg-gray-800">
+                                    <?php foreach ($this->categories as $category): ?>
+                                        <a href="subpage.php?id=<?php echo $category['category_id']; ?>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">
+                                            <?php echo htmlspecialchars($category['name']); ?>
+                                        </a>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                        </li>
+                        <?php if ($this->isLoggedIn): ?>
+                            <li><a href="new_post.php" class="block py-2 px-3 text-gray-900 hover:text-blue-700 dark:text-white">New Post</a></li>
+                        <?php endif; ?>
+                    </ul>
+                </div>
+
+                <div class="flex space-x-4">
+                    <?php if ($this->isLoggedIn): ?>
+                        <a href="user.php?id=<?php echo $this->userId; ?>" class="flex items-center space-x-2">
+                            <img src="<?php echo $this->fetchProfilePicture($this->userId); ?>" class="w-8 h-8 rounded-full">
+                            <span class="text-gray-900 dark:text-white"><?php echo htmlspecialchars($this->userName); ?></span>
+                        </a>
+                        <form method="POST">
+                            <button type="submit" name="logout" class="px-4 py-2 text-white bg-red-600 rounded hover:bg-red-500">Log out</button>
+                        </form>
                     <?php else: ?>
-                        <a>No categories available</a>
+                         <a href="register.php" class="px-4 py-2 text-white bg-gray-900 rounded hover:bg-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600">Sign up</a>
+                        <a href="login.php" class="px-4 py-2 text-white bg-gray-900 rounded hover:bg-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600">Login</a>
                     <?php endif; ?>
                 </div>
             </div>
-        <?php 
-        }
-        ?>
-        </div>
-        <?php
-        if ($_SERVER['REQUEST_URI'] == '/' || $_SERVER['REQUEST_URI'] == '' || $_SERVER['PHP_SELF'] == '/index.php') {
-        ?>
-            <form class="search-form" method="GET" action="">
-                <input type="text" name="category" placeholder="Search by category" value="<?php echo htmlspecialchars($search_category ?? ''); ?>">
-                <button type="submit">Search</button>
-            </form>
-        <?php 
-        }
-        ?>
-
-        <div class="auth-buttons">
-            <?php if ($this->isLoggedIn): ?>
-            <div class="auth-info">
-                <?php if ($_SERVER['REQUEST_URI'] != '/new_post.php') {
-                ?>
-                <button class="btn new-post-btn" onclick="window.location.href='new_post.php'">New Post</button>
-                <?php 
-                }
-                ?>
-                <a href="user.php?id=<?php echo $this->userId; ?>" class="profile-link">
-                    <?php
-                        $image_src = $this->fetchProfilePicture($this->userId);
-                    ?>
-                    <img src="<?php echo $image_src; ?>" alt="Profile Picture" class="profile-img">
-                    <span class="username"><?php echo htmlspecialchars($this->userName); ?></span>
-                </a>
-            </div>
-        
-            <form method="POST" style="display: inline;">
-                <button type="submit" name="logout" class="btn logout-btn">Log out</button>
-            </form>
-            
-        <?php else: ?>
-            <button class="btn register-btn" onclick="window.location.href='register.php'">Sign up</button>
-            <button class="btn login-btn" onclick="window.location.href='login.php'">Login</button>
-        <?php endif; ?>
-    </nav>
+        </nav>
 
 <?php
     return ob_get_clean(); // Zwracamy zawartość bufora jako string
