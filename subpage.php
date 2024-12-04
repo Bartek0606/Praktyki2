@@ -1,4 +1,5 @@
 <?php
+ob_start();
 session_start();
 include 'db_connection.php';
 include 'Component/navbar.php';
@@ -221,3 +222,7 @@ function getProfilePicture($profile_picture) {
 
 </body>
 </html>
+<?php
+$conn->close();
+ob_end_flush();
+?>
