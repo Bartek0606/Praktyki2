@@ -72,6 +72,18 @@ $stmt_events->bind_param("i", $profileUserId); // Change $userId to $profileUser
 $stmt_events->execute();
 $result_events = $stmt_events->get_result();
 
+// Get user's items
+$sql_items = "
+    SELECT items.item_id, items.name, items.description, items.image, items.price, items.created_at 
+    FROM items 
+    WHERE items.user_id = ?
+    ORDER BY items.created_at DESC
+";
+
+$stmt_items = $conn->prepare($sql_items);
+$stmt_items->bind_param("i", $profileUserId);
+$stmt_items->execute();
+$result_items = $stmt_items->get_result();
 
 
 // Check if the user is already being followed
@@ -173,7 +185,7 @@ if ($isLoggedIn && isset($_POST['follow'])) {
         </div>
     </div>
 
-    <<div class="toggle-buttons">
+    <div class="toggle-buttons">
     <button id="show-posts" class="toggle-btn">
         <?php 
         if ($isLoggedIn && $userId == $profileUserId) {
@@ -197,7 +209,18 @@ if ($isLoggedIn && isset($_POST['follow'])) {
         }
         ?>
     </button>
+    
+    <button id="show-items" class="toggle-btn">
+        <?php 
+        if ($isLoggedIn && $userId == $profileUserId) {
+            echo "Your Items";
+        } else {
+            echo htmlspecialchars($user['username']) . "'s Items";
+        }
+        ?>
+    </button>
 </div>
+
 
 
     <!-- Posty użytkownika -->
@@ -357,7 +380,38 @@ if ($isLoggedIn && isset($_POST['follow'])) {
         </p>
     <?php endif; ?>
 </div>
-
+<<div class="container items-container" id="items-container" style="display: none;">
+  <h2>
+    <?php 
+    if ($isLoggedIn && $userId == $profileUserId) {
+        echo "Your Items";
+    } else {
+        echo htmlspecialchars($user['username']) . "'s Items";
+    }
+    ?>
+  </h2>
+  <?php if ($result_items->num_rows > 0): ?>
+    <div class="items">
+        <?php while ($item = $result_items->fetch_assoc()): ?>
+            <a href="item_details.php?item_id=<?php echo $item['item_id']; ?>" class="item-link">
+                <div class="item-card">
+                    <?php if (!empty($item['image'])): ?>
+                        <img src="data:image/jpeg;base64,<?php echo base64_encode($item['image']); ?>" alt="Item Image" class="item-image">
+                    <?php endif; ?>
+                    <div class="item-details">
+                        <h3><?php echo htmlspecialchars($item['title']); ?></h3>
+                        <p><strong>Description:</strong> <?php echo htmlspecialchars($item['description']); ?></p>
+                        <p><strong>Price:</strong> $<?php echo number_format($item['price'], 2); ?></p>
+                        <p><strong>Added on:</strong> <?php echo htmlspecialchars($item['created_at']); ?></p>
+                    </div>
+                </div>
+            </a>
+        <?php endwhile; ?>
+    </div>
+  <?php else: ?>
+    <p>No items to display.</p>
+  <?php endif; ?>
+</div>
 
 
 
