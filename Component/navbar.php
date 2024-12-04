@@ -84,8 +84,8 @@ class Navbar{
                             <img src="<?php echo $this->fetchProfilePicture($this->userId); ?>" class="w-8 h-8 rounded-full">
                             <span class="text-gray-900 dark:text-white"><?php echo htmlspecialchars($this->userName); ?></span>
                         </a>
-                        <form method="POST">
-                            <button type="submit" name="logout" class="px-4 py-2 text-white bg-red-600 rounded hover:bg-red-500">Log out</button>
+                        <form method="POST" class="m-0">
+                            <button type="submit" name="logout" class="px-4 py-2 text-white bg-red-900 rounded hover:bg-red-800 dark:bg-red-700 dark:hover:bg-red-600">Log out</button>
                         </form>
                     <?php else: ?>
                          <a href="register.php" class="px-4 py-2 text-white bg-gray-900 rounded hover:bg-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600">Sign up</a>
