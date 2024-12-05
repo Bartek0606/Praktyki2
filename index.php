@@ -102,22 +102,27 @@ $events_result = $conn->query($sql_events);
       </div>
     </div>
     <!-- Slider -->
-    <div id="slider" class="slider-container flex overflow-x-hidden space-x-4 mb-14">
-      <?php
-      if ($events_result->num_rows > 0) {
-          while ($event = $events_result->fetch_assoc()) {
-              $formatted_date = date("F j, Y, g:i a", strtotime($event['event_date']));
-              $event_url = 'event.php?id=' . $event['event_id'];
-              echo "<div class='bg-gray-800 p-4 rounded-lg flex-none w-80'>";
-              echo "<div class='text-orange-400 text-sm mb-2'>" . htmlspecialchars($formatted_date) . "</div>";
-              echo "<div class='text-lg text-white font-semibold'>" . htmlspecialchars($event['event_name']) . "</div>";
-              echo "<div class='text-sm text-white mt-2'>" . htmlspecialchars($event['location']) . "</div>";
-              echo "</div>";
-          }
-      } else {
-          echo "<p class='text-center'>No events available.</p>";
-      }
-      ?>
+    <div id="slider" class="slider-container flex overflow-hidden space-x-4 mb-14">
+
+    <?php
+if ($events_result->num_rows > 0) {
+    while ($event = $events_result->fetch_assoc()) {
+        $formatted_date = date("F j, Y, g:i a", strtotime($event['event_date']));
+        $event_url = 'event.php?id=' . $event['event_id']; // URL to the event details page
+
+        // Make the event container bigger and ensure no scrollbar on hover
+        echo "<a href='" . $event_url . "' class='bg-gray-800 p-6 rounded-lg flex-none w-96 transition-transform transform hover:scale-105'>"; // Tailwind for scaling
+        echo "<div class='text-orange-400 text-sm mb-2'>" . htmlspecialchars($formatted_date) . "</div>";
+        echo "<div class='text-lg text-white font-semibold'>" . htmlspecialchars($event['event_name']) . "</div>";
+        echo "<div class='text-sm text-white mt-2'>" . htmlspecialchars($event['location']) . "</div>";
+        echo "</a>"; // Close the anchor tag
+    }
+} else {
+    echo "<p class='text-center'>No events available.</p>";
+}
+?>
+
+
     </div>
   </div>
   </main>
