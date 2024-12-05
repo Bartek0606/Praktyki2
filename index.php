@@ -79,11 +79,14 @@ $events_result = $conn->query($sql_events);
     ?>
       
 </header>
-<hr class="border-t-4 mx-auto w-3/6 border-orange-500 mb-6 mt-1">
+
+
 <main class="container">
 <div class="w-full mx-auto max-w-5xl px-4">
     <div class="flex justify-between items-center mb-4">
-      <div class="text-2xl font-bold text-white">Events</div>
+      <div class="text-2xl font-bold text-white">Events Section
+      <hr class="border-t-4 mx-auto w-full border-orange-500 mb-6 mt-1">
+      </div>
       <!-- Strzałki -->
       <div class="flex space-x-2">
         <button id="prev" class="bg-gray-600 p-2 rounded-full text-white hover:bg-gray-500">
