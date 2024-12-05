@@ -150,7 +150,7 @@ if ($isLoggedIn && isset($_POST['follow'])) {
     <?php echo $navbar->render(); ?>
 </header>
 <main>
-    <!-- User information -->
+    
     <div class="container user-info">
         <div class="user-profile">
             <?php if ($user['profile_picture'] && $user['profile_picture'] !== 'default.png'): ?>
@@ -165,7 +165,7 @@ if ($isLoggedIn && isset($_POST['follow'])) {
             <p><strong>Bio:</strong> <?php echo nl2br(htmlspecialchars($user['bio'])); ?></p>
             <p><strong>Followers: </strong><?php echo $followers_count; ?> <strong>Following: </strong><?php echo $following_count; ?></p>
 
-            <!-- Only show Follow button if the user is logged in and is not following the profile user -->
+    
             <?php if ($isLoggedIn && $userId != $profileUserId): ?>
                 <form method="POST">
                     <button type="submit" name="follow" class="follow-btn <?php echo $isFollowing ? 'unfollow' : ''; ?>">
@@ -177,7 +177,7 @@ if ($isLoggedIn && isset($_POST['follow'])) {
                 </a>    
             <?php endif; ?>
             
-            <!-- Show Edit Profile button if viewing own profile -->
+          
             <?php if ($isLoggedIn && $userId == $profileUserId): ?>
                 <a href="edit_profile.php" class="edit-profile-btn">
                     <button class="btn edit-btn">Edit Profile</button>
