@@ -49,6 +49,28 @@ $events_result = $conn->query($sql_events);
     .slider-container {
       scroll-behavior: smooth; /* Płynne przewijanie */
     }
+
+    @keyframes draw-border {
+    0% {
+        border-width: 0;
+        border-bottom-width: 4px;
+        border-bottom-color: transparent;
+    }
+    50% {
+        border-bottom-color: orange;
+        border-left-width: 4px;
+        border-left-color: orange;
+    }
+    100% {
+        border-width: 4px;
+        border-color: orange;
+    }
+}
+.group-hover:animate-draw-border {
+    animation: draw-border 1s forwards;
+}
+
+
   </style>
 <body class="bg-gray-900">
 <header>
@@ -95,9 +117,6 @@ $events_result = $conn->query($sql_events);
       ?>
     </div>
   </div>
-
-
- 
   </main>
  
 
@@ -106,10 +125,13 @@ $events_result = $conn->query($sql_events);
 
 
 
-  <div class="relative w-full mx-auto h-2/4">
+  <div class="relative w-5/6 mx-auto h-2/4">
   <img src="tloooo.png" alt="Tło" class="w-full h-full object-cover filter blur mx-auto rounded-xl ">
-  <div class="absolute inset-0 flex items-center justify-center">
-    <h2 class="text-white text-3xl font-bold">Blog Posts Section</h2>
+  <div class="absolute inset-0 flex flex-col items-center justify-center">
+    <h2 class="text-white text-3xl font-bold mb-2">Blog Posts Section
+    <hr class="border-t-4  border-orange-500 mt-3">
+    </h2>
+    
   </div>
   </div>
 
@@ -118,6 +140,7 @@ $events_result = $conn->query($sql_events);
 
 
   <div class="sort-menu  rounded-lg text-gray-300 flex items-center ">
+    
     <form method="GET" action="" class="flex items-center mx-auto space-x-3">
         <label for="sort" class="font-semibold text-gray-400">Sort by:</label>
         <select 
@@ -130,8 +153,11 @@ $events_result = $conn->query($sql_events);
             <option value="oldest" <?php echo isset($_GET['sort']) && $_GET['sort'] === 'oldest' ? 'selected' : ''; ?>>Oldest</option>
             <option value="likes" <?php echo isset($_GET['sort']) && $_GET['sort'] === 'likes' ? 'selected' : ''; ?>>Most Liked</option>
         </select>
+        
     </form>
+
 </div>
+
 
     <?php 
         echo $posts->render();
