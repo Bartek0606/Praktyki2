@@ -106,7 +106,7 @@ class PostRender {
         <div class="w-4/5 mx-auto py-12 dark:bg-gray-900">
             <div class="text-center dark:bg-gray-900">
             </div>
-            <div class=" grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <?php
                 if ($this->posts->num_rows > 0) {
                     while ($row = $this->posts->fetch_assoc()) {
@@ -122,18 +122,21 @@ class PostRender {
                         $result_check_like = $stmt_check_like->get_result();
                         $isLiked = $result_check_like->num_rows > 0;
     
-                        echo "<div class='relative bg-white shadow-lg rounded-lg overflow-hidden h-[500px] card {$isQuestionClass}'>"; // Zmieniono na h-[500px]
-                        echo "<a href='{$post_url}' class='block h-full'>";
+                        echo "<div class='relative bg-white shadow-lg rounded-lg overflow-hidden h-[500px] card {$isQuestionClass} transition-transform transform hover:scale-105 hover:shadow-2xl hover:bg-gray-800 hover:text-white'>";
+                        echo "<a href='{$post_url}' class='block h-full relative group'>";
                         if ($hasImage) {
-                            echo "<img src='data:image/jpeg;base64," . base64_encode($row['image']) . "' alt='Post Image' class='absolute inset-0 w-full h-full object-cover'>";
-                            echo "<div class='absolute inset-0 bg-black bg-opacity-50'></div>"; // Nakładka przyciemniająca
+                            echo "<img src='data:image/jpeg;base64," . base64_encode($row['image']) . "' alt='Post Image' class='absolute inset-0 w-full h-full object-cover filter transition-opacity duration-500 ease-in-out hover:opacity-75'>";
+                            echo "<div class='absolute inset-0 bg-black bg-opacity-50 transition-opacity duration-500 ease-in-out hover:bg-opacity-75'></div>"; // Nakładka przyciemniająca
                         }
-                        echo "<div class='absolute inset-0 card-content p-8 flex flex-col justify-end'>";
-                        echo "<h3 class='text-xl font-semibold text-white '>" . $row['title'] . "</h3>"; // Tytuł
+                        echo "<div class='absolute inset-0 card-content p-8 flex flex-col justify-end transition-opacity duration-500 ease-in-out'>";
+                        echo "<h3 class='text-xl font-semibold text-white'>" . $row['title'] . "</h3>"; // Tytuł
                         echo "<span class='block text-gray-300'>" . htmlspecialchars($row['category_name']) . "</span>"; // Kategoria
                         echo "<span class='block text-white font-medium'>" . $row['author_name'] . "</span>"; // Twórca
                         echo "<span class='block text-gray-300 text-sm'>" . $row['created_at'] . "</span>"; // Data
+                        echo "<small class='block text-white'>Likes: " . htmlspecialchars($row['like_count']) . "</small>"; // Ilość polubień
                         echo "</div>";
+                        // Animowana pomarańczowa ramka
+                        echo "<div class='absolute inset-0 border-4 border-transparent rounded-lg group-hover:border-orange-400 transition-all duration-500 ease-in-out group-hover:animate-draw-border'></div>";
                         echo "</a>";
                         echo "</div>";
                     }
@@ -147,6 +150,9 @@ class PostRender {
         return ob_get_clean(); 
     }
     }
+    
+    
+    
     
 ?>
 <script>
