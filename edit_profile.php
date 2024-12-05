@@ -138,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <link rel="stylesheet" href="edit_profile.css">
     <script src="profile.js" defer></script>
-    <link rel="stylesheet" href="navbar.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>Profile • HobbyHub</title>
 </head>
 <body>
