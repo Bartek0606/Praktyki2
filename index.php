@@ -97,11 +97,28 @@ $events_result = $conn->query($sql_events);
   </div>
 
 
-<div class="nagl">
-<h3 class="text-white text-center text-2xl font-bold">Posts</h3>
-</div>
-<div class="sort-menu p-4 rounded-lg mb-6 text-gray-300 flex items-center justify-between">
-    <form method="GET" action="" class="flex items-center space-x-3">
+ 
+  </main>
+ 
+
+
+
+
+
+
+  <div class="relative w-full mx-auto h-2/4">
+  <img src="tloooo.png" alt="Tło" class="w-full h-full object-cover filter blur mx-auto rounded-xl ">
+  <div class="absolute inset-0 flex items-center justify-center">
+    <h2 class="text-white text-3xl font-bold">Blog Posts Section</h2>
+  </div>
+  </div>
+
+  
+  <section class="blog-posts w-full bg-gray-900 mt-14">
+
+
+  <div class="sort-menu  rounded-lg text-gray-300 flex items-center ">
+    <form method="GET" action="" class="flex items-center mx-auto space-x-3">
         <label for="sort" class="font-semibold text-gray-400">Sort by:</label>
         <select 
             name="sort" 
@@ -116,13 +133,10 @@ $events_result = $conn->query($sql_events);
     </form>
 </div>
 
-
-   <section class="blog-posts bg-gray-600">
     <?php 
         echo $posts->render();
     ?>
 </section>
-  </main>
 
   <script>
     const slider = document.getElementById('slider');
