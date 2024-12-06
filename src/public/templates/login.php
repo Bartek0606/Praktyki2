@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-include 'db_connection.php';
+include '../../../db_connection.php';
 
 $emailError = '';
 $passwordError = '';
@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Check if the user is an admin
                 if ($user['is_admin'] == 1) {
                     // Redirect to the admin page if the user is an admin
-                    header("Location: admin/admin.php");
+                    header("Location: ../../admin/admin.php");
                 } else {
                     // Otherwise, redirect to the normal page
                     header("Location: index.php");
@@ -61,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Login • HobbyHub</title>
-<link rel="stylesheet" href="login.css">
+<link rel="stylesheet" href="../../../login.css">
 </head>
 <body>
 

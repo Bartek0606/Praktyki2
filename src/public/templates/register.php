@@ -1,6 +1,6 @@
 <?php
 
-require_once 'db_connection.php';
+require_once '../../../db_connection.php';
 
 $emailError = '';
 $passwordError = '';
@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             
             // Domyślnie ustawiamy is_admin na 0 (zwykły użytkownik)
-            $defaultProfilePicture = file_get_contents('default.png'); 
+            $defaultProfilePicture = file_get_contents('../image/default.png'); 
 
             // Ustawienie is_admin na 0 (zwykły użytkownik)
             $stmt = $conn->prepare("INSERT INTO users (username, email, password_hash, full_name, created_at, profile_picture, is_admin) VALUES (?, ?, ?, ?, NOW(), ?, 0)");
@@ -77,7 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign up • HobbyHub</title>
-    <link rel="stylesheet" href="register.css">
+    <link rel="stylesheet" href="../../../register.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>

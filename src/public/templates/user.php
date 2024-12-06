@@ -2,8 +2,8 @@
 ob_start();
 session_start();
 
-include 'db_connection.php';
-include 'Component/navbar.php';
+include '../../../db_connection.php';
+include '../../Component/navbar.php';
 
 $isLoggedIn = isset($_SESSION['user_id']);
 $userId = $isLoggedIn ? $_SESSION['user_id'] : null;
@@ -138,11 +138,11 @@ if ($isLoggedIn && isset($_POST['follow'])) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="user.css">
-    <link rel="stylesheet" href="glowna.css">
+    <link rel="stylesheet" href="../../../user.css">
+    <link rel="stylesheet" href="../../../glowna.css">
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="user.js" defer></script>
+    <script src="../js/user.js" defer></script>
     <title><?php echo htmlspecialchars($user['username']); ?>'s Profile • HobbyHub</title>
 </head>
 <body>

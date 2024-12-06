@@ -2,8 +2,8 @@
 ob_start();
 session_start();
 
-include 'db_connection.php';
-include 'Component/navbar.php';
+include '../../../db_connection.php';
+include '../../Component/navbar.php';
 
 // Sprawdzenie, czy użytkownik jest zalogowany
 if (!isset($_SESSION['user_id'])) {
@@ -136,8 +136,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="edit_profile.css">
-    <script src="profile.js" defer></script>
+    <link rel="stylesheet" href="../../../edit_profile.css">
+    <script src="../js/profile.js" defer></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <title>Profile • HobbyHub</title>
 </head>

@@ -1,8 +1,8 @@
 <?php
 ob_start();
 session_start();
-include 'db_connection.php';
-include 'Component/navbar.php';
+include '../../../db_connection.php';
+include '../../Component/navbar.php';
 $isLoggedIn = isset($_SESSION['user_id']);
 
 $userId = $isLoggedIn ? $_SESSION['user_id'] : null;
@@ -105,9 +105,9 @@ function getProfilePicture($profile_picture) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="fotografia.css">
+    <link rel="stylesheet" href="../../../fotografia.css">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="fotografia.js"></script>
+    <script src="../js/fotografia.js"></script>
     <title>Blog o fotografii</title>
     <style>
         .card:hover {

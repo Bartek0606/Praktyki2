@@ -2,8 +2,8 @@
 ob_start();
 session_start();
 
-include 'db_connection.php';
-include 'Component/navbar.php';
+include '../../../db_connection.php';
+include '../../Component/navbar.php';
 
 // Handle logout
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
@@ -70,10 +70,11 @@ $user_items_result = $stmt_user_items->get_result();
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="glowna.css">
-    <link rel="stylesheet" href="navbar.css">
-    <link rel="stylesheet" href="item_details.css">
-    <link rel="stylesheet" href="items.css">
+    <link rel="stylesheet" href="../../../glowna.css">
+    <link rel="stylesheet" href="../../../navbar.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../../../item_details.css">
+    <link rel="stylesheet" href="../../../items.css">
     <title><?php echo htmlspecialchars($item['name']); ?> - Item Details</title>
 </head>
 <body>
