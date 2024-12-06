@@ -138,56 +138,53 @@ if ($isLoggedIn && isset($_POST['follow'])) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../../../user.css">
-    <link rel="stylesheet" href="../../../glowna.css">
-
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="../js/user.js" defer></script>
     <title><?php echo htmlspecialchars($user['username']); ?>'s Profile • HobbyHub</title>
 </head>
-<body>
+
+<body class="bg-gray-900">
 <header>
     <?php echo $navbar->render(); ?>
 </header>
 <main>
     
-    <div class="container user-info">
-        <div class="user-profile">
-            <?php if ($user['profile_picture'] && $user['profile_picture'] !== 'default.png'): ?>
-                <img src="data:image/jpeg;base64,<?php echo base64_encode($user['profile_picture']); ?>" alt="Profile Picture">
-            <?php else: ?>
-                <img src="default.png" alt="Default Profile Picture">
-            <?php endif; ?>
-        </div>
-        <div class="user-details">
-            <h2><?php echo htmlspecialchars($user['username']); ?></h2>
-            <p><strong>Full Name:</strong> <?php echo htmlspecialchars($user['full_name']); ?></p>
-            <p><strong>Bio:</strong> <?php echo nl2br(htmlspecialchars($user['bio'])); ?></p>
-            <p><strong>Followers: </strong><?php echo $followers_count; ?> <strong>Following: </strong><?php echo $following_count; ?></p>
-
-    
-            <?php if ($isLoggedIn && $userId != $profileUserId): ?>
-                <form method="POST">
-                    <button type="submit" name="follow" class="follow-btn <?php echo $isFollowing ? 'unfollow' : ''; ?>">
-                        <?php echo $isFollowing ? 'Unfollow' : 'Follow'; ?>
-                    </button>
-                </form>
-                <a href="message.php?id=<?php echo $profileUserId; ?>" class="message-btn">
-                    <button class="edit-btn">Message</button>
-                </a>    
-            <?php endif; ?>
-            
-          
-            <?php if ($isLoggedIn && $userId == $profileUserId): ?>
-                <a href="edit_profile.php" class="edit-profile-btn">
-                    <button class="btn edit-btn">Edit Profile</button>
-                </a>
-            <?php endif; ?>
-        </div>
+<div class="container mx-auto p-6 bg-gray-600 rounded-lg shadow-lg">
+    <div class="user-profile flex justify-center mb-6">
+        <?php if ($user['profile_picture'] && $user['profile_picture'] !== 'default.png'): ?>
+            <img class="w-24 h-24 rounded-full" src="data:image/jpeg;base64,<?php echo base64_encode($user['profile_picture']); ?>" alt="Profile Picture">
+        <?php else: ?>
+            <img class="w-24 h-24 rounded-full" src="default.png" alt="Default Profile Picture">
+        <?php endif; ?>
     </div>
+    <div class="user-details text-center">
+        <h2 class="text-2xl font-bold mb-2"><?php echo htmlspecialchars($user['username']); ?></h2>
+        <p class="text-gray-400"><strong>Full Name:</strong> <?php echo htmlspecialchars($user['full_name']); ?></p>
+        <p class="text-gray-400"><strong>Bio:</strong> <?php echo nl2br(htmlspecialchars($user['bio'])); ?></p>
+        <p class="text-gray-400"><strong>Followers: </strong><?php echo $followers_count; ?> <strong>Following: </strong><?php echo $following_count; ?></p>
 
-    <div class="toggle-buttons">
-    <button id="show-posts" class="toggle-btn">
+        <?php if ($isLoggedIn && $userId != $profileUserId): ?>
+            <form method="POST" class="mt-4">
+                <button type="submit" name="follow" class="px-4 py-2 rounded-md text-white <?php echo $isFollowing ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-500 hover:bg-blue-600'; ?>">
+                    <?php echo $isFollowing ? 'Unfollow' : 'Follow'; ?>
+                </button>
+            </form>
+            <a href="message.php?id=<?php echo $profileUserId; ?>" class="inline-block mt-4">
+                <button class="px-4 py-2 bg-green-500 hover:bg-green-600 rounded-md text-white">Message</button>
+            </a>
+        <?php endif; ?>
+
+        <?php if ($isLoggedIn && $userId == $profileUserId): ?>
+            <a href="edit_profile.php" class="inline-block mt-4">
+                <button class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 rounded-md text-white">Edit Profile</button>
+            </a>
+        <?php endif; ?>
+    </div>
+</div>
+
+
+<div class="toggle-buttons flex justify-center mt-6 space-x-4">
+    <button id="show-posts" class="toggle-btn px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-md text-white">
         <?php 
         if ($isLoggedIn && $userId == $profileUserId) {
             echo "Your Posts";
@@ -198,10 +195,10 @@ if ($isLoggedIn && isset($_POST['follow'])) {
     </button>
 
     <?php if ($isLoggedIn && $userId == $profileUserId): ?>
-        <button id="show-likes" class="toggle-btn">Your Likes</button>
+        <button id="show-likes" class="toggle-btn px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-md text-white">Your Likes</button>
     <?php endif; ?>
 
-    <button id="show-events" class="toggle-btn">
+    <button id="show-events" class="toggle-btn px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-md text-white">
         <?php 
         if ($isLoggedIn && $userId == $profileUserId) {
             echo "Your Events";
@@ -211,7 +208,7 @@ if ($isLoggedIn && isset($_POST['follow'])) {
         ?>
     </button>
     
-    <button id="show-items" class="toggle-btn">
+    <button id="show-items" class="toggle-btn px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-md text-white">
         <?php 
         if ($isLoggedIn && $userId == $profileUserId) {
             echo "Your Items";
@@ -224,45 +221,45 @@ if ($isLoggedIn && isset($_POST['follow'])) {
 
 
 
-    <!-- Posty użytkownika -->
-    <div class="container posts-container" id="posts-container">
-        <h2>
-            <?php 
-            if ($isLoggedIn && $userId == $profileUserId) {
-                echo "Your Posts";
-            } else {
-                echo htmlspecialchars($user['username']) . "'s Posts";
-            }
-            ?>
-        </h2>
-        <?php
-        if ($result_posts->num_rows > 0): ?>
-            <div class="posts">
-    <?php while ($post = $result_posts->fetch_assoc()): ?>
-        <a href="post.php?id=<?php echo $post['post_id']; ?>" class="post-link">
-            <div class="post">
-                <?php if (!empty($post['image'])): ?>
-                    <img src="data:image/jpeg;base64,<?php echo base64_encode($post['image']); ?>" alt="Post Image" class="post-image">
-                <?php endif; ?>
-                <div class="post-content">
-                    <h3><?php echo htmlspecialchars($post['title']); ?></h3>
-                    <p class="category"><strong>Category: <?php echo htmlspecialchars($post['category_name']); ?></strong></p>
-                    <p><strong class="post-autor">By: <?php echo htmlspecialchars($post['author_username']); ?></strong></p>
-                    <p><?php echo $post['content']; ?></p>
-                    <p class="post-date"><strong>Date: </strong><?php echo htmlspecialchars($post['created_at']); ?></p>
-                </div>
-            </div>
-        </a>
-    <?php endwhile; ?>
+
+  <!-- Posty użytkownika -->
+<div class="container posts-container mt-6 mx-auto bg-gray-600 p-6 rounded-lg shadow-lg" id="post-container">
+    <h2 class="text-2xl font-bold mb-4">
+        <?php 
+        if ($isLoggedIn && $userId == $profileUserId) {
+            echo "Your Posts";
+        } else {
+            echo htmlspecialchars($user['username']) . "'s Posts";
+        }
+        ?>
+    </h2>
+    <?php if ($result_posts->num_rows > 0): ?>
+        <div class="posts space-y-4">
+            <?php while ($post = $result_posts->fetch_assoc()): ?>
+                <a href="post.php?id=<?php echo $post['post_id']; ?>" class="post-link block p-4 bg-gray-700 hover:bg-gray-600 rounded-lg transition">
+                    <div class="post">
+                        <?php if (!empty($post['image'])): ?>
+                            <img src="data:image/jpeg;base64,<?php echo base64_encode($post['image']); ?>" alt="Post Image" class="post-image mb-4 rounded-lg">
+                        <?php endif; ?>
+                        <div class="post-content">
+                            <h3 class="text-xl font-bold mb-2"><?php echo htmlspecialchars($post['title']); ?></h3>
+                            <p class="category text-gray-400 mb-2"><strong>Category: <?php echo htmlspecialchars($post['category_name']); ?></strong></p>
+                            <p class="post-autor text-gray-400 mb-2"><strong>By: <?php echo htmlspecialchars($post['author_username']); ?></strong></p>
+                            <p class="text-gray-300 mb-4"><?php echo $post['content']; ?></p>
+                            <p class="post-date text-gray-400"><strong>Date: </strong><?php echo htmlspecialchars($post['created_at']); ?></p>
+                        </div>
+                    </div>
+                </a>
+            <?php endwhile; ?>
+        </div>
+    <?php else: ?>
+        <p class="text-gray-400">No posts yet. Start creating posts!</p>
+    <?php endif; ?>
 </div>
 
-        <?php else: ?>
-            <p>No posts yet. Start creating posts!</p>
-        <?php endif; ?>
-    </div>
     
-    <div class="container posts-container" id="likes-container" style="display: none;">
-    <h2>Your Likes</h2>
+<div class="container likes-container mt-6 mx-auto  bg-gray-600 p-6 rounded-lg shadow-lg" id="likes-container" style="display: none;">
+    <h2 class="text-2xl font-bold mb-4">Your Likes</h2>
     <?php
    $sql_like = "
     SELECT posts.post_id, posts.title, posts.content, posts.created_at, posts.image, categories.name AS category_name,
@@ -270,8 +267,8 @@ if ($isLoggedIn && isset($_POST['follow'])) {
     FROM posts
     JOIN categories ON posts.category_id = categories.category_id
     LEFT JOIN user_likes ON posts.post_id = user_likes.id_post
-    LEFT JOIN users ON posts.user_id = users.user_id  -- Corrected: This should join on the `posts.user_id`, not `user_likes.id_user`
-    WHERE user_likes.id_user = ?   -- We need to check the `user_likes.id_user` here
+    LEFT JOIN users ON posts.user_id = users.user_id
+    WHERE user_likes.id_user = ?
     GROUP BY posts.post_id, users.user_id, categories.name
     ORDER BY posts.created_at DESC
 ";
@@ -303,9 +300,8 @@ if ($isLoggedIn && isset($_POST['follow'])) {
         exit();
     }
 
-
     if ($result_like->num_rows > 0): ?>
-        <div class="posts">
+        <div class="posts space-y-4">
             <?php while ($like = $result_like->fetch_assoc()): 
                  $sql_check_like = "SELECT * FROM `user_likes` WHERE id_user = ? AND id_post = ?";
                     $stmt_check_like = $conn->prepare($sql_check_like);
@@ -314,35 +310,35 @@ if ($isLoggedIn && isset($_POST['follow'])) {
                     $result_check_like = $stmt_check_like->get_result();
                     $isLiked = $result_check_like->num_rows > 0;
                 ?>
-                <a href="post.php?id=<?php echo $like['post_id']; ?>" class="post-link">
+                <a href="post.php?id=<?php echo $like['post_id']; ?>" class="post-link block p-4 bg-gray-700 hover:bg-gray-600 rounded-lg transition">
                     <div class="post">
                         <?php if (!empty($like['image'])): ?>
-                            <img src="data:image/jpeg;base64,<?php echo base64_encode($like['image']); ?>" alt="Post Image" class="post-image">
+                            <img src="data:image/jpeg;base64,<?php echo base64_encode($like['image']); ?>" alt="Post Image" class="post-image mb-4 rounded-lg">
                         <?php endif; ?>
                         <div class="post-content">
-                            <h3><?php echo htmlspecialchars($like['title']); ?></h3>
-                            <p class="category"><strong>Category: <?php echo htmlspecialchars($like['category_name']); ?></strong></p>
-                            <p><strong class="post-author">By: <?php echo htmlspecialchars($like['author_username']); ?></strong></p>
-                            <p><?php echo $like['content']; ?></p>
-                            <p class="post-date"><strong>Date: </strong><?php echo htmlspecialchars($like['created_at']); ?></p>
+                            <h3 class="text-xl font-bold mb-2"><?php echo htmlspecialchars($like['title']); ?></h3>
+                            <p class="category text-gray-400 mb-2"><strong>Category: <?php echo htmlspecialchars($like['category_name']); ?></strong></p>
+                            <p class="post-autor text-gray-400 mb-2"><strong>By: <?php echo htmlspecialchars($like['author_username']); ?></strong></p>
+                            <p class="text-gray-300 mb-4"><?php echo $like['content']; ?></p>
+                            <p class="post-date text-gray-400"><strong>Date: </strong><?php echo htmlspecialchars($like['created_at']); ?></p>
                             <form method="POST" action="">
                                 <p>Likes: <?php echo $like['like_count']; ?></p> 
                                 <input type="hidden" name="post_id" value="<?php echo $like['post_id']; ?>">
-                                <button class="heart <?php echo $isLiked ? 'liked' : ''; ?>"" name="like" ></button>
+                                <button class="heart <?php echo $isLiked ? 'liked' : ''; ?>" name="like"></button>
                             </form>
-
                         </div>
                     </div>
                 </a>
             <?php endwhile; ?>
         </div>
     <?php else: ?>
-        <p>No posts liked yet. </p>
+        <p class="text-gray-400">No posts liked yet.</p>
     <?php endif; ?>
 </div>
 
-<div class="container events-container" id="events-container" style="display: none;">
-    <h2>
+
+<div class="container events-container mx-auto  mt-6 bg-gray-600 p-6 rounded-lg shadow-lg" id="events-container" style="display: none;">
+    <h2 class="text-2xl font-bold mb-4">
         <?php 
         if ($isLoggedIn && $userId == $profileUserId) {
             echo "Your Events";
@@ -352,25 +348,24 @@ if ($isLoggedIn && isset($_POST['follow'])) {
         ?>
     </h2>
     <?php if ($result_events->num_rows > 0): ?>
-        <div class="events">
+        <div class="events space-y-4">
             <?php while ($event = $result_events->fetch_assoc()): ?>
-                <a href="event.php?id=<?php echo $event['event_id']; ?>" class="event-link">
+                <a href="event.php?id=<?php echo $event['event_id']; ?>" class="event-link block p-4 bg-gray-700 hover:bg-gray-600 rounded-lg transition">
                     <div class="event-card">
-                        <div class="event-header">
-                            <h3><?php echo htmlspecialchars($event['event_name']); ?></h3>
-                            <p class="event-date"><?php echo htmlspecialchars($event['event_date']); ?></p>
+                        <div class="event-header mb-2">
+                            <h3 class="text-xl font-bold"><?php echo htmlspecialchars($event['event_name']); ?></h3>
+                            <p class="event-date text-gray-400"><?php echo htmlspecialchars($event['event_date']); ?></p>
                         </div>
                         <div class="event-body">
-                            <p><strong>Description:</strong> <?php echo htmlspecialchars($event['event_description']); ?></p>
-                            <p><strong>Location:</strong> <?php echo htmlspecialchars($event['location']); ?></p>
+                            <p class="text-gray-400 mb-2"><strong>Description:</strong> <?php echo htmlspecialchars($event['event_description']); ?></p>
+                            <p class="text-gray-400"><strong>Location:</strong> <?php echo htmlspecialchars($event['location']); ?></p>
                         </div>
                     </div>
                 </a>
-
             <?php endwhile; ?>
         </div>
     <?php else: ?>
-        <p class="no-events">
+        <p class="text-gray-400">
             <?php 
             if ($isLoggedIn && $userId == $profileUserId) {
                 echo "You are not attending any events yet.";
@@ -381,8 +376,12 @@ if ($isLoggedIn && isset($_POST['follow'])) {
         </p>
     <?php endif; ?>
 </div>
-<div class="container items-container" id="items-container" style="display: none;">
-  <h2>
+
+
+
+
+<div class="container items-container mx-auto  mt-6 bg-gray-600 p-6 rounded-lg shadow-lg" id="items-container" style="display: none;">
+  <h2 class="text-2xl font-bold mb-4">
     <?php 
     if ($isLoggedIn && $userId == $profileUserId) {
         echo "Your Items";
@@ -392,27 +391,28 @@ if ($isLoggedIn && isset($_POST['follow'])) {
     ?>
   </h2>
   <?php if ($result_items->num_rows > 0): ?>
-    <div class="items">
+    <div class="items space-y-4">
         <?php while ($item = $result_items->fetch_assoc()): ?>
-            <a href="item_details.php?item_id=<?php echo $item['item_id']; ?>" class="item-link">
+            <a href="item_details.php?item_id=<?php echo $item['item_id']; ?>" class="item-link block p-4 bg-gray-700 hover:bg-gray-600 rounded-lg transition">
                 <div class="item-card">
                     <?php if (!empty($item['image'])): ?>
-                        <img src="data:image/jpeg;base64,<?php echo base64_encode($item['image']); ?>" alt="Item Image" class="item-image">
+                        <img src="data:image/jpeg;base64,<?php echo base64_encode($item['image']); ?>" alt="Item Image" class="item-image mb-4 rounded-lg">
                     <?php endif; ?>
                     <div class="item-details">
-                        <h3><?php echo htmlspecialchars($item['title']); ?></h3>
-                        <p><strong>Name:</strong> <?php echo htmlspecialchars($item['name']); ?></p>
-                        <p><strong>Price:</strong> <?php echo number_format($item['price'], 2); ?> zł</p>
-                        <p><strong>Added on:</strong> <?php echo htmlspecialchars($item['created_at']); ?></p>
+                        <h3 class="text-xl font-bold mb-2"><?php echo htmlspecialchars($item['title']); ?></h3>
+                        <p class="text-gray-400 mb-2"><strong>Name:</strong> <?php echo htmlspecialchars($item['name']); ?></p>
+                        <p class="text-gray-400 mb-2"><strong>Price:</strong> <?php echo number_format($item['price'], 2); ?> zł</p>
+                        <p class="text-gray-400"><strong>Added on:</strong> <?php echo htmlspecialchars($item['created_at']); ?></p>
                     </div>
                 </div>
             </a>
         <?php endwhile; ?>
     </div>
   <?php else: ?>
-    <p>No items to display.</p>
+    <p class="text-gray-400">No items to display.</p>
   <?php endif; ?>
 </div>
+
 
 
 
