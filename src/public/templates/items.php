@@ -70,14 +70,6 @@ $categories_result = $conn->query($sql_categories);
         <hr class="border-gray-600">
     </div>
 
-    <?php if ($isLoggedIn): ?>
-        <div class="mb-6">
-            <a href="add_item.php" class="bg-orange-500 hover:bg-orange-400 text-white font-bold py-2 px-4 rounded-lg">
-                Add New Item
-            </a>
-        </div>
-    <?php endif; ?>
-
     <!-- Filters Section -->
     <div class="bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
         <form method="GET" action="" class="space-y-4">
