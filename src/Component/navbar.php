@@ -55,7 +55,7 @@ class Navbar{
 
                 <div class="hidden w-full md:block md:w-auto" id="navbar-default">
                     <ul class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-8 p-4 md:p-0 bg-gray-50 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900">
-                        <li><a href="index.php" class="block py-2 px-3 text-gray-900 hover:text-blue-700 dark:text-white">Home</a></li>
+                        <li><a href="items.php" class="block py-2 px-3 text-gray-900 hover:text-blue-700 dark:text-white">Items</a></li>
                         <li>
                             <div class="relative">
                                 <button
@@ -75,7 +75,9 @@ class Navbar{
                         </li>
                         <?php if ($this->isLoggedIn): ?>
                             <li><a href="new_post.php" class="block py-2 px-3 text-gray-900 hover:text-blue-700 dark:text-white">New Post</a></li>
+                            <li><a href="add_item.php" class="block py-2 px-3 text-gray-900 hover:text-blue-700 dark:text-white">Add Item</a></li>
                         <?php endif; ?>
+
                         <?php
                         if ($_SERVER['REQUEST_URI'] == '/' || $_SERVER['REQUEST_URI'] == '' || $_SERVER['PHP_SELF'] == '/index.php') {
                         ?>
@@ -113,6 +115,7 @@ class Navbar{
     }
 }
 ?>
+
 <script>
 // Toggle dropdown menu visibility
 function toggleDropdown() {
