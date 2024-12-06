@@ -375,31 +375,34 @@ if ($isLoggedIn && isset($_POST['follow'])) {
 
 
 <div id="items-container" class="container items-container mt-6 mx-auto bg-gray-600 p-6 rounded-lg shadow-lg" style="display: none;">
-<h2 class="text-2xl font-bold text-white mb-4">Your Items
-    <hr class="border-t-4 w-32 border-orange-500 mb-6 mt-1">
+    <h2 class="text-2xl font-bold text-white mb-4">
+        <?php echo $isLoggedIn && $userId == $profileUserId ? "Your Items" : htmlspecialchars($user['username']) . "'s Items"; ?>
     </h2>
-  <?php if ($result_items->num_rows > 0): ?>
-    <div class="items space-y-4">
-        <?php while ($item = $result_items->fetch_assoc()): ?>
-            <a href="item_details.php?item_id=<?php echo $item['item_id']; ?>" class="item-link block p-4 bg-gray-700 hover:bg-gray-900 rounded-lg transition">
-                <div class="item-card">
+    <hr class="border-t-4 w-32 border-orange-500 mb-6 mt-1">
+    <?php if ($result_items->num_rows > 0): ?>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <?php while ($item = $result_items->fetch_assoc()): ?>
+                <div class="item-card p-4 bg-gray-700 hover:bg-gray-600 rounded-lg transition shadow-md">
                     <?php if (!empty($item['image'])): ?>
-                        <img src="data:image/jpeg;base64,<?php echo base64_encode($item['image']); ?>" alt="Item Image" class="item-image mb-4 rounded-lg">
+                        <img src="data:image/jpeg;base64,<?php echo base64_encode($item['image']); ?>" alt="Item Image" class="w-full h-48 object-cover rounded-lg mb-4">
+                    <?php else: ?>
+                        <img src="public/image/default-item.png" alt="Default Item Image" class="w-full h-48 object-cover rounded-lg mb-4">
                     <?php endif; ?>
                     <div class="item-details">
-                        <h3 class="text-xl font-bold mb-2"><?php echo htmlspecialchars($item['title']); ?></h3>
-                        <p class="text-gray-400 mb-2"><strong>Name:</strong> <?php echo htmlspecialchars($item['name']); ?></p>
+                        <h3 class="text-xl font-bold text-white mb-2"><?php echo htmlspecialchars($item['name']); ?></h3>
                         <p class="text-gray-400 mb-2"><strong>Price:</strong> <?php echo number_format($item['price'], 2); ?> zł</p>
+                        <p class="text-gray-400 mb-2"><strong>Description:</strong> <?php echo htmlspecialchars($item['description']); ?></p>
                         <p class="text-gray-400"><strong>Added on:</strong> <?php echo htmlspecialchars($item['created_at']); ?></p>
                     </div>
+                    <a href="item_details.php?item_id=<?php echo $item['item_id']; ?>" class="mt-4 inline-block px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-md text-white text-center transition">View Details</a>
                 </div>
-            </a>
-        <?php endwhile; ?>
-    </div>
-  <?php else: ?>
-    <p class="text-gray-400">No items to display.</p>
-  <?php endif; ?>
+            <?php endwhile; ?>
+        </div>
+    <?php else: ?>
+        <p class="text-gray-400">No items to display.</p>
+    <?php endif; ?>
 </div>
+
 
 
 
