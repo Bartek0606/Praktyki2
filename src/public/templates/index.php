@@ -38,8 +38,6 @@ $events_result = $conn->query($sql_events);
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../../../navbar.css">
-
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="../js/glowna.js" defer></script>
     <title>HobbyHub</title>
@@ -79,8 +77,8 @@ $events_result = $conn->query($sql_events);
     ?>
       
 </header>
-<main class="container">
-<div class="w-full mx-auto max-w-5xl px-4">
+<main class="container mx-auto">
+<div class="w-full mx-auto max-w-5xl px-4 mt-8">
     <div class="flex justify-between items-center mb-4">
       <div class="text-2xl font-bold text-white">Events Section
       <hr class="border-t-4 mx-auto w-full border-orange-500 mb-6 mt-1">
