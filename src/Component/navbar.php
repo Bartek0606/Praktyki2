@@ -32,7 +32,8 @@ class Navbar{
         $stmt->execute();
         $result = $stmt->get_result();
     
-        $image_src = '../public/image/default.png'; 
+        $image_src = '/src/public/image/default.png';
+ 
     
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
