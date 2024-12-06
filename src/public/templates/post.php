@@ -3,8 +3,8 @@ ob_start();
 
 session_start();
 
-include 'db_connection.php';
-include 'Component/navbar.php';
+include '../../../db_connection.php';
+include '../../Component/navbar.php';
 
 $isLoggedIn = isset($_SESSION['user_id']);
 
@@ -95,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 function getUserImage($userId, $conn) { 
-    $image_src = '../default.png'; 
+    $image_src = '../image//default.png'; 
     $stmt = $conn->prepare("SELECT profile_picture FROM users WHERE user_id = ?"); 
     $stmt->bind_param("i", $userId); 
     $stmt->execute(); 
@@ -153,9 +153,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="glowna.css">
+    <link rel="stylesheet" href="../../../glowna.css">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="post.js" defer></script>
+    <script src="../js/post.js" defer></script>
     <title><?php echo htmlspecialchars($post['title'], ENT_QUOTES, 'UTF-8'); ?></title>
 </head>
 <body class="bg-gray-900">

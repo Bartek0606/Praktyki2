@@ -2,8 +2,8 @@
 ob_start();
 session_start();
 
-include 'db_connection.php';
-include 'Component/navbar.php';
+include '../../../db_connection.php';
+include '../../Component/navbar.php';
 
 // Handle logout
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
@@ -56,9 +56,10 @@ $categories_result = $conn->query($sql_categories);
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="glowna.css">
-    <link rel="stylesheet" href="navbar.css">
-    <link rel="stylesheet" href="items.css">
+    <link rel="stylesheet" href="../../../glowna.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../../../navbar.css">
+    <link rel="stylesheet" href="../../../items.css">
     <title>Items for Sale</title>
 </head>
 <body>

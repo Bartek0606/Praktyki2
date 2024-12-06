@@ -110,7 +110,7 @@ class PostRender {
                 <?php
                 if ($this->posts->num_rows > 0) {
                     while ($row = $this->posts->fetch_assoc()) {
-                        $post_url = 'post.php?id=' . $row['post_id'];
+                        $post_url = '../templates/post.php?id=' . $row['post_id'];
                         $hasImage = !empty($row['image']);
     
                         $isQuestionClass = $row['is_question'] == 1 ? 'border-yellow-200' : ''; // Klasa dla pytania

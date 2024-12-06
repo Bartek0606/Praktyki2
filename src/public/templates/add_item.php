@@ -1,7 +1,7 @@
 <?php
 ob_start();
 session_start();
-include 'db_connection.php';
+include '../../../db_connection.php';
 include 'Component/navbar.php';
 
 // Handle logout
