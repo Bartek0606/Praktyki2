@@ -4,8 +4,6 @@ session_start();
 include '../../../db_connection.php';
 include '../../Component/navbar.php';
 
-// Start session
-
 
 // Check if user is logged in
 $isLoggedIn = isset($_SESSION['user_id']);
