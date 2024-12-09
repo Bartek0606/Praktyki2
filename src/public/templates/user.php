@@ -132,6 +132,8 @@ if ($isLoggedIn && isset($_POST['follow'])) {
     header("Location: " . $_SERVER['PHP_SELF'] . "?id=" . $profileUserId);
     exit();
 }
+
+
 ?>
 
 <!DOCTYPE html>
@@ -153,14 +155,18 @@ if ($isLoggedIn && isset($_POST['follow'])) {
     <!-- Główna sekcja układu -->
     <div class="flex items-center">
     <!-- Lewa sekcja (zdjęcie profilowe i przycisk) -->
+    <?php
+$image_src = '/src/public/image/default.png';  // Zmienna z pełną ścieżką do default.png
+?>
 <div class="w-full flex flex-col items-center">
     <div class="user-profile mb-4">
-        <?php if ($user['profile_picture'] && $user['profile_picture'] !== '../image//default.png'): ?>
-            <img class="w-32 h-32 rounded-full shadow-md hover:shadow-xl transition-shadow duration-300" src="data:image/jpeg;base64,<?php echo base64_encode($user['profile_picture']); ?>" alt="Profile Picture">
-        <?php else: ?>
-            <img class="w-32 h-32 rounded-full shadow-md hover:shadow-xl transition-shadow duration-300" src="public/image/default.png" alt="Default Profile Picture">
-        <?php endif; ?>
+    <?php if ($user['profile_picture'] && $user['profile_picture'] !== 'default.png'): ?>
+        <img class="w-32 h-32 rounded-full shadow-md hover:shadow-xl transition-shadow duration-300" src="data:image/jpeg;base64,<?php echo base64_encode($user['profile_picture']); ?>" alt="Profile Picture">
+    <?php else: ?>
+        <img class="w-32 h-32 rounded-full shadow-md hover:shadow-xl transition-shadow duration-300" src="<?php echo $image_src; ?>" alt="Default Profile Picture">
+    <?php endif; ?>
     </div>
+    
     <div>
         <?php if ($isLoggedIn && $userId == $profileUserId): ?>
             <a href="edit_profile.php" class="inline-block">
