@@ -110,7 +110,7 @@ $user_items_result = $stmt_user_items->get_result();
                 <!-- Edit Button (only if the item is owned by the logged-in user) -->
                 <?php if ($isLoggedIn && $userId == $item['user_id']): ?>
                     <div class="mt-6">
-                        <a href="edit_item.php?item_id=<?php echo htmlspecialchars($item['item_id']); ?>" class="w-full py-3 bg-blue-500 text-white font-bold rounded-lg hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 transition ease-in-out duration-150">
+                        <a href="edit_item.php?item_id=<?php echo htmlspecialchars($item['item_id']); ?>" class="w-full py-3 px-6 bg-blue-500 text-white font-bold rounded-lg hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 transition ease-in-out duration-150">
                             Edit Item
                         </a>
                     </div>
@@ -119,7 +119,7 @@ $user_items_result = $stmt_user_items->get_result();
                 <!-- Message Button -->
                 <?php if ($isLoggedIn && $userId != $item['user_id']): ?>
                     <form action="message.php?id=<?php echo $item['user_id']; ?>" method="POST" class="mt-6">
-                        <button type="submit" class="w-full py-3 bg-orange-500 text-white font-bold rounded-lg hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-400 transition ease-in-out duration-150">Message the Seller</button>
+                        <button type="submit" class="w-full py-3 px-6 bg-orange-500 text-white font-bold rounded-lg hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-400 transition ease-in-out duration-150">Message the Seller</button>
                     </form>
                 <?php endif; ?>
             </div>
