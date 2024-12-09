@@ -13,11 +13,11 @@ class Sidebar {
         $userData = $this->getUserData();
         $username = $userData['username'] ?? 'Guest';
         $profilePicture = $userData['profile_picture'] ?? null;
-
-        if ($profilePicture) {
+        $default_image_src = '/src/public/image/default.png';
+        if (!empty($profilePicture) && $profilePicture !=='default.png') {
             $profilePictureSrc = 'data:image/jpeg;base64,' . base64_encode($profilePicture);
         } else {
-            $profilePictureSrc = 'default_profile.png';
+            $profilePictureSrc = $default_image_src;
         }
 
         return '

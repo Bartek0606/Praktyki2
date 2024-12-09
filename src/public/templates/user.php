@@ -234,7 +234,7 @@ $image_src = '/src/public/image/default.png';  // Zmienna z pełną ścieżką d
 
 
   <!-- Posty użytkownika -->
-  <div id="post-container" class="container posts-container mt-6 mx-auto bg-gray-600 p-6 rounded-lg shadow-lg">
+  <div id="post-container" class="container posts-container mt-6 mx-auto bg-gray-600 p-6 rounded-lg shadow-lg ">
     <h2 class="text-2xl font-bold text-white mb-4">Your Posts
     <hr class="border-t-4 w-32 border-orange-500 mb-6 mt-1">
     </h2>
@@ -384,7 +384,7 @@ $image_src = '/src/public/image/default.png';  // Zmienna z pełną ścieżką d
 
 
 <div id="items-container" class="container items-container mt-6 mx-auto bg-gray-600 p-6 rounded-lg shadow-lg" style="display: none;">
-    <h2 class="text-2xl font-bold text-white mb-4">
+    <h2 class="text-2xl font-bold text-white ">
         <?php echo $isLoggedIn && $userId == $profileUserId ? "Your Items" : htmlspecialchars($user['username']) . "'s Items"; ?>
     </h2>
     <hr class="border-t-4 w-32 border-orange-500 mb-6 mt-1">
