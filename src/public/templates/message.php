@@ -20,8 +20,17 @@ $navbar = new Navbar($conn, $isLoggedIn, $userId, $userName);
 // ID do kogo
 if (isset($_GET['id'])) {
     $profileUserId = intval($_GET['id']);
-
-    
+    $sql_profile_user = "SELECT username FROM users WHERE user_id = ?"; 
+    $stmt_profile_user = $conn->prepare($sql_profile_user); 
+    $stmt_profile_user->bind_param("i", $profileUserId); 
+    $stmt_profile_user->execute(); 
+    $result_profile_user = $stmt_profile_user->get_result(); 
+    if ($result_profile_user->num_rows == 1) { 
+        $profileUserRow = $result_profile_user->fetch_assoc(); 
+        $profileUserName = $profileUserRow['username']; 
+    } else { 
+        echo "User not found."; exit(); 
+    }
 } else {
     echo "User ID not specified.";
     exit();
@@ -86,7 +95,7 @@ $result_messages = $stmt_messages->get_result();
 </header>
 <main class="flex-grow container mx-auto mt-6 p-4">
     <div class="bg-gray-600 shadow-md rounded-lg border border-gray-200 p-6 flex flex-col h-[70vh]">
-        <h1 class="text-2xl font-bold text-white mb-6">Messages</h1>
+        <h1 class="text-2xl font-bold text-white mb-6">Messages with <?php echo '<a href="user.php?id=' . urlencode($profileUserId) . '" class="text-white hover:underline">' . htmlspecialchars($profileUserName, ENT_QUOTES, 'UTF-8') . '</a>'; ?></h1>
         <div class="flex-grow overflow-y-auto space-y-4 px-4">
             <?php
             if ($result_messages->num_rows > 0) {
