@@ -149,7 +149,7 @@ $user_items_result = $stmt_user_items->get_result();
         <?php if ($user_items_result->num_rows > 0): ?>
             <div class="mt-12">
                 <h3 class="text-2xl font-bold text-orange-400 mb-6">Other Items by <?php echo htmlspecialchars($item['username']); ?></h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="grid grid-cols-1 md:griad-cols-2 lg:grid-cols-4 gap-6">
                     <?php while ($user_item = $user_items_result->fetch_assoc()): ?>
                         <div class="bg-gray-700 p-4 rounded-lg shadow-lg">
                             <a href="item_details.php?item_id=<?php echo htmlspecialchars($user_item['item_id']); ?>" class="block">
@@ -163,12 +163,16 @@ $user_items_result = $stmt_user_items->get_result();
                     <?php endwhile; ?>
                 </div>
             </div>
+        <?php else: ?>
+            <div class="mt-12">
+                <h3 class="text-2xl font-bold text-orange-400 mb-6">Other Items by <?php echo htmlspecialchars($item['username']); ?></h3>
+                <p class="text-gray-400">No other items available by <?php echo htmlspecialchars($item['username']); ?>.</p>
+            </div>
         <?php endif; ?>
     </div>
 </main>
 </body>
 </html>
-
 
 <?php
 $stmt->close();
