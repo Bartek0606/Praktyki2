@@ -169,7 +169,6 @@ $user_items_result = $stmt_user_items->get_result();
 </body>
 </html>
 
-
 <?php
 $stmt->close();
 $stmt_related->close();
