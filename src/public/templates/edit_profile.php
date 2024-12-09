@@ -33,18 +33,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    // Resetowanie zdjęcia profilowego
-    if (isset($_POST['reset_picture'])) {
-        $sql_update = "UPDATE users SET profile_picture = 'default.png' WHERE user_id = '$user_id'";
-        if ($conn->query($sql_update) === TRUE) {
-            $_SESSION['success_message'] = "Profile picture has been reset.";
-            $_SESSION['success_message_type'] = 'reset'; // Typ komunikatu - reset
-            header("Location: edit_profile.php");
-            exit();
-        } else {
-            echo "Error resetting profile picture: " . $conn->error;
-        }
+// Resetowanie zdjęcia profilowego
+if (isset($_POST['reset_picture'])) {
+    $sql_update = "UPDATE users SET profile_picture = 'default.png' WHERE user_id = '$user_id'";
+    if ($conn->query($sql_update) === TRUE) {
+        $_SESSION['success_message'] = "Profile picture has been reset.";
+        $_SESSION['success_message_type'] = 'reset'; // Typ komunikatu - reset
+        header("Location: edit_profile.php");
+        exit();
+    } else {
+        echo "Error resetting profile picture: " . $conn->error;
     }
+}
+
 
     // Aktualizacja danych użytkownika
     $username = $_POST['username'];
@@ -155,19 +156,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="space-y-4">
                         <div class="bg-gray-800 p-4 rounded-lg">
                             <div class="flex items-center space-x-4">
-                                <div class="w-24 h-24 rounded-full overflow-hidden">
-                                    <?php if ($user['profile_picture'] && $user['profile_picture'] !== 'default.png'): ?>
-                                        <img class="w-full h-full object-cover" src="data:image/jpeg;base64,<?php echo base64_encode($user['profile_picture']); ?>" alt="Profile Picture">
-                                    <?php else: ?>
-                                        <img class="w-full h-full object-cover" src="default.png" alt="Default Profile Picture">
-                                    <?php endif; ?>
-                                </div>
+                            <?php
+$image_src = '/src/public/image/default.png';  // Zmienna z pełną ścieżką do default.png
+?>
+
+<div class="w-24 h-24 rounded-full overflow-hidden">
+    <?php if ($user['profile_picture'] && $user['profile_picture'] !== 'default.png'): ?>
+        <img class="w-full h-full object-cover" src="data:image/jpeg;base64,<?php echo base64_encode($user['profile_picture']); ?>" alt="Profile Picture">
+    <?php else: ?>
+        <img class="w-full h-full object-cover" src="<?php echo $image_src; ?>" alt="Default Profile Picture">
+    <?php endif; ?>
+</div>
+
+
                                 <div class="flex items-center space-x-2">
                                     <div class="w-80">
                                         <label for="profile_picture" class="block mb-2">Profile Picture</label>
                                         <input type="file" name="profile_picture" id="profile_picture" accept="image/*" class="bg-gray-700 p-2 rounded-lg w-full text-gray-300 h-10">
                                     </div>
                                     <button type="submit" name="reset_picture" class="mt-2 bg-orange-400 p-2 rounded-full text-white hover:bg-gray-500 h-10 w-40">Reset Profile Picture</button>
+
                                 </div>
                             </div>
                         </div>
