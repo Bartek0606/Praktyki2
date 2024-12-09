@@ -1,5 +1,5 @@
 <?php
-include __DIR__ . '/../db_connection.php';
+include __DIR__ . '/../../db_connection.php';
 include 'Edit_Post.php'; 
 include 'delete_post.php';
 include_once 'sidebar_admin.php';
@@ -10,13 +10,13 @@ $userId = $isLoggedIn ? $_SESSION['user_id'] : null;
 // Obsługa wylogowania
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
     session_destroy();
-    header("Location: /../login.php");
+    header("Location: /../../public/templates/login.php");
     exit;
 }
 
 
 if (!$isLoggedIn) {
-    header("Location: /../login.php");
+    header("Location: /../../public/templates/login.php");
     exit;
 }
 

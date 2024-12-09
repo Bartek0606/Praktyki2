@@ -1,5 +1,5 @@
 <?php
-include __DIR__ . '/../db_connection.php'; 
+include __DIR__ . '/../../db_connection.php';
 include __DIR__ . '/Category.php'; 
 include_once 'sidebar_admin.php';
 
@@ -8,7 +8,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
 $userId = $isLoggedIn ? $_SESSION['user_id'] : null;
 
 if (!$isLoggedIn) {
-    header("Location: /../login.php");
+    header("Location: /../../public/templates/login.php");
     exit;
 }
 
