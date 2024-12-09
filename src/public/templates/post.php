@@ -1,13 +1,14 @@
 <?php
-ob_start();
-
 session_start();
-
+// Include required files
 include '../../../db_connection.php';
 include '../../Component/navbar.php';
 
-$isLoggedIn = isset($_SESSION['user_id']);
+// Start session
 
+
+// Check if user is logged in
+$isLoggedIn = isset($_SESSION['user_id']);
 $userId = $isLoggedIn ? $_SESSION['user_id'] : null;
 $userName = $isLoggedIn ? $_SESSION['username'] : null;
 
@@ -23,8 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
 function isOwner($userId, $ownerId) {
     return $userId === $ownerId;
 }
-
-
 
 // Retrieve post ID from the URL
 $postId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
@@ -145,7 +144,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
-
 ?>
 
 <!DOCTYPE html>
