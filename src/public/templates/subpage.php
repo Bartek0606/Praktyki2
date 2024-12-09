@@ -95,7 +95,7 @@ $result_posts = $stmt_posts->get_result();
 function getProfilePicture($profile_picture) {
     $default_image_src = '/src/public/image/default.png'; // Ścieżka do domyślnego zdjęcia profilowego
     
-    if (!empty($profile_picture)) {
+    if (!empty($profile_picture) && $profile_picture !=='default.png') {
         return 'data:image/jpeg;base64,' . base64_encode($profile_picture);
     }
     return $default_image_src;
