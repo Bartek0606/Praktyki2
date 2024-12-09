@@ -80,6 +80,13 @@ $user_items_result = $stmt_user_items->get_result();
 </header>
 <main class="container mx-auto max-w-4xl px-6 py-12">
     <div class="bg-gray-800 p-8 rounded-lg shadow-lg">
+        <!-- Success Message -->
+        <?php if (isset($_GET['success'])): ?>
+            <div class="mb-6 py-3 px-4 bg-green-500 text-white rounded-lg">
+                Your changes were saved successfully!
+            </div>
+        <?php endif; ?>
+
         <h1 class="text-3xl font-bold text-orange-400 mb-6"><?php echo htmlspecialchars($item['name']); ?></h1>
 
         <div class="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-8">
@@ -100,10 +107,19 @@ $user_items_result = $stmt_user_items->get_result();
                 <p><strong class="text-orange-400">Price:</strong> <?php echo htmlspecialchars($item['price']); ?> zł</p>
                 <p><strong class="text-orange-400">Posted on:</strong> <?php echo $formatted_date; ?></p>
 
+                <!-- Edit Button (only if the item is owned by the logged-in user) -->
+                <?php if ($isLoggedIn && $userId == $item['user_id']): ?>
+                    <div class="mt-6">
+                        <a href="edit_item.php?item_id=<?php echo htmlspecialchars($item['item_id']); ?>" class="w-full py-3 bg-blue-500 text-white font-bold rounded-lg hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 transition ease-in-out duration-150">
+                            Edit Item
+                        </a>
+                    </div>
+                <?php endif; ?>
+
                 <!-- Message Button -->
                 <?php if ($isLoggedIn && $userId != $item['user_id']): ?>
                     <form action="message.php?id=<?php echo $item['user_id']; ?>" method="POST" class="mt-6">
-                        <button type="submit" class="w-full py-3 bg-orange-500 text-white font-bold rounded-lg hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-400">Message the Seller</button>
+                        <button type="submit" class="w-full py-3 bg-orange-500 text-white font-bold rounded-lg hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-400 transition ease-in-out duration-150">Message the Seller</button>
                     </form>
                 <?php endif; ?>
             </div>

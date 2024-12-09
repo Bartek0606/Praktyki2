@@ -89,12 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_post'])) {
     <div class="bg-gray-800 p-8 rounded-lg shadow-lg">
         <h2 class="text-3xl font-bold text-orange-400 mb-6">Edit Post</h2>
 
-        <?php if (isset($error)): ?>
-            <div class="bg-red-600 text-white p-4 rounded-lg mb-6">
-                <?php echo $error; ?>
-            </div>
-        <?php endif; ?>
-
         <form method="POST" enctype="multipart/form-data" class="space-y-6">
             <div class="space-y-2">
                 <label for="title" class="block text-lg font-semibold">Title:</label>
@@ -129,6 +123,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_post'])) {
                     class="w-full py-3 bg-orange-500 text-white font-bold rounded-lg hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-400">
                 Save Changes
             </button>
+
+            <?php if (isset($error)): ?>
+            <div class="bg-red-600 text-white p-4 rounded-lg mb-6">
+                <?php echo $error; ?>
+            </div>
+        <?php endif; ?>
         </form>
     </div>
 </main>
