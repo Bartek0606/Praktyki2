@@ -194,12 +194,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
         <?php if ($isLoggedIn && isOwner($userId, $post['user_id'])): ?>
-            <button class="mt-4 px-6 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition duration-200" onclick="toggleEditForm('post')">Edit Post</button>
-            <form method="POST" id="edit-post-form" style="display:none;" class="mt-4">
-                <textarea name="new_content" required class="w-full p-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 mb-4"><?php echo htmlspecialchars($post['content'], ENT_QUOTES, 'UTF-8'); ?></textarea>
-                <button type="submit" name="edit_post" class="px-6 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition duration-200">Save Changes</button>
-            </form>
+            <a href="edit_post.php?post_id=<?php echo $postId; ?>"
+            class="mt-4 px-6 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition duration-200">
+                Edit Post
+            </a>
         <?php endif; ?>
+
     </article>
 
     <!-- Comment Section -->
