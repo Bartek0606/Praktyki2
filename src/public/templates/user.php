@@ -149,7 +149,7 @@ if ($isLoggedIn && isset($_POST['follow'])) {
 </header>
 <main>
     
-<div class="container mx-auto p-6 bg-gray-700 rounded-lg shadow-xl transform transition-all duration-500 hover:scale-105">
+<div class="container mx-auto p-6 bg-gray-700 rounded-lg shadow-xl transform transition-all duration-500 ">
     <!-- Główna sekcja układu -->
     <div class="flex items-center">
     <!-- Lewa sekcja (zdjęcie profilowe i przycisk) -->
@@ -382,6 +382,7 @@ if ($isLoggedIn && isset($_POST['follow'])) {
     <?php if ($result_items->num_rows > 0): ?>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <?php while ($item = $result_items->fetch_assoc()): ?>
+                <a href="item_details.php?item_id=<?php echo $item['item_id']; ?>">
                 <div class="item-card p-4 bg-gray-700 hover:bg-gray-600 rounded-lg transition shadow-md">
                     <?php if (!empty($item['image'])): ?>
                         <img src="data:image/jpeg;base64,<?php echo base64_encode($item['image']); ?>" alt="Item Image" class="w-full h-48 object-cover rounded-lg mb-4">
@@ -394,8 +395,9 @@ if ($isLoggedIn && isset($_POST['follow'])) {
                         <p class="text-gray-400 mb-2"><strong>Description:</strong> <?php echo htmlspecialchars($item['description']); ?></p>
                         <p class="text-gray-400"><strong>Added on:</strong> <?php echo htmlspecialchars($item['created_at']); ?></p>
                     </div>
-                    <a href="item_details.php?item_id=<?php echo $item['item_id']; ?>" class="mt-4 inline-block px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-md text-white text-center transition">View Details</a>
+                    
                 </div>
+                </a>
             <?php endwhile; ?>
         </div>
     <?php else: ?>
