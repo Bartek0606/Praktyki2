@@ -174,7 +174,7 @@ $image_src = '/src/public/image/default.png';  // Zmienna z pełną ścieżką d
                                         <label for="profile_picture" class="block mb-2">Profile Picture</label>
                                         <input type="file" name="profile_picture" id="profile_picture" accept="image/*" class="bg-gray-700 p-2 rounded-lg w-full text-gray-300 h-10">
                                     </div>
-                                    <button type="submit" name="reset_picture" class="mt-2 bg-orange-400 p-2 rounded-full text-white hover:bg-gray-500 h-10 w-40">Reset Profile Picture</button>
+                                    <button type="submit" name="reset_picture" class="mt-8 bg-orange-400 p-2 rounded-full text-white hover:bg-gray-500 h-10 w-40">Reset Profile Picture</button>
 
                                 </div>
                             </div>

@@ -119,11 +119,11 @@ $categories_result = $conn->query($sql_categories);
                 $image_html = $item['image'] ? "<img src='data:image/jpeg;base64,$image_data' alt='" . htmlspecialchars($item['name']) . "' class='rounded-lg shadow-md mb-4'>" : '';
                 ?>
                 <div class="bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
-                    <a href="item_details.php?item_id=<?php echo htmlspecialchars($item['item_id']); ?>" class="block">
+                    <a href="item_details.php?item_id=<?php echo htmlspecialchars($item['item_id']); ?>">
                         <?php echo $image_html; ?>
                         <h3 class="text-xl font-bold text-orange-400 mb-2"><?php echo htmlspecialchars($item['name']); ?></h3>
                         <p class="text-sm text-gray-400 mb-1"><strong>Owner:</strong>
-                            <a href="user.php?id=<?php echo htmlspecialchars($item['user_id']); ?>"
+                            <a class="font-bold " href="user.php?id=<?php echo htmlspecialchars($item['user_id']); ?>"
                                class="text-blue-400 hover:underline">
                                 <?php echo htmlspecialchars($item['username']); ?>
                             </a>

@@ -98,7 +98,7 @@ $user_items_result = $stmt_user_items->get_result();
             <!-- Info Section -->
             <div class="flex-grow">
                 <p><strong class="text-orange-400">Owner:</strong> 
-                    <a href="user.php?id=<?php echo htmlspecialchars($item['user_id']); ?>" class="text-blue-400 hover:underline">
+                    <a class="text-white font-bold"href="user.php?id=<?php echo htmlspecialchars($item['user_id']); ?>" class="text-blue-400 hover:underline">
                         <?php echo htmlspecialchars($item['username']); ?>
                     </a>
                 </p>

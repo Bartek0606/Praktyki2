@@ -112,7 +112,6 @@ $stmt_following_count->bind_param("i", $profileUserId);
 $stmt_following_count->execute();
 $result_following_count = $stmt_following_count->get_result();
 $following_count = $result_following_count->fetch_assoc()['following_count'];
-
 // Handle follow/unfollow action
 if ($isLoggedIn && isset($_POST['follow'])) {
     if ($isFollowing) {
@@ -161,9 +160,9 @@ $image_src = '/src/public/image/default.png';  // Zmienna z pełną ścieżką d
 <div class="w-full flex flex-col items-center">
     <div class="user-profile mb-4">
     <?php if ($user['profile_picture'] && $user['profile_picture'] !== 'default.png'): ?>
-        <img class="w-32 h-32 rounded-full shadow-md hover:shadow-xl transition-shadow duration-300" src="data:image/jpeg;base64,<?php echo base64_encode($user['profile_picture']); ?>" alt="Profile Picture">
+        <img class="w-36 h-36 rounded-full shadow-md hover:shadow-xl transition-shadow duration-300" src="data:image/jpeg;base64,<?php echo base64_encode($user['profile_picture']); ?>" alt="Profile Picture">
     <?php else: ?>
-        <img class="w-32 h-32 rounded-full shadow-md hover:shadow-xl transition-shadow duration-300" src="<?php echo $image_src; ?>" alt="Default Profile Picture">
+        <img class="w-36 h-36 rounded-full shadow-md hover:shadow-xl transition-shadow duration-300" src="<?php echo $image_src; ?>" alt="Default Profile Picture">
     <?php endif; ?>
     </div>
     
@@ -181,8 +180,8 @@ $image_src = '/src/public/image/default.png';  // Zmienna z pełną ścieżką d
         <div class="w-3/4 ml-8">
             <div class="user-details">
                 <h2 class="text-3xl font-bold mb-2 text-white"><?php echo htmlspecialchars($user['username']); ?></h2>
-                <p class="text-lg text-gray-300 mb-4"><?php echo htmlspecialchars($user['role'] ?? 'User Role'); ?></p>
-
+                <p class="text-lg text-gray-300 mb-4"><?php echo htmlspecialchars($user['full_name']); ?></p>  
+                <!-- ?? 'User Role' -->
                 <!-- Sekcja bio -->
                 <div class="bio text-gray-300 mb-6">
                     <h3 class="text-xl font-semibold text-white">Bio:</h3>
@@ -191,6 +190,10 @@ $image_src = '/src/public/image/default.png';  // Zmienna z pełną ścieżką d
 
                 <!-- Liczniki followers -->
                 <div class="follow-info flex space-x-8 text-white">
+                <div>
+                        <p class="text-lg font-semibold"><?php echo $followers_count; ?></p>
+                        <p class="text-gray-300">Posts</p>
+                    </div>
                     <div>
                         <p class="text-lg font-semibold"><?php echo $followers_count; ?></p>
                         <p class="text-gray-300">Followers</p>
