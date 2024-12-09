@@ -93,7 +93,7 @@ $result_posts = $stmt_posts->get_result();
 
 // Funkcja do pobrania zdjęcia profilowego
 function getProfilePicture($profile_picture) {
-    $default_image_src = '../default.png'; // Ścieżka do domyślnego zdjęcia profilowego
+    $default_image_src = '/src/public/image/default.png'; // Ścieżka do domyślnego zdjęcia profilowego
     
     if (!empty($profile_picture)) {
         return 'data:image/jpeg;base64,' . base64_encode($profile_picture);
