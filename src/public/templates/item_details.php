@@ -122,6 +122,14 @@ $user_items_result = $stmt_user_items->get_result();
                         <button type="submit" class="w-full py-3 px-6 bg-orange-500 text-white font-bold rounded-lg hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-400 transition ease-in-out duration-150">Message the Seller</button>
                     </form>
                 <?php endif; ?>
+
+                <!-- Purchase Button -->
+                <?php if ($isLoggedIn && $userId != $item['user_id']): ?>
+                    <form action="purchase.php" method="POST" class="mt-6">
+                        <input type="hidden" name="item_id" value="<?php echo htmlspecialchars($item['item_id']); ?>">
+                        <button type="submit" name="purchase" class="w-full py-3 px-6 bg-green-500 text-white font-bold rounded-lg hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-green-400 transition ease-in-out duration-150">Buy Now</button>
+                    </form>
+                <?php endif; ?>
             </div>
         </div>
 

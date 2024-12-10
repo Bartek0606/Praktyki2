@@ -12,6 +12,7 @@ if (!isset($_SESSION['user_id'])) {
 
 $itemId = $_GET['item_id'];
 
+// Fetch the item details
 $sql = "SELECT * FROM items WHERE item_id = ? AND user_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("ii", $itemId, $_SESSION['user_id']);
@@ -46,8 +47,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $update_stmt->bind_param("ssiii", $name, $description, $category_id, $price, $itemId);
     $update_stmt->execute();
 
-    // Redirect to the updated item details page with a success message
-    header("Location: item_details.php?item_id=$itemId&success=true");
+    // Set a session variable to indicate a successful update
+    $_SESSION['update_success'] = true;
+
+    // Redirect to the updated item details page without displaying the success in the URL
+    header("Location: item_details.php?item_id=$itemId");
     exit;
 }
 ?>
@@ -105,6 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </html>
 
 <?php
+// Close the statement and database connection
 $stmt->close();
 $conn->close();
 ob_end_flush();
