@@ -132,6 +132,15 @@ if ($isLoggedIn && isset($_POST['follow'])) {
     exit();
 }
 
+// Get the number of posts
+$sql_posts_count = "SELECT COUNT(*) AS posts_count FROM posts WHERE user_id = ?";
+$stmt_posts_count = $conn->prepare($sql_posts_count);
+$stmt_posts_count->bind_param("i", $profileUserId);
+$stmt_posts_count->execute();
+$result_posts_count = $stmt_posts_count->get_result();
+$posts_count = $result_posts_count->fetch_assoc()['posts_count'];
+
+
 
 ?>
 
@@ -188,10 +197,9 @@ $image_src = '/src/public/image/default.png';  // Zmienna z pełną ścieżką d
                     <p><?php echo nl2br(htmlspecialchars($user['bio'])); ?></p>
                 </div>
 
-                <!-- Liczniki followers -->
                 <div class="follow-info flex space-x-8 text-white">
-                <div>
-                        <p class="text-lg font-semibold"><?php echo $followers_count; ?></p>
+                    <div>
+                        <p class="text-lg font-semibold"><?php echo $posts_count; ?></p>
                         <p class="text-gray-300">Posts</p>
                     </div>
                     <div>
@@ -203,6 +211,7 @@ $image_src = '/src/public/image/default.png';  // Zmienna z pełną ścieżką d
                         <p class="text-gray-300">Following</p>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
