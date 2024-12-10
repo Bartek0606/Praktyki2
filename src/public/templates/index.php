@@ -45,7 +45,7 @@ $events_result = $conn->query($sql_events);
 
 <style>
     .slider-container {
-      scroll-behavior: smooth; /* Płynne przewijanie */
+      scroll-behavior: smooth; 
     }
 
     @keyframes draw-border {
@@ -150,8 +150,6 @@ if ($events_result->num_rows > 0) {
     </form>
 
 </div>
-
-
     <?php 
         echo $posts->render();
     ?>

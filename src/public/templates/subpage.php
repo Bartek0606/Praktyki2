@@ -109,30 +109,7 @@ function getProfilePicture($profile_picture) {
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="../js/fotografia.js"></script>
     <title>Blog o fotografii</title>
-    <style>
-        .card:hover {
-            transform: scale(1.05);
-            transition: transform 0.3s ease-in-out;
-        }
-        .user-photo:hover {
-            transform: rotate(360deg);
-            transition: transform 0.5s ease-in-out;
-        }
-        .bg-gradient {
-            background: linear-gradient(135deg, #6B73FF 0%, #000DFF 100%);
-        }
-        .text-shadow {
-            text-shadow: 1px 2px 5px rgba(0, 0, 0, 0.3);
-        }
-        .card {
-            border: 1px solid #ddd;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .card-content {
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(2px);
-        }
-    </style>
+
 </head>
 <body class="bg-gray-100 dark:bg-gray-900">
 <header>
@@ -191,35 +168,11 @@ function getProfilePicture($profile_picture) {
                 echo "</div>";
             }
         } else {
-            echo "<p class='text-white'>Brak postów w tej kategorii.</p>";
+            echo "<p class='text-white'>No posts.</p>";
         }
         ?>
     </div>
 </div>
-
-<section id="opinie" class="reviews-section">
-    <h2 class="reviews-title">User opinions about the blog</h2>
-    <div class="reviews-slider">
-        <button class="reviews-prev-button">&larr;</button> <!-- Strzałka w lewo -->
-        <div class="reviews-container">
-            <?php
-            if ($result->num_rows > 0) {
-                while($row = $result->fetch_assoc()) {
-                    echo '<div class="review">';
-                    echo '<img src="' . $row['profile_picture_url'] . '" alt="Zdjęcie użytkownika" class="review-image">';
-                    echo '<p class="review-username">' . $row['username'] . '</p>';
-                    echo '<p class="review-text">"' . $row['content'] . '"</p>';
-                    echo '</div>';
-                }
-            } else {
-                echo "Brak recenzji dotyczących fotografii.";
-            }
-            ?>
-        </div>
-        <button class="reviews-next-button">&rarr;</button> <!-- Strzałka w prawo -->
-    </div>
-</section>
-
 </body>
 </html>
 <?php
