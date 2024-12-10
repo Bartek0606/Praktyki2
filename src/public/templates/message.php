@@ -11,9 +11,7 @@ $userId = $isLoggedIn ? $_SESSION['user_id'] : null;
 $userName = $isLoggedIn ? $_SESSION['username'] : null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
-    session_destroy(); // Destroy the session
-    header("Location: index.php"); // Redirect to homepage
-    exit;
+    logout();
 }
 
 $navbar = new Navbar($conn, $isLoggedIn, $userId, $userName);

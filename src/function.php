@@ -46,4 +46,10 @@ function getMessages($conn, $userId, $profileUserId) {
     $stmt_messages->execute();
     return $stmt_messages->get_result();
 }
+function logout() {
+    session_start(); 
+    session_destroy(); 
+    header("Location: index.php"); 
+    exit;
+}
 ?>
