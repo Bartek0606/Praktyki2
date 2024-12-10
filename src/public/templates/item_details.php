@@ -81,11 +81,21 @@ $user_items_result = $stmt_user_items->get_result();
 <main class="container mx-auto max-w-4xl px-6 py-12">
     <div class="bg-gray-800 p-8 rounded-lg shadow-lg">
         <!-- Success Message -->
-        <?php if (isset($_GET['success'])): ?>
+        <?php if (isset($_SESSION['purchase_success']) && $_SESSION['purchase_success']): ?>
             <div class="mb-6 py-3 px-4 bg-green-500 text-white rounded-lg">
-                Your changes were saved successfully!
+                Purchase successful!
             </div>
+            <?php unset($_SESSION['purchase_success']); // Clear the success flag ?>
         <?php endif; ?>
+
+        <!-- Success Message -->
+        <?php if (isset($_SESSION['update_success']) && $_SESSION['update_success']): ?>
+            <div class="mb-6 py-3 px-4 bg-green-500 text-white rounded-lg">
+                Item updated successfully!
+            </div>
+            <?php unset($_SESSION['update_success']); // Clear the success flag ?>
+        <?php endif; ?>
+
 
         <h1 class="text-3xl font-bold text-orange-400 mb-6"><?php echo htmlspecialchars($item['name']); ?></h1>
 
@@ -130,7 +140,7 @@ $user_items_result = $stmt_user_items->get_result();
                         <button type="submit" name="purchase" class="w-full py-3 px-6 bg-green-500 text-white font-bold rounded-lg hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-green-400 transition ease-in-out duration-150">Buy Now</button>
                     </form>
                 <?php elseif ($item['purchased']): ?>
-                    <div class="mt-6 py-3 px-6 bg-gray-600 text-gray-400 rounded-lg text-center">
+                    <div class="mt-6 py-3 px-6 bg-gray-600 text-white-400 rounded-lg text-center">
                         Item already purchased
                     </div>
                 <?php endif; ?>

@@ -42,7 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['purchase'])) {
 
         if ($stmt_update->execute()) {
             $_SESSION['purchase_success'] = true;
-            header("Location: item_details.php?item_id=$itemId");
+            header("Location: item_details.php?item_id=$itemId&success=true");
+            exit;
         } else {
             echo "Error updating item purchased status.";
         }

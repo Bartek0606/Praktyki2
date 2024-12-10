@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Set a session variable to indicate a successful update
     $_SESSION['update_success'] = true;
 
-    // Redirect to the updated item details page without displaying the success in the URL
+    // Redirect to the updated item details page
     header("Location: item_details.php?item_id=$itemId");
     exit;
 }
