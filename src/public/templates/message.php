@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message_content'])) {
 }
 // Delete message
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_message_id'])) {
-    $deleteMessageId = intval($_POST['delete_message_id']);
+    $deleteMessageId = $_POST['delete_message_id'];
     $sql_delete = "DELETE FROM messages WHERE message_id = ? AND sender_id = ?";
     $stmt_delete = $conn->prepare($sql_delete);
     $stmt_delete->bind_param("ii", $deleteMessageId, $userId);
@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_message_id']))
 
 // Edit message
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_message_id'])) { 
-    $editMessageId = intval($_POST['edit_message_id']); 
+    $editMessageId = $_POST['edit_message_id']; 
     $newContent = trim($_POST['new_message_content']); 
     if (!empty($newContent)) { 
         $sql_edit = "UPDATE messages SET content = ? WHERE message_id = ? AND sender_id = ?"; 
@@ -95,7 +95,7 @@ $result_messages = $stmt_messages->get_result();
 </header>
 <main class="flex-grow container mx-auto mt-6 p-4">
     <div class="bg-gray-600 shadow-md rounded-lg border border-gray-200 p-6 flex flex-col h-[70vh]">
-        <h1 class="text-2xl font-bold text-white mb-6">Messages with <?php echo '<a href="user.php?id=' . urlencode($profileUserId) . '" class="text-white hover:underline">' . htmlspecialchars($profileUserName, ENT_QUOTES, 'UTF-8') . '</a>'; ?></h1>
+        <h1 class="text-2xl font-bold text-white mb-6">Messages with <?php echo '<a href="user.php?id=' . $profileUserId. '" class="text-white hover:underline">' . $profileUserName. '</a>'; ?></h1>
         <div class="flex-grow overflow-y-auto space-y-4 px-4">
             <?php
             if ($result_messages->num_rows > 0) {
@@ -125,9 +125,7 @@ $result_messages = $stmt_messages->get_result();
                             <!-- Hidden Edit Form -->
                             <form id="edit-form-<?php echo $row['message_id']; ?>" method="POST" style="display: none;" class="mt-4 flex flex-col space-y-2">
                                 <input type="hidden" name="edit_message_id" value="<?php echo $row['message_id']; ?>">
-                                <!-- Input Field -->
                                 <textarea name="new_message_content" rows="2" placeholder="Edit your message..." class="border border-gray-300 rounded-lg p-2 text-sm w-full focus:ring-2 focus:ring-blue-400 focus:outline-none text-black"></textarea>
-                                <!-- Save and Cancel Buttons -->
                                 <div class="flex justify-end space-x-2">
                                     <button type="submit" class="bg-green-500 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:bg-green-600 focus:ring-2 focus:ring-green-400 focus:outline-none">
                                         Save
