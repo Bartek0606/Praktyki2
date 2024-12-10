@@ -347,7 +347,6 @@ $image_src = '/src/public/image/default.png';  // Zmienna z pełną ścieżką d
         header("Location: " . $_SERVER['REQUEST_URI']);
         exit();
     }
- 
     if ($result_like->num_rows > 0): ?>
         <div class="posts space-y-4">
             <?php while ($like = $result_like->fetch_assoc()):
@@ -369,11 +368,14 @@ $image_src = '/src/public/image/default.png';  // Zmienna z pełną ścieżką d
                             <p class="post-autor text-gray-400 mb-2"><strong>By: <?php echo htmlspecialchars($like['author_username']); ?></strong></p>
                             <p class="text-gray-300 mb-4"><?php echo $like['content']; ?></p>
                             <p class="post-date text-gray-400"><strong>Date: </strong><?php echo htmlspecialchars($like['created_at']); ?></p>
-                            <form method="POST" action="">
-                                <p class="text-white text-lg mt-1">Likes: <?php echo $like['like_count']; ?></p>
-                                <input type="hidden" name="post_id" value="<?php echo $like['post_id']; ?>">
-                                <button class="heart <?php echo $isLiked ? 'liked' : ''; ?>" name="like"></button>
-                            </form>
+                            <form method="POST" action="" class="relative" id="like-form-<?php echo $row['post_id']; ?>">
+                                <input type="hidden" name="post_id" value="<?php echo $row['post_id']; ?>">
+                                <button type="submit" name="like" class="like-btn absolute bottom-10 right-10 bg-none border-none cursor-pointer">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="<?php echo $isLiked ? 'red' : 'none'; ?>" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                    </svg>
+                                </button>
+
                         </div>
                     </div>
                 </a>
