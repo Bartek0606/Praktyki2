@@ -50,56 +50,33 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-document.addEventListener('DOMContentLoaded', () => {
-    const popupContainer = document.getElementById('popup-container');
-    const popupContent = document.getElementById('popup-content');
-    const popupTitle = document.getElementById('popup-title');
-    const closePopup = document.getElementById('close-popup');
+document.addEventListener("DOMContentLoaded", () => {
+  const modal = document.getElementById("modal");
+  const modalContent = document.getElementById("modal-content");
+  const modalTitle = document.getElementById("modal-title");
+  const closeModal = document.getElementById("close-modal");
 
-    // Funkcja do otwierania popupu
-    function openPopup(title, type) {
-        popupTitle.textContent = title;
-        popupContent.innerHTML = "<p class='text-gray-400'>Loading...</p>";
+  // Close modal on click
+  closeModal.addEventListener("click", () => {
+    modal.classList.add("hidden");
+    modalContent.innerHTML = "";
+  });
 
-        // Pobranie danych z serwera
-        fetch(`fetch_followers_following.php?type=${type}&user_id=<?php echo $profileUserId; ?>`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.length > 0) {
-                    const list = data.map(user => `
-                        <div class="flex items-center space-x-4 p-2 hover:bg-gray-600 rounded-md">
-                            <img src="${user.profile_picture}" alt="${user.username}'s profile picture" class="w-12 h-12 rounded-full">
-                            <div>
-                                <p class="text-white font-semibold">${user.username}</p>
-                                <p class="text-gray-400">${user.full_name || ''}</p>
-                            </div>
-                        </div>
-                    `).join('');
-                    popupContent.innerHTML = list;
-                } else {
-                    popupContent.innerHTML = "<p class='text-gray-400'>No users to display.</p>";
-                }
-            })
-            .catch(error => {
-                popupContent.innerHTML = "<p class='text-red-500'>An error occurred while loading data.</p>";
-                console.error(error);
-            });
+  // Function to show modal
+  window.showModal = async (type, userId) => {
+    modalTitle.textContent = `${type}`;
+    modal.classList.remove("hidden");
 
-        popupContainer.classList.remove('hidden');
+    try {
+      const response = await fetch(
+        `fetch_${type.toLowerCase()}.php?user_id=${userId}`
+      );
+      if (!response.ok) throw new Error("Error fetching data.");
+      const data = await response.text();
+      modalContent.innerHTML = data;
+    } catch (error) {
+      modalContent.innerHTML =
+        '<p class="text-red-500">Failed to load data. Please try again later.</p>';
     }
-
-    // Obsługa zamykania popupu
-    closePopup.addEventListener('click', () => {
-        popupContainer.classList.add('hidden');
-    });
-
-    // Obsługa kliknięcia w "Followers" i "Following"
-    document.getElementById('show-followers').addEventListener('click', () => {
-        openPopup('Followers', 'followers');
-    });
-
-    document.getElementById('show-following').addEventListener('click', () => {
-        openPopup('Following', 'following');
-    });
+  };
 });
-

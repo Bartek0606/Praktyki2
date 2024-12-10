@@ -140,6 +140,13 @@ $stmt_posts_count->execute();
 $result_posts_count = $stmt_posts_count->get_result();
 $posts_count = $result_posts_count->fetch_assoc()['posts_count'];
 
+$sql_posts_count = "SELECT COUNT(*) AS posts_count FROM posts WHERE user_id = ?";
+$stmt_posts_count = $conn->prepare($sql_posts_count);
+$stmt_posts_count->bind_param("i", $profileUserId);
+$stmt_posts_count->execute();
+$result_posts_count = $stmt_posts_count->get_result();
+$posts_count = $result_posts_count->fetch_assoc()['posts_count'];
+
 ?>
 
 <!DOCTYPE html>
@@ -197,36 +204,22 @@ $image_src = '/src/public/image/default.png';  // Zmienna z pełną ścieżką d
 
                 <div class="follow-info flex space-x-8 text-white">
                     <div>
-                        <p class="text-lg font-semibold"><?php echo $followers_count; ?></p>
-                        <p class="text-gray-300">
-                            <button id="show-followers" class="hover:underline">Followers</button>
-                        </p>
+                        <p class="text-lg font-semibold"><?php echo $posts_count; ?></p>
+                        <p class="text-gray-300">Posts</p>
                     </div>
-                    <div>
+                    <div class="cursor-pointer" onclick="showModal('Followers', <?php echo $profileUserId; ?>)">
+                        <p class="text-lg font-semibold"><?php echo $followers_count; ?></p>
+                        <p class="text-gray-300">Followers</p>
+                    </div>
+                    <div class="cursor-pointer" onclick="showModal('Following', <?php echo $profileUserId; ?>)">
                         <p class="text-lg font-semibold"><?php echo $following_count; ?></p>
-                        <p class="text-gray-300">
-                            <button id="show-following" class="hover:underline">Following</button>
-                        </p>
+                        <p class="text-gray-300">Following</p>
                     </div>
                 </div>
 
-
             </div>
         </div>
     </div>
-
-    <div id="popup-container" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-        <div class="bg-gray-700 w-11/12 md:w-2/3 lg:w-1/2 p-6 rounded-lg shadow-lg">
-            <div class="flex justify-between items-center mb-4">
-                <h3 id="popup-title" class="text-xl font-bold text-white"></h3>
-                <button id="close-popup" class="text-gray-400 hover:text-gray-200 text-xl font-bold">&times;</button>
-            </div>
-            <div id="popup-content" class="text-gray-300 space-y-4">
-                <!-- Lista followers/following będzie dynamicznie ładowana -->
-            </div>
-        </div>
-    </div>
-
 
     <!-- Sekcja przycisków na dole -->
     <div class="toggle-buttons flex justify-center mt-6 space-x-4">
@@ -251,7 +244,16 @@ $image_src = '/src/public/image/default.png';  // Zmienna z pełną ścieżką d
     </div>
 </div>
 
-
+<!-- Modal -->
+<div id="modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
+    <div class="bg-gray-800 rounded-lg w-3/4 max-w-xl p-6">
+        <div class="flex justify-between items-center">
+            <h2 id="modal-title" class="text-xl font-bold text-white"></h2>
+            <button id="close-modal" class="text-white text-lg">&times;</button>
+        </div>
+        <div id="modal-content" class="mt-4 text-gray-300"></div>
+    </div>
+</div>
 
 
   <!-- Posty użytkownika -->
@@ -434,10 +436,6 @@ $image_src = '/src/public/image/default.png';  // Zmienna z pełną ścieżką d
         <p class="text-gray-400">No items to display.</p>
     <?php endif; ?>
 </div>
-
-
-
-
 
 </main>
 </body>
