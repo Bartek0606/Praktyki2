@@ -1,4 +1,5 @@
 <?php
+ob_start();
 session_start();
 // Include required files
 include '../../../db_connection.php';
