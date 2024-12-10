@@ -26,12 +26,12 @@ if (!isset($_GET['item_id']) || !is_numeric($_GET['item_id'])) {
 
 $itemId = $_GET['item_id'];
 
-// Fetch the item details, including owner information
-$sql_item = "SELECT i.item_id, i.name, i.image, i.description, i.price, i.created_at, c.name AS category_name, u.user_id, u.username
-             FROM items i
-             LEFT JOIN categories c ON i.category_id = c.category_id
-             LEFT JOIN users u ON i.user_id = u.user_id
-             WHERE i.item_id = ?";
+// Fetch the item details, including owner information and purchase status
+$sql_item = "SELECT i.item_id, i.name, i.image, i.description, i.price, i.created_at, i.purchased, c.name AS `category_name`, u.user_id, u.username
+FROM items i
+LEFT JOIN categories c ON i.category_id = c.category_id
+LEFT JOIN users u ON i.user_id = u.user_id
+WHERE i.item_id = ?;";
 $stmt = $conn->prepare($sql_item);
 $stmt->bind_param("i", $itemId);
 $stmt->execute();
@@ -124,11 +124,15 @@ $user_items_result = $stmt_user_items->get_result();
                 <?php endif; ?>
 
                 <!-- Purchase Button -->
-                <?php if ($isLoggedIn && $userId != $item['user_id']): ?>
+                <?php if ($isLoggedIn && $userId != $item['user_id'] && !$item['purchased']): ?>
                     <form action="purchase.php" method="POST" class="mt-6">
                         <input type="hidden" name="item_id" value="<?php echo htmlspecialchars($item['item_id']); ?>">
                         <button type="submit" name="purchase" class="w-full py-3 px-6 bg-green-500 text-white font-bold rounded-lg hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-green-400 transition ease-in-out duration-150">Buy Now</button>
                     </form>
+                <?php elseif ($item['purchased']): ?>
+                    <div class="mt-6 py-3 px-6 bg-gray-600 text-gray-400 rounded-lg text-center">
+                        Item already purchased
+                    </div>
                 <?php endif; ?>
             </div>
         </div>

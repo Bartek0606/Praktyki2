@@ -35,8 +35,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['purchase'])) {
 
     // Execute the statement
     if ($stmt->execute()) {
-        $_SESSION['purchase_success'] = true;
-        header("Location: item_details.php?item_id=$itemId");
+        // Update the purchased status for the item
+        $sql_update_item = "UPDATE items SET purchased = 1 WHERE item_id = ?";
+        $stmt_update = $conn->prepare($sql_update_item);
+        $stmt_update->bind_param("i", $itemId);
+
+        if ($stmt_update->execute()) {
+            $_SESSION['purchase_success'] = true;
+            header("Location: item_details.php?item_id=$itemId");
+        } else {
+            echo "Error updating item purchased status.";
+        }
+
+        $stmt_update->close();
     } else {
         echo "Error processing purchase.";
     }
