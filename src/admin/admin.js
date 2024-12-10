@@ -25,3 +25,17 @@ function closePopup() {
   document.getElementById("edit-popup").style.display = "none";
   document.getElementById("overlay").style.display = "none";
 }
+
+function showForm(selectedForm) {
+  const forms = document.querySelectorAll(".form-section");
+  forms.forEach((form) => (form.style.display = "none")); // Ukryj wszystkie formularze
+
+  if (selectedForm) {
+    document.getElementById(selectedForm).style.display = "block"; // Pokaż wybrany formularz
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  // Ukryj wszystkie formularze na starcie
+  showForm("");
+});
