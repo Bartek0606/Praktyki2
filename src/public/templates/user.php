@@ -140,8 +140,6 @@ $stmt_posts_count->execute();
 $result_posts_count = $stmt_posts_count->get_result();
 $posts_count = $result_posts_count->fetch_assoc()['posts_count'];
 
-
-
 ?>
 
 <!DOCTYPE html>
@@ -199,22 +197,36 @@ $image_src = '/src/public/image/default.png';  // Zmienna z pełną ścieżką d
 
                 <div class="follow-info flex space-x-8 text-white">
                     <div>
-                        <p class="text-lg font-semibold"><?php echo $posts_count; ?></p>
-                        <p class="text-gray-300">Posts</p>
-                    </div>
-                    <div>
                         <p class="text-lg font-semibold"><?php echo $followers_count; ?></p>
-                        <p class="text-gray-300">Followers</p>
+                        <p class="text-gray-300">
+                            <button id="show-followers" class="hover:underline">Followers</button>
+                        </p>
                     </div>
                     <div>
                         <p class="text-lg font-semibold"><?php echo $following_count; ?></p>
-                        <p class="text-gray-300">Following</p>
+                        <p class="text-gray-300">
+                            <button id="show-following" class="hover:underline">Following</button>
+                        </p>
                     </div>
                 </div>
+
 
             </div>
         </div>
     </div>
+
+    <div id="popup-container" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+        <div class="bg-gray-700 w-11/12 md:w-2/3 lg:w-1/2 p-6 rounded-lg shadow-lg">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="popup-title" class="text-xl font-bold text-white"></h3>
+                <button id="close-popup" class="text-gray-400 hover:text-gray-200 text-xl font-bold">&times;</button>
+            </div>
+            <div id="popup-content" class="text-gray-300 space-y-4">
+                <!-- Lista followers/following będzie dynamicznie ładowana -->
+            </div>
+        </div>
+    </div>
+
 
     <!-- Sekcja przycisków na dole -->
     <div class="toggle-buttons flex justify-center mt-6 space-x-4">

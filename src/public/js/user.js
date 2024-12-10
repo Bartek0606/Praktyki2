@@ -48,3 +48,58 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const popupContainer = document.getElementById('popup-container');
+    const popupContent = document.getElementById('popup-content');
+    const popupTitle = document.getElementById('popup-title');
+    const closePopup = document.getElementById('close-popup');
+
+    // Funkcja do otwierania popupu
+    function openPopup(title, type) {
+        popupTitle.textContent = title;
+        popupContent.innerHTML = "<p class='text-gray-400'>Loading...</p>";
+
+        // Pobranie danych z serwera
+        fetch(`fetch_followers_following.php?type=${type}&user_id=<?php echo $profileUserId; ?>`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    const list = data.map(user => `
+                        <div class="flex items-center space-x-4 p-2 hover:bg-gray-600 rounded-md">
+                            <img src="${user.profile_picture}" alt="${user.username}'s profile picture" class="w-12 h-12 rounded-full">
+                            <div>
+                                <p class="text-white font-semibold">${user.username}</p>
+                                <p class="text-gray-400">${user.full_name || ''}</p>
+                            </div>
+                        </div>
+                    `).join('');
+                    popupContent.innerHTML = list;
+                } else {
+                    popupContent.innerHTML = "<p class='text-gray-400'>No users to display.</p>";
+                }
+            })
+            .catch(error => {
+                popupContent.innerHTML = "<p class='text-red-500'>An error occurred while loading data.</p>";
+                console.error(error);
+            });
+
+        popupContainer.classList.remove('hidden');
+    }
+
+    // Obsługa zamykania popupu
+    closePopup.addEventListener('click', () => {
+        popupContainer.classList.add('hidden');
+    });
+
+    // Obsługa kliknięcia w "Followers" i "Following"
+    document.getElementById('show-followers').addEventListener('click', () => {
+        openPopup('Followers', 'followers');
+    });
+
+    document.getElementById('show-following').addEventListener('click', () => {
+        openPopup('Following', 'following');
+    });
+});
+
