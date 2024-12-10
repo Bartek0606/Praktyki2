@@ -80,7 +80,7 @@ $user_items_result = $stmt_user_items->get_result();
 </header>
 <main class="container mx-auto max-w-4xl px-6 py-12">
     <div class="bg-gray-800 p-8 rounded-lg shadow-lg">
-        <!-- Success Message -->
+        <!-- Success Message Purchase-->
         <?php if (isset($_SESSION['purchase_success']) && $_SESSION['purchase_success']): ?>
             <div class="mb-6 py-3 px-4 bg-green-500 text-white rounded-lg">
                 Purchase successful!
@@ -88,13 +88,22 @@ $user_items_result = $stmt_user_items->get_result();
             <?php unset($_SESSION['purchase_success']); // Clear the success flag ?>
         <?php endif; ?>
 
-        <!-- Success Message -->
+        <!-- Success Message Update-->
         <?php if (isset($_SESSION['update_success']) && $_SESSION['update_success']): ?>
             <div class="mb-6 py-3 px-4 bg-green-500 text-white rounded-lg">
                 Item updated successfully!
             </div>
             <?php unset($_SESSION['update_success']); // Clear the success flag ?>
         <?php endif; ?>
+
+        <!-- Success Message Add-->
+        <?php if (isset($_SESSION['add_item_success']) && $_SESSION['add_item_success']): ?>
+            <div class="mb-6 py-3 px-4 bg-green-500 text-white rounded-lg">
+                Item added successfully!
+            </div>
+            <?php unset($_SESSION['add_item_success']); // Wyczyść flagę sukcesu ?>
+        <?php endif; ?>
+
 
 
         <h1 class="text-3xl font-bold text-orange-400 mb-6"><?php echo htmlspecialchars($item['name']); ?></h1>

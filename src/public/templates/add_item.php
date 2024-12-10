@@ -25,7 +25,6 @@ $navbar = new Navbar($conn, $isLoggedIn, $userId, $userName);
 $message = null;
 $messageClass = "";
 
-// Handling item form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_item'])) {
     $item_name = $conn->real_escape_string($_POST['item_name']);
     $description = $conn->real_escape_string($_POST['description']);
@@ -44,9 +43,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_item'])) {
         ";
 
         if ($conn->query($sql_add_item) === TRUE) {
-            $message = "Item added successfully!";
-            $messageClass = "success";
-            header("Location: items.php");
+            // Pobierz ID nowo dodanego przedmiotu
+            $new_item_id = $conn->insert_id;
+
+            // Ustaw komunikat o sukcesie
+            $_SESSION['add_item_success'] = true;
+
+            // Przekierowanie na stronę szczegółów przedmiotu
+            header("Location: item_details.php?item_id=$new_item_id");
+            exit;
         } else {
             $message = "Error adding item: " . $conn->error;
             $messageClass = "error";
