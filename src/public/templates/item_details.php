@@ -26,12 +26,12 @@ if (!isset($_GET['item_id']) || !is_numeric($_GET['item_id'])) {
 
 $itemId = $_GET['item_id'];
 
-// Fetch the item details, including owner information
-$sql_item = "SELECT i.item_id, i.name, i.image, i.description, i.price, i.created_at, c.name AS category_name, u.user_id, u.username
-             FROM items i
-             LEFT JOIN categories c ON i.category_id = c.category_id
-             LEFT JOIN users u ON i.user_id = u.user_id
-             WHERE i.item_id = ?";
+// Fetch the item details, including owner information and purchase status
+$sql_item = "SELECT i.item_id, i.name, i.image, i.description, i.price, i.created_at, i.purchased, c.name AS `category_name`, u.user_id, u.username
+FROM items i
+LEFT JOIN categories c ON i.category_id = c.category_id
+LEFT JOIN users u ON i.user_id = u.user_id
+WHERE i.item_id = ?;";
 $stmt = $conn->prepare($sql_item);
 $stmt->bind_param("i", $itemId);
 $stmt->execute();
@@ -80,12 +80,31 @@ $user_items_result = $stmt_user_items->get_result();
 </header>
 <main class="container mx-auto max-w-4xl px-6 py-12">
     <div class="bg-gray-800 p-8 rounded-lg shadow-lg">
-        <!-- Success Message -->
-        <?php if (isset($_GET['success'])): ?>
+        <!-- Success Message Purchase-->
+        <?php if (isset($_SESSION['purchase_success']) && $_SESSION['purchase_success']): ?>
             <div class="mb-6 py-3 px-4 bg-green-500 text-white rounded-lg">
-                Your changes were saved successfully!
+                Purchase successful!
             </div>
+            <?php unset($_SESSION['purchase_success']); // Clear the success flag ?>
         <?php endif; ?>
+
+        <!-- Success Message Update-->
+        <?php if (isset($_SESSION['update_success']) && $_SESSION['update_success']): ?>
+            <div class="mb-6 py-3 px-4 bg-green-500 text-white rounded-lg">
+                Item updated successfully!
+            </div>
+            <?php unset($_SESSION['update_success']); // Clear the success flag ?>
+        <?php endif; ?>
+
+        <!-- Success Message Add-->
+        <?php if (isset($_SESSION['add_item_success']) && $_SESSION['add_item_success']): ?>
+            <div class="mb-6 py-3 px-4 bg-green-500 text-white rounded-lg">
+                Item added successfully!
+            </div>
+            <?php unset($_SESSION['add_item_success']); // Wyczyść flagę sukcesu ?>
+        <?php endif; ?>
+
+
 
         <h1 class="text-3xl font-bold text-orange-400 mb-6"><?php echo htmlspecialchars($item['name']); ?></h1>
 
@@ -121,6 +140,18 @@ $user_items_result = $stmt_user_items->get_result();
                     <form action="message.php?id=<?php echo $item['user_id']; ?>" method="POST" class="mt-6">
                         <button type="submit" class="w-full py-3 px-6 bg-orange-500 text-white font-bold rounded-lg hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-400 transition ease-in-out duration-150">Message the Seller</button>
                     </form>
+                <?php endif; ?>
+
+                <!-- Purchase Button -->
+                <?php if ($isLoggedIn && $userId != $item['user_id'] && !$item['purchased']): ?>
+                    <form action="purchase.php" method="POST" class="mt-6">
+                        <input type="hidden" name="item_id" value="<?php echo htmlspecialchars($item['item_id']); ?>">
+                        <button type="submit" name="purchase" class="w-full py-3 px-6 bg-green-500 text-white font-bold rounded-lg hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-green-400 transition ease-in-out duration-150">Buy Now</button>
+                    </form>
+                <?php elseif ($item['purchased']): ?>
+                    <div class="mt-6 py-3 px-6 bg-gray-600 text-white-400 rounded-lg text-center">
+                        Item already purchased
+                    </div>
                 <?php endif; ?>
             </div>
         </div>

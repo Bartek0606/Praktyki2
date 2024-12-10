@@ -16,7 +16,7 @@ $userId = $isLoggedIn ? $_SESSION['user_id'] : null;
 $userName = $isLoggedIn ? $_SESSION['username'] : null;
 
 if (!$isLoggedIn) {
-    header("Location: login.php"); // Przekieruj na stronę logowania, jeśli użytkownik nie jest zalogowany
+    header("Location: login.php"); // Redirect to login page if not logged in
     exit;
 }
 
@@ -25,28 +25,33 @@ $navbar = new Navbar($conn, $isLoggedIn, $userId, $userName);
 $message = null;
 $messageClass = "";
 
-// Obsługa formularza dodawania przedmiotu
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_item'])) {
     $item_name = $conn->real_escape_string($_POST['item_name']);
     $description = $conn->real_escape_string($_POST['description']);
     $price = (float)$_POST['price'];
     $category_id = (int)$_POST['category'];
 
-    // Obsługa przesłanego obrazu
+    // Handle uploaded image
     if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
         $image = file_get_contents($_FILES['image']['tmp_name']);
         $image = $conn->real_escape_string($image);
 
-        // Wstaw nowy przedmiot do bazy danych
+        // Insert new item into the database
         $sql_add_item = "
-            INSERT INTO items (name, description, price, category_id, image, created_at, user_id)
-            VALUES ('$item_name', '$description', $price, $category_id, '$image', NOW(), $userId)
+            INSERT INTO items (name, description, price, category_id, image, purchased, created_at, user_id)
+            VALUES ('$item_name', '$description', $price, $category_id, '$image', '0', NOW(), $userId)
         ";
 
         if ($conn->query($sql_add_item) === TRUE) {
-            $message = "Item added successfully!";
-            $messageClass = "success";
-            header("Location: items.php");
+            // Pobierz ID nowo dodanego przedmiotu
+            $new_item_id = $conn->insert_id;
+
+            // Ustaw komunikat o sukcesie
+            $_SESSION['add_item_success'] = true;
+
+            // Przekierowanie na stronę szczegółów przedmiotu
+            header("Location: item_details.php?item_id=$new_item_id");
+            exit;
         } else {
             $message = "Error adding item: " . $conn->error;
             $messageClass = "error";
@@ -126,4 +131,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_item'])) {
 $conn->close();
 ob_end_flush();
 ?>
-
