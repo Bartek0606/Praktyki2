@@ -1,5 +1,4 @@
 <?php
-
 class Comment {
     private $conn;
 
@@ -45,3 +44,22 @@ class Comment {
         return $this->getAllPCom($search_query);
     }
 }
+
+session_start();
+$isLoggedIn = isset($_SESSION['user_id']);
+$userId = $isLoggedIn ? $_SESSION['user_id'] : null;
+
+if (!$isLoggedIn) {
+    header("Location: /../../public/templates/login.php");
+    exit();
+}
+
+$commentObj = new Comment($conn);
+
+if (isset($_GET['delete_comment_id'])) {
+    $comment_id = (int)$_GET['delete_comment_id'];
+    $commentObj->deleteComment($comment_id); 
+}
+
+$search_query = isset($_GET['search_query']) ? $_GET['search_query'] : '';
+$comments = $commentObj->getAllPCom($search_query);
