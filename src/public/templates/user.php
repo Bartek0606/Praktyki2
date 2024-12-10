@@ -131,15 +131,15 @@ if ($isLoggedIn && isset($_POST['follow'])) {
     header("Location: " . $_SERVER['PHP_SELF'] . "?id=" . $profileUserId);
     exit();
 }
- 
-// Get the number of posts
+
+
 $sql_posts_count = "SELECT COUNT(*) AS posts_count FROM posts WHERE user_id = ?";
 $stmt_posts_count = $conn->prepare($sql_posts_count);
 $stmt_posts_count->bind_param("i", $profileUserId);
 $stmt_posts_count->execute();
 $result_posts_count = $stmt_posts_count->get_result();
 $posts_count = $result_posts_count->fetch_assoc()['posts_count'];
- 
+
 ?>
  
 <!DOCTYPE html>
@@ -212,29 +212,27 @@ $image_src = '/src/public/image/default.png';  // Zmienna z pełną ścieżką d
                     <h3 class="text-xl font-semibold text-white">Bio:</h3>
                     <p><?php echo nl2br(htmlspecialchars($user['bio'])); ?></p>
                 </div>
- 
+
                 <div class="follow-info flex space-x-8 text-white">
-                <div>
-                        <p class="text-lg font-semibold"><?php echo $posts_count; ?></p>
-                        <p class="text-gray-300">
-                            <button id="show-followers" class="hover:underline">Posts</button>
-                        </p>
-                    </div>
                     <div>
+                        <p class="text-lg font-semibold"><?php echo $posts_count; ?></p>
+                        <p class="text-gray-300">Posts</p>
+
+                    </div>
+                    <div class="cursor-pointer" onclick="showModal('Followers', <?php echo $profileUserId; ?>)">
                         <p class="text-lg font-semibold"><?php echo $followers_count; ?></p>
                         <p class="text-gray-300">
                             <button id="show-followers" class="hover:underline">Followers</button>
                         </p>
                     </div>
-                    <div>
+                    <div class="cursor-pointer" onclick="showModal('Following', <?php echo $profileUserId; ?>)">
                         <p class="text-lg font-semibold"><?php echo $following_count; ?></p>
                         <p class="text-gray-300">
                             <button id="show-following" class="hover:underline">Following</button>
                         </p>
                     </div>
                 </div>
- 
- 
+
             </div>
         </div>
     </div>
@@ -273,7 +271,18 @@ $image_src = '/src/public/image/default.png';  // Zmienna z pełną ścieżką d
         </button>
     </div>
 </div>
- 
+      
+<!-- Modal -->
+<div id="modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
+    <div class="bg-gray-800 rounded-lg w-3/4 max-w-xl p-6">
+        <div class="flex justify-between items-center">
+            <h2 id="modal-title" class="text-xl font-bold text-white"></h2>
+            <button id="close-modal" class="text-white text-lg">&times;</button>
+        </div>
+        <div id="modal-content" class="mt-4 text-gray-300"></div>
+    </div>
+</div>
+
   <!-- Posty użytkownika -->
   <div id="post-container" class="container posts-container mt-6 mx-auto bg-gray-600 p-6 rounded-lg shadow-lg ">
     <h2 class="text-2xl font-bold text-white mb-4">Your Posts
@@ -451,7 +460,6 @@ $image_src = '/src/public/image/default.png';  // Zmienna z pełną ścieżką d
         <p class="text-gray-400">No items to display.</p>
     <?php endif; ?>
 </div>
- 
 </main>
 </body>
 </html>

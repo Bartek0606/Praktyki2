@@ -48,3 +48,35 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const modal = document.getElementById("modal");
+  const modalContent = document.getElementById("modal-content");
+  const modalTitle = document.getElementById("modal-title");
+  const closeModal = document.getElementById("close-modal");
+
+  // Close modal on click
+  closeModal.addEventListener("click", () => {
+    modal.classList.add("hidden");
+    modalContent.innerHTML = "";
+  });
+
+  // Function to show modal
+  window.showModal = async (type, userId) => {
+    modalTitle.textContent = `${type}`;
+    modal.classList.remove("hidden");
+
+    try {
+      const response = await fetch(
+        `fetch_${type.toLowerCase()}.php?user_id=${userId}`
+      );
+      if (!response.ok) throw new Error("Error fetching data.");
+      const data = await response.text();
+      modalContent.innerHTML = data;
+    } catch (error) {
+      modalContent.innerHTML =
+        '<p class="text-red-500">Failed to load data. Please try again later.</p>';
+    }
+  };
+});
