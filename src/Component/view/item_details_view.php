@@ -30,7 +30,7 @@
             <!-- Sekcja szczegółów -->
             <div class="flex-grow">
                 <p><strong class="text-orange-400">Owner:</strong> 
-                    <a class="text-white font-bold  "href="user.php?id=<?php echo htmlspecialchars($item['user_id']); ?>" class="text-blue-400 hover:underline">
+                    <a href="user.php?id=<?php echo htmlspecialchars($item['user_id']); ?>" class="text-blue-400 hover:underline">
                         <?php echo htmlspecialchars($item['username']); ?>
                     </a>
                 </p>
@@ -38,6 +38,41 @@
                 <p><strong class="text-orange-400">Category:</strong> <?php echo htmlspecialchars($item['category_name'] ?? 'Uncategorized'); ?></p>
                 <p><strong class="text-orange-400">Price:</strong> <?php echo htmlspecialchars($item['price']); ?> zł</p>
                 <p><strong class="text-orange-400">Posted on:</strong> <?php echo date("F j, Y, g:i a", strtotime($item['created_at'])); ?></p>
+
+                <!-- Przyciski akcji -->
+                <!-- Purchase, Message, and Edit Buttons -->
+<div class="mt-6 flex flex-col space-y-4">
+    <!-- Message Button -->
+    <?php if ($isLoggedIn && $userId != $item['user_id']): ?>
+        <a href="message.php?id=<?php echo htmlspecialchars($item['user_id']); ?>" 
+           class="py-2 px-6 bg-blue-500 text-white font-bold rounded-lg text-center hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 transition ease-in-out duration-150">
+           Message Seller
+        </a>
+    <?php endif; ?>
+
+    <!-- Purchase Button -->
+    <?php if ($isLoggedIn && $userId != $item['user_id'] && !$item['purchased']): ?>
+        <form action="purchase.php" method="POST">
+            <input type="hidden" name="item_id" value="<?php echo htmlspecialchars($item['item_id']); ?>">
+            <button type="submit" name="purchase" class="w-full py-2 px-6 bg-green-500 text-white font-bold rounded-lg text-center hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-green-400 transition ease-in-out duration-150">
+                Buy Now
+            </button>
+        </form>
+    <?php elseif ($item['purchased']): ?>
+        <div class="w-full py-2 px-6 bg-gray-600 text-white-400 rounded-lg text-center">
+            Item already purchased
+        </div>
+    <?php endif; ?>
+
+    <!-- Edit Button (only if the item is owned by the logged-in user) -->
+    <?php if ($isLoggedIn && $userId == $item['user_id']): ?>
+        <a href="edit_item.php?item_id=<?php echo htmlspecialchars($item['item_id']); ?>" 
+           class="py-2 px-6 bg-yellow-500 text-white font-bold rounded-lg text-center hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition ease-in-out duration-150">
+           Edit Item
+        </a>
+    <?php endif; ?>
+</div>
+
             </div>
         </div>
     </div>
