@@ -156,26 +156,6 @@ $user_items_result = $stmt_user_items->get_result();
             </div>
         </div>
 
-        <!-- Related Items Section -->
-        <?php if ($related_items_result->num_rows > 0): ?>
-            <div class="mt-12">
-                <h3 class="text-2xl font-bold text-orange-400 mb-6">Related Items</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <?php while ($related = $related_items_result->fetch_assoc()): ?>
-                        <div class="bg-gray-700 p-4 rounded-lg shadow-lg">
-                            <a href="item_details.php?item_id=<?php echo htmlspecialchars($related['item_id']); ?>" class="block">
-                                <?php echo $related['image'] 
-                                    ? "<img src='data:image/jpeg;base64," . base64_encode($related['image']) . "' alt='" . htmlspecialchars($related['name']) . "' class='rounded-t-lg h-48 w-full object-cover' />" 
-                                    : '<div class="bg-gray-600 h-48 flex items-center justify-center text-gray-400">No Image</div>'; ?>
-                                <h4 class="text-lg font-bold text-white mt-4"><?php echo htmlspecialchars($related['name']); ?></h4>
-                                <p class="text-orange-400"><strong>Price:</strong> <?php echo htmlspecialchars($related['price']); ?> zł</p>
-                            </a>
-                        </div>
-                    <?php endwhile; ?>
-                </div>
-            </div>
-        <?php endif; ?>
-
         <!-- User's Other Items Section -->
         <?php if ($user_items_result->num_rows > 0): ?>
             <div class="mt-12">
