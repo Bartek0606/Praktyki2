@@ -19,7 +19,7 @@ $sidebar = new Sidebar($conn, $userId);
    <?php echo $sidebar->getSidebarHtml(); ?>
    <main class="dashboard bg-gray-50 ml-64 mt-14 min-h-screen w-full">
       <div class="comments-container m-auto space-y-4 w-full">
-      <?php // Ładujemy widok
+      <?php 
             include __DIR__ . '/Views/comment_view.php'; ?>
       </div>
    </main>
