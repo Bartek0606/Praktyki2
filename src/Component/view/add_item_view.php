@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../../public/js/add_item.js"></script>
     <title>Add Item • HobbyHub</title>
 </head>
 <body class="bg-gray-900 text-white">
@@ -20,7 +21,7 @@
             </div>
         <?php endif; ?>
 
-        <form method="POST" action="add_item_function.php" enctype="multipart/form-data" class="space-y-6">
+        <form method="POST" action="../../function/add_item_function.php" enctype="multipart/form-data" class="space-y-6" onsubmit="return validateForm()">
             <div class="space-y-2">
                 <label for="item_name" class="block text-lg font-semibold">Item Name:</label>
                 <input type="text" name="item_name" id="item_name" class="w-full p-3 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-orange-400" required>
@@ -59,6 +60,15 @@
 
             <button type="submit" name="add_item" class="w-full py-3 bg-orange-500 text-white font-bold rounded-lg hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-400">Add Item</button>
         </form>
+    </div>
+
+    <!-- Error Modal -->
+    <div id="errorModal" class="fixed inset-0 flex items-center justify-center hidden bg-black bg-opacity-50">
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg text-white max-w-xs w-full">
+            <h3 class="text-lg font-bold mb-2">Error</h3>
+            <p>Please upload an image before submitting.</p>
+            <button onclick="document.getElementById('errorModal').classList.add('hidden')" class="mt-4 py-1 px-3 bg-orange-500 text-white rounded-lg hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-400">Close</button>
+        </div>
     </div>
 </main>
 </body>
