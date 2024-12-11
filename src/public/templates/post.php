@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
 }
 
 function isOwner($userId, $ownerId) {
-    return $userId === $ownerId;
+    return (int)$userId === (int)$ownerId;
 }
 
 // Retrieve post ID from the URL
