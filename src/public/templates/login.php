@@ -3,7 +3,8 @@ ob_start();
 session_start();
 
 include '../../../db_connection.php';
-include '../../function.php';
+include '../../function/function.php';
+include '../../function/login_function.php';
 
 $emailError = '';
 $passwordError = '';

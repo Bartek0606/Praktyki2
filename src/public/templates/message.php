@@ -4,7 +4,8 @@ session_start();
 
 include '../../../db_connection.php';
 include '../../Component/navbar.php';
-include '../../function.php';
+include '../../function/function.php';
+include '../../function/message_function.php';
 
 $isLoggedIn = isset($_SESSION['user_id']);
 $userId = $isLoggedIn ? $_SESSION['user_id'] : null;

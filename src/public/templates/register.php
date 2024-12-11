@@ -1,8 +1,8 @@
 <?php
 ob_start(); 
 require_once '../../../db_connection.php';
-include '../../function.php';
-
+include '../../function/function.php';
+include '../../function/register_function.php';
 $emailError = '';
 $passwordError = '';
 $confirmPasswordError = '';
