@@ -1,6 +1,19 @@
 <?php
-include __DIR__ . '/Views/events_view.php';
-include  '../../../db_connection.php';
+include __DIR__ . '/../../db_connection.php';
+include 'popups_events.php';
+include __DIR__ . '/logic/event_logic.php';
+include_once 'sidebar_admin.php';
+
+session_start();
+$isLoggedIn = isset($_SESSION['user_id']);
+$userId = $isLoggedIn ? $_SESSION['user_id'] : null;
+
+if (!$isLoggedIn) {
+    header("Location: /../../public/templates/login.php");
+    exit;
+}
+
+$sidebar = new Sidebar($conn, $userId);
 ?>
 
 <!DOCTYPE html>
@@ -8,20 +21,19 @@ include  '../../../db_connection.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - Events</title>
-    <link rel="stylesheet" href="https://cdn.tailwindcss.com">
+    <title>Admin Panel</title>
+    <script src="admin.js" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
 <div class="admin-panel flex">
-    <main class="dashboard bg-gray-50 ml-64 mt-24 p-8 min-h-screen w-full">
-        <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Events</h2>
-        <div class="flex justify-center mb-6">
-            <button class="add-event-btn bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition duration-200" onclick="openAddEventPopup()">Add Event</button>
-        </div>
-        <?php include 'Views/events_view.php'; ?>
-    </main>
+    <?php echo $sidebar->getSidebarHtml(); ?>
+        <?php include __DIR__ . '/Views/event_view.php'; ?>
 </div>
-<?php include 'Views/popups_events.php'; ?>
-<script src="admin.js"></script>
+<?php
+echo $popupRenderer->renderAddEventPopup($errors, $formData);
+echo $popupRenderer->renderEditEventPopup();
+?>
+
 </body>
 </html>
