@@ -88,7 +88,7 @@
                 <?php endif; ?>
 
                 <?php if ($isLoggedIn && isOwner($userId, $comment['user_id'])): ?>
-                    <button class="ml-2 px-6 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition duration-200" onclick="toggleEditForm(<?php echo $comment['comment_id']; ?>)">Edit Comment</button>
+                    <button class="ml-2 px-6 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition duration-200" onclick="toggleEditForm(<?php echo $comment['comment_id']; ?>)">Edit</button>
                 <?php endif; ?>
             </div>
 
@@ -126,10 +126,12 @@
                 </div>
                 <p class="text-gray-600 mt-2"><?php echo htmlspecialchars($reply['content'], ENT_QUOTES, 'UTF-8'); ?></p>
 
-                <!-- Edit Reply Button -->
-                <?php if ($isLoggedIn && isOwner($userId, $reply['user_id'])): ?>
-                    <button class="ml-2 px-6 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition duration-200" onclick="toggleEditReplyForm(<?php echo $reply['comment_id']; ?>)">Edit Reply</button>
-                <?php endif; ?>
+                <div class="flex justify-start items-center mt-4">
+                    <!-- Edit Reply Button -->
+                    <?php if ($isLoggedIn && isOwner($userId, $reply['user_id'])): ?>
+                        <button class="ml-2 px-6 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition duration-200" onclick="toggleEditReplyForm(<?php echo $reply['comment_id']; ?>)">Edit</button>
+                    <?php endif; ?>
+                </div>
 
                 <!-- Edit Reply Form -->
                 <?php if ($isLoggedIn && isOwner($userId, $reply['user_id'])): ?>
