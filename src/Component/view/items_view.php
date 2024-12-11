@@ -62,7 +62,8 @@
                 <?php
                 $formatted_date = date("F j, Y, g:i a", strtotime($item['created_at']));
                 $image_data = base64_encode($item['image']);
-                $image_html = $item['image'] ? "<img src='data:image/jpeg;base64,$image_data' alt='" . htmlspecialchars($item['name']) . "' class='rounded-lg shadow-md mb-4'>" : '';
+                $image_html = $item['image'] ? "<img src='data:image/jpeg;base64,$image_data' alt='" . htmlspecialchars($item['name']) . "' class='rounded-lg shadow-md mb-4 w-80 h-80 object-cover'>" : '';
+                
                 ?>
                 <div class="bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
                     <a href="item_details.php?item_id=<?php echo htmlspecialchars($item['item_id']); ?>">
