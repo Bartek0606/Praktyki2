@@ -58,7 +58,7 @@
                 <button type="submit" name="submit_comment" class="px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition duration-200">Post Comment</button>
             </form>
         <?php else: ?>
-            <p class="text-red-800 bg-red-100 p-4 rounded-md mb-4">You must be logged in to post a comment.</p>
+            <p class="text-red-800 bg-100 p-4 rounded-md mb-4">You must be logged in to post a comment.</p>
         <?php endif; ?>
 
         <?php if (isset($_SESSION['comment_success'])): ?>
