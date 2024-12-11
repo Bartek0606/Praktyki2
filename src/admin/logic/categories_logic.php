@@ -1,6 +1,6 @@
 <?php
 // Załaduj plik połączenia z bazą danych
-require_once '../../db_connection.php';
+include '../../db_connection.php';
  // Uzupełnij ścieżkę do pliku db_connection.php
 
 // Start sesji i sprawdzanie, czy użytkownik jest zalogowany
