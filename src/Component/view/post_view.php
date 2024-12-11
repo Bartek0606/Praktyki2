@@ -58,7 +58,7 @@
                 <button type="submit" name="submit_comment" class="px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition duration-200">Post Comment</button>
             </form>
         <?php else: ?>
-            <p class="text-red-800 bg-100 p-4 rounded-md mb-4">You must be logged in to post a comment.</p>
+            <p class="text-red-800 bg-red-100 p-4 rounded-md mb-4">You must be logged in to post a comment.</p>
         <?php endif; ?>
 
         <?php if (isset($_SESSION['comment_success'])): ?>
@@ -68,86 +68,79 @@
         <?php if (isset($_SESSION['edit_success'])): ?>
             <p class="text-green-800 bg-green-100 p-4 rounded-md mb-4"><?php echo $_SESSION['edit_success']; unset($_SESSION['edit_success']); ?></p>
         <?php endif; ?>
-        <?php while ($comment = $resultComments->fetch_assoc()): ?>
-            <div class="flex w-full justify-between border rounded-md mb-6">
-                <div class="p-3">
-                    <!-- Comment details -->
-                    <div class="flex gap-3 items-center">
-                        <img src="<?php echo getUserImage($comment['user_id'], $conn); ?>" alt="Profile Image" class="w-8 h-8 rounded-full">
-                        <h3 class="font-bold">
-                            <?php echo '<a href="user.php?id=' . urlencode($comment['user_id']) . '" class="text-blue-600 hover:underline">' . htmlspecialchars($comment['username'], ENT_QUOTES, 'UTF-8') . '</a>'; ?>
-                            <br>
-                            <span class="text-sm text-gray-400 font-normal"><?php echo htmlspecialchars($comment['created_at'], ENT_QUOTES, 'UTF-8'); ?></span>
-                        </h3>
-                    </div>
-                    <p class="text-gray-600 mt-2">
+       <?php while ($comment = $resultComments->fetch_assoc()): ?>
+    <div class="comments-section mt-12">
+    <h2 class="text-2xl font-semibold text-white mb-6">Comments</h2>
+
+    <!-- Wyświetlanie komentarzy -->
+    <?php while ($comment = $resultComments->fetch_assoc()): ?>
+        <div class="comment bg-gray-800 border border-gray-700 rounded-lg p-4 mb-4 shadow-md">
+            <div class="flex items-start">
+                <img src="<?php echo getUserImage($comment['user_id'], $conn); ?>" alt="Profile Image" 
+                     class="w-10 h-10 rounded-full mr-3">
+                <div class="flex-1">
+                    <h3 class="text-lg font-semibold text-blue-400">
+                        <?php echo '<a href="user.php?id=' . urlencode($comment['user_id']) . '" class="hover:underline">' . htmlspecialchars($comment['username'], ENT_QUOTES, 'UTF-8') . '</a>'; ?>
+                    </h3>
+                    <span class="text-sm text-gray-400"><?php echo htmlspecialchars($comment['created_at'], ENT_QUOTES, 'UTF-8'); ?></span>
+                    <p class="text-gray-200 mt-2">
                         <?php echo htmlspecialchars($comment['content'], ENT_QUOTES, 'UTF-8'); ?>
                     </p>
-                    <div class="flex justify-start items-center mt-4">
-                        <?php if ($isLoggedIn): ?>
-                            <button class="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200" onclick="toggleReplyForm(<?php echo $comment['comment_id']; ?>)">Reply</button>
-                        <?php endif; ?>
 
+                    <!-- Przyciski odpowiedzi i edycji -->
+                    <div class="flex mt-4 space-x-2">
+                        <?php if ($isLoggedIn): ?>
+                            <button class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200"
+                                    onclick="toggleReplyForm(<?php echo $comment['comment_id']; ?>)">Reply</button>
+                        <?php endif; ?>
                         <?php if ($isLoggedIn && isOwner($userId, $comment['user_id'])): ?>
-                            <button class="ml-2 px-6 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition duration-200" onclick="toggleEditForm(<?php echo $comment['comment_id']; ?>)">Edit Comment</button>
+                            <button class="ml-2 px-6 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition duration-200"
+                                    onclick="toggleEditForm(<?php echo $comment['comment_id']; ?>)">
+                                Edit Comment
+                            </button>
+
                         <?php endif; ?>
                     </div>
-
-                    <?php if ($isLoggedIn): ?>
-                        <form method="POST" id="reply-form-<?php echo $comment['comment_id']; ?>" style="display:none;" class="mt-4">
-                            <textarea name="comment_content" placeholder="Write your reply..." required class="w-full p-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"></textarea>
-                            <input type="hidden" name="parent_comment_id" value="<?php echo $comment['comment_id']; ?>">
-                            <button type="submit" name="submit_comment" class="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-green-600 transition duration-200">Post Reply</button>
-                        </form>
-                    <?php endif; ?>
-
-                    <?php if ($isLoggedIn && isOwner($userId, $comment['user_id'])): ?>
-                        <form method="POST" id="edit-comment-form-<?php echo $comment['comment_id']; ?>" style="display:none;" class="mt-4">
-                            <textarea name="new_content" required class="w-full p-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 mb-4"><?php echo htmlspecialchars($comment['content'], ENT_QUOTES, 'UTF-8'); ?></textarea>
-                            <input type="hidden" name="comment_id" value="<?php echo $comment['comment_id']; ?>">
-                            <button type="submit" name="edit_comment" class="px-6 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition duration-200">Save Changes</button>
-                        </form>
-                    <?php endif; ?>
                 </div>
             </div>
-        <?php endwhile; ?>
 
-        <!-- Replies -->
-        <?php if (!empty($replies[$comment['comment_id']])): ?>
-            <?php foreach ($replies[$comment['comment_id']] as $reply): ?>
-                <div class="flex w-full justify-between border ml-5 rounded-md mb-6">
-                    <div class="p-3">
-                        <div class="flex gap-3 items-center">
-                            <img src="<?php echo getUserImage($reply['user_id'], $conn); ?>" alt="Profile Image" class="w-8 h-8 rounded-full">
-                            <h3 class="font-bold">
-                                <?php echo '<a href="user.php?id=' . urlencode($reply['user_id']) . '" class="text-blue-600 hover:underline">' . htmlspecialchars($reply['username'], ENT_QUOTES, 'UTF-8') . '</a>'; ?>
-                                <br>
-                                <span class="text-sm text-gray-400 font-normal"><?php echo htmlspecialchars($reply['created_at'], ENT_QUOTES, 'UTF-8'); ?></span>
+            <!-- Formularz odpowiedzi -->
+            <form method="POST" id="reply-form-<?php echo $comment['comment_id']; ?>" style="display:none;" class="mt-4">
+                <textarea name="comment_content" placeholder="Write your reply..." required 
+                          class="w-full p-4 border border-gray-600 rounded-md bg-gray-700 text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"></textarea>
+                <input type="hidden" name="parent_comment_id" value="<?php echo $comment['comment_id']; ?>">
+                <button type="submit" name="submit_comment" 
+                        class="px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition duration-200">
+                    Post Reply
+                </button>
+            </form>
+
+            <!-- Wyświetlanie odpowiedzi -->
+            <?php 
+            $repliesResult = getRepliesForComment($conn, $comment['comment_id']);
+            while ($reply = $repliesResult->fetch_assoc()): ?>
+                <div class="reply bg-gray-700 border-l-4 border-blue-500 rounded-lg p-4 ml-6 mt-4 shadow-md">
+                    <div class="flex items-start">
+                        <img src="<?php echo getUserImage($reply['user_id'], $conn); ?>" alt="Profile Image" 
+                             class="w-8 h-8 rounded-full mr-3">
+                        <div class="flex-1">
+                            <h3 class="text-lg font-semibold text-blue-400">
+                                <?php echo '<a href="user.php?id=' . urlencode($reply['user_id']) . '" class="hover:underline">' . htmlspecialchars($reply['username'], ENT_QUOTES, 'UTF-8') . '</a>'; ?>
                             </h3>
+                            <span class="text-sm text-gray-400"><?php echo htmlspecialchars($reply['created_at'], ENT_QUOTES, 'UTF-8'); ?></span>
+                            <p class="text-gray-200 mt-2">
+                                <?php echo htmlspecialchars($reply['content'], ENT_QUOTES, 'UTF-8'); ?>
+                            </p>
                         </div>
-                        <p class="text-gray-600 mt-2">
-                            <?php echo htmlspecialchars($reply['content'], ENT_QUOTES, 'UTF-8'); ?>
-                        </p>
-
-                        <!-- Edit Reply Button -->
-                        <?php if ($isLoggedIn && isOwner($userId, $reply['user_id'])): ?>
-                            <button class="ml-2 px-6 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition duration-200" onclick="toggleEditForm(<?php echo $reply['comment_id']; ?>)">Edit Reply</button>
-                        <?php endif; ?>
-
-                        <!-- Edit Reply Form -->
-                        <?php if ($isLoggedIn && isOwner($userId, $reply['user_id'])): ?>
-                            <form method="POST" id="edit-reply-form-<?php echo $reply['comment_id']; ?>" style="display:none;" class="mt-4">
-                                <textarea name="new_content" required class="w-full p-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 mb-4"><?php echo htmlspecialchars($reply['content'], ENT_QUOTES, 'UTF-8'); ?></textarea>
-                                <input type="hidden" name="reply_id" value="<?php echo $reply['comment_id']; ?>">
-                                <button type="submit" name="edit_reply" class="px-6 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition duration-200">Save Changes</button>
-                            </form>
-                        <?php endif; ?>
                     </div>
                 </div>
-            <?php endforeach; ?>
-        <?php endif; ?>
-    </div>
-        
+            <?php endwhile; ?>
+        </div>
+    <?php endwhile; ?>
+</div>
+
+<?php endwhile; ?>
+
 </main>
 </body>
 </html>

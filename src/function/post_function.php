@@ -28,18 +28,18 @@ function getComments($conn, $postId) {
     return $stmt->get_result();
 }
 
-function getReplies($conn, $postId) {
-    $sql = "SELECT c.comment_id, c.content, c.created_at, u.user_id, u.username, c.parent_comment_id 
+function getRepliesForComment($conn, $commentId) {
+    $sql = "SELECT c.comment_id, c.content, c.created_at, u.user_id, u.username 
             FROM comments c
             LEFT JOIN users u ON c.user_id = u.user_id
-            WHERE c.post_id = ? 
-            AND c.parent_comment_id IS NOT NULL
+            WHERE c.parent_comment_id = ?
             ORDER BY c.created_at ASC";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $postId);
+    $stmt->bind_param("i", $commentId);
     $stmt->execute();
     return $stmt->get_result();
 }
+
 
 function insertComment($conn, $postId, $userId, $commentContent, $parentCommentId) {
     $sql = "INSERT INTO comments (post_id, user_id, content, parent_comment_id) VALUES (?, ?, ?, ?)";

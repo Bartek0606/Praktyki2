@@ -31,12 +31,8 @@ if ($postId > 0) {
     }
 
     $resultComments = getComments($conn, $postId); 
-    $resultReplies = getReplies($conn, $postId);
+    $resultReplies = getRepliesForComment($conn, $postId);
     
-    $replies = [];
-    while ($reply = $resultReplies->fetch_assoc()) {
-        $replies[$reply['parent_comment_id']][] = $reply;
-    }
 } else {
     echo "<p>Invalid post ID.</p>";
     exit;
