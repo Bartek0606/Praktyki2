@@ -4,7 +4,8 @@ session_start();
 
 include '../../../db_connection.php';
 include '../../Component/navbar.php';
-include '../../function.php';
+include '../../function/function.php';
+include '../../function/items_function.php';
 
 // Handle logout
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout'])) {
