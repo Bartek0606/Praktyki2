@@ -33,10 +33,6 @@ if ($postId > 0) {
     $resultComments = getComments($conn, $postId); 
     $resultReplies = getReplies($conn, $postId);
     
-    $replies = [];
-    while ($reply = $resultReplies->fetch_assoc()) {
-        $replies[$reply['parent_comment_id']][] = $reply;
-    }
 } else {
     echo "<p>Invalid post ID.</p>";
     exit;
@@ -68,24 +64,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (isset($_POST['edit_comment']) && $isLoggedIn) {
-        $commentId = (int)$_POST['comment_id'];
         $newContent = $conn->real_escape_string($_POST['new_content']);
+        $commentId = (int)$_POST['comment_id'];
 
-        $resultCheckOwner = checkCommentOwner($conn, $commentId);
-        if ($resultCheckOwner->num_rows > 0) {
-            $commentOwner = $resultCheckOwner->fetch_assoc();
-            if (isOwner($userId, $commentOwner['user_id'])) {
-                if (updateComment($conn, $commentId, $newContent)) {
-                    $_SESSION['edit_success'] = 'Comment updated successfully!';
-                    header('Location: ' . $_SERVER['REQUEST_URI']);
-                    exit();
-                } else {
-                    echo "<p>Error: " . $conn->error . "</p>";
-                }
-            }
+        if (updateComment($conn, $commentId, $newContent)) {
+            $_SESSION['edit_success'] = 'Comment updated successfully!';
+            header('Location: ' . $_SERVER['REQUEST_URI']);
+            exit();
+        } else {
+            echo "<p>Error: " . $conn->error . "</p>";
+        }
+    }
+
+    if (isset($_POST['edit_reply']) && $isLoggedIn) {
+        $newContent = $conn->real_escape_string($_POST['new_content']);
+        $replyId = (int)$_POST['reply_id'];
+
+        if (updateReply($conn, $replyId, $newContent)) {
+            $_SESSION['edit_success'] = 'Reply updated successfully!';
+            header('Location: ' . $_SERVER['REQUEST_URI']);
+            exit();
+        } else {
+            echo "<p>Error: " . $conn->error . "</p>";
         }
     }
 }
+
 include '../../Component/view/post_view.php';
 ob_end_flush();
 ?>

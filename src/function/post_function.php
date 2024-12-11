@@ -29,12 +29,12 @@ function getComments($conn, $postId) {
 }
 
 function getReplies($conn, $postId) {
-    $sql = "SELECT c.comment_id, c.content, c.created_at, u.user_id, u.username, c.parent_comment_id 
-            FROM comments c
-            LEFT JOIN users u ON c.user_id = u.user_id
-            WHERE c.post_id = ? 
-            AND c.parent_comment_id IS NOT NULL
-            ORDER BY c.created_at ASC";
+    $sql = "SELECT c.comment_id, c.content, c.created_at, u.user_id, u.username 
+FROM comments c
+LEFT JOIN users u ON c.user_id = u.user_id
+WHERE c.post_id = ? AND c.parent_comment_id IS NOT NULL
+ORDER BY c.created_at ASC
+";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $postId);
     $stmt->execute();
@@ -72,6 +72,13 @@ function updatePost($conn, $postId, $newContent) {
 }
 
 function updateComment($conn, $commentId, $newContent) {
+    $sql = "UPDATE comments SET content = ? WHERE comment_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("si", $newContent, $commentId);
+    return $stmt->execute();
+}
+
+function updateReply($conn, $commentId, $newContent) {
     $sql = "UPDATE comments SET content = ? WHERE comment_id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("si", $newContent, $commentId);
