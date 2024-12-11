@@ -113,7 +113,7 @@
         <?php endwhile; ?>
 
         <!-- Replies -->
-        <?php if (isset($replies[$comment['comment_id']])): ?>
+        <?php if (!empty($replies[$comment['comment_id']])): ?>
             <?php foreach ($replies[$comment['comment_id']] as $reply): ?>
                 <div class="flex w-full justify-between border ml-5 rounded-md mb-6">
                     <div class="p-3">
