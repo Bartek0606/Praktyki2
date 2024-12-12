@@ -173,7 +173,6 @@
                             <h3 class="text-xl font-semibold text-white mb-2"><?php echo htmlspecialchars($post['title']); ?></h3>
                             <p class="category text-gray-400 mb-2"><strong>Category:</strong> <?php echo htmlspecialchars($post['category_name']); ?></p>
                             <p class="post-author text-gray-400 mb-2"><strong>By:</strong> <?php echo htmlspecialchars($post['author_username']); ?></p>
-                            <p class="text-gray-300 mb-4"><?php echo $post['content']; ?></p>
                             <p class="post-date text-gray-400"><strong>Date:</strong> <?php echo htmlspecialchars($post['created_at']); ?></p>
                         </div>
                     </div>
@@ -212,7 +211,6 @@
                             <h3 class="text-xl font-semibold text-white mb-2"><?php echo htmlspecialchars($like['title']); ?></h3>
                             <p class="category text-gray-400 mb-2"><strong>Category:</strong> <?php echo htmlspecialchars($like['category_name']); ?></p>
                             <p class="post-author text-gray-400 mb-2"><strong>By:</strong> <?php echo htmlspecialchars($like['author_username']); ?></p>
-                            <p class="text-gray-300 mb-4"><?php echo $like['content']; ?></p>
                             <p class="post-date text-gray-400"><strong>Date:</strong> <?php echo htmlspecialchars($like['created_at']); ?></p>
                             
                             <form method="POST" action="" class="relative mt-4" id="like-form-<?php echo $like['post_id']; ?>">
