@@ -2,7 +2,7 @@
 ob_start();
 session_start(); 
 include '../../Component/slider.php';
-include './all_post_view.php';
+include '../../Component/view/all_post_view.php';
 include '../../../db_connection.php';
 include '../../Component/navbar.php';
 include '../../Component/post.php';

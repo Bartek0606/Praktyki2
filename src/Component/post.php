@@ -73,7 +73,15 @@ class PostRender {
     public function render() {
         ob_start();
         ?>
-       
+          <div class="relative w-5/6 mx-auto h-2/4">
+    <img src="../image/tlo.png" alt="Tło" class="w-full h-full object-cover filter blur mx-auto rounded-xl ">
+    <div class="absolute inset-0 flex flex-col items-center justify-center">
+      <h2 class="text-white text-3xl font-bold mb-2">Blog Posts Section
+      <hr class="border-t-4  border-orange-500 mt-3">
+      </h2>
+    </div>
+  </div>
+        <section class="blog-posts w-full bg-gray-900 mt-14">
         <div class="w-4/6 mx-auto py-12 mb-12">
         <div class="text-left mb-8">
                 <a href="/src/public/templates/all_post.php" class="px-6 py-3 bg-gray-700 text-white font-bold rounded-lg hover:bg-gray-800 transition">
