@@ -10,7 +10,20 @@ include __DIR__ . '/logic/categories_logic.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
     <script src="https://cdn.tailwindcss.com"></script>
-   <script src="admin.js"></script>
+    <script>
+        function showForm(selectedForm) {
+            const forms = document.querySelectorAll('.form-section');
+            forms.forEach(form => form.style.display = 'none'); // Ukryj wszystkie formularze
+
+            if (selectedForm) {
+                document.getElementById(selectedForm).style.display = 'block'; // Pokaż wybrany formularz
+            }
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            // Ukryj wszystkie formularze na starcie
+            showForm('');
+        });
+    </script>
 </head>
 
 <body class="bg-gray-50 text-gray-700">
