@@ -89,6 +89,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like'])) {
+    handleLikeAction($conn, $userId);
+}
+
+$isLiked = false; 
+if ($isLoggedIn) {
+    $isLiked = hasUserLikedPost($conn, $userId, $postId);
+}
+
+$likeCount = getLikeCountForPost($conn, $postId);
 
 include '../../Component/view/post_view.php';
 ob_end_flush();

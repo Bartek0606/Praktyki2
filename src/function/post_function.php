@@ -92,4 +92,68 @@ function checkCommentOwner($conn, $commentId) {
     $stmt->execute();
     return $stmt->get_result();
 }
+function handleLikeAction($conn, $userId) {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['like'])) {
+        $post_id = intval($_POST['post_id']); // Ensure $post_id is an integer
+        
+        // Check if the user already liked the post
+        $sql_check = "SELECT * FROM `user_likes` WHERE id_user = ? AND id_post = ?";
+        $stmt_check = $conn->prepare($sql_check);
+        $stmt_check->bind_param("ii", $userId, $post_id);
+        $stmt_check->execute();
+        $result_check = $stmt_check->get_result();
+
+        if ($result_check->num_rows > 0) {
+            // If liked, remove the like
+            $sql_delete = "DELETE FROM `user_likes` WHERE id_user = ? AND id_post = ?";
+            $stmt_delete = $conn->prepare($sql_delete);
+            $stmt_delete->bind_param("ii", $userId, $post_id);
+            $stmt_delete->execute();
+        } else {
+            // If not liked, add the like
+            $sql_register = "INSERT INTO `user_likes`(`id_user`, `id_post`) VALUES (?, ?)";
+            $stmt_register = $conn->prepare($sql_register);
+            $stmt_register->bind_param("ii", $userId, $post_id);
+            $stmt_register->execute();
+        }
+    }
+    header("Location: " . $_SERVER['REQUEST_URI']);
+    exit();
+}
+function hasUserLikedPost($conn, $userId, $postId) {
+    // Default to false
+    $isLiked = false;
+
+    if ($userId) {
+        // Check if the user has liked the post
+        $sql_check_like = "SELECT * FROM `user_likes` WHERE id_user = ? AND id_post = ?";
+        $stmt_check_like = $conn->prepare($sql_check_like);
+        $stmt_check_like->bind_param("ii", $userId, $postId);
+        $stmt_check_like->execute();
+        $result_check_like = $stmt_check_like->get_result();
+
+        // If the user has liked the post, return true
+        if ($result_check_like->num_rows > 0) {
+            $isLiked = true;
+        }
+    }
+
+    return $isLiked;
+}
+function getLikeCountForPost($conn, $postId) {
+    $sql = "
+        SELECT COUNT(user_likes.id_post) AS like_count
+        FROM posts
+        LEFT JOIN user_likes ON posts.post_id = user_likes.id_post
+        WHERE posts.post_id = ?
+    ";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $postId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    
+    return $row['like_count'];
+}
 ?>
