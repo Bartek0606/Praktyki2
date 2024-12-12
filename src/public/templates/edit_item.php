@@ -43,5 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 include '../../Component/view/edit_item_view.php';
+include '../../Component/view/footer.php';
 ob_end_flush();
 ?>

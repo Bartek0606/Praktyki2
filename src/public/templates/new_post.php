@@ -45,5 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_post'])) {
 }
 $categories_result = getCategories($conn); 
 include '../../Component/view/new_post_view.php';
+include '../../Component/view/footer.php';
 ob_end_flush();
 ?>

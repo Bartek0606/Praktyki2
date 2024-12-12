@@ -24,4 +24,5 @@ $navbar = new Navbar($conn, $isLoggedIn, $userId, $userName);
 
 // Include the add item form view
 include '../../Component/view/add_item_view.php';
+include '../../Component/view/footer.php';
 ?>

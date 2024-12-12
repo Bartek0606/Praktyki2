@@ -47,6 +47,7 @@ $posts_count = getPostsCount($conn, $profileUserId);
 $liked_posts = getLikedPosts($conn, $userId);
 
 include '../../Component/view/user_view.php';
+include '../../Component/view/footer.php';
 ob_end_flush();
 ?>
  

@@ -105,7 +105,7 @@ if (isset($_GET['id'])) {
 }
 
 include '../../Component/view/event_view.php'; // Dołączamy plik widoku
-
+include '../../Component/view/footer.php';
 $conn->close();
 ob_end_flush();
 ?>

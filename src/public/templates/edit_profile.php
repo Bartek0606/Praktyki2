@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 include '../../Component/view/edit_profile_view.php'; // Dołączenie widoku z HTML
-
+include '../../Component/view/footer.php';
 $conn->close();
 ob_end_flush();
 ?>

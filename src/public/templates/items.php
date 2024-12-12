@@ -30,5 +30,6 @@ $items_result = getItems($conn, $category_condition, $order_by);
 $categories_result = getCategories($conn);
 
 include '../../Component/view/items_view.php'; 
+include '../../Component/view/footer.php';
 ob_end_flush();
 ?>
