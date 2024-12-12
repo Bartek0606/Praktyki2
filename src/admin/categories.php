@@ -1,5 +1,4 @@
 <?php
-// Ładujemy plik logiki
 include __DIR__ . '/logic/categories_logic.php';
 ?>
 

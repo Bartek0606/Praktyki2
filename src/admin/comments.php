@@ -1,8 +1,8 @@
 <?php
 include __DIR__ . '/../../db_connection.php';
-include 'Comment.php';  
-include 'CommentRenderer.php';
-include_once 'sidebar_admin.php';
+include './logic/comment_logic.php';  
+include './Views/CommentRenderer.php';
+include_once './Views/sidebar_admin.php';
 
 session_start();
 $isLoggedIn = isset($_SESSION['user_id']);
