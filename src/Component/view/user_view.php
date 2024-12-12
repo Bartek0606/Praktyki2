@@ -139,42 +139,44 @@
     </div>
 
     <!-- User posts -->
-    <div id="post-container" class="container posts-container mt-6 mx-auto bg-gray-600 p-6 rounded-lg shadow-lg ">
-        <h2 class="text-2xl font-bold text-white mb-4">
-            <?php
-            echo $isLoggedIn && $userId == $profileUserId ? "Your Posts" : htmlspecialchars($user['username']) . "'s Posts";
-            ?>
-        <hr class="border-t-4 w-32 border-orange-500 mb-6 mt-1">
-        </h2>
-        
-        <?php $result_posts = getUserPosts($conn, $profileUserId); ?>
-        <?php if ($result_posts->num_rows > 0): ?>
-            <div class="posts space-y-4">
-                <?php while ($post = $result_posts->fetch_assoc()): ?>
-                    <a href="post.php?id=<?php echo $post['post_id']; ?>" class="post-link block p-4 bg-gray-700 hover:bg-gray-600 rounded-lg transition">
-                        <div class="post">
-                            <?php if (!empty($post['image'])): ?>
-                                <img src="data:image/jpeg;base64,<?php echo base64_encode($post['image']); ?>" alt="Post Image" class="post-image mb-4 rounded-lg">
-                            <?php endif; ?>
-                            <div class="post-content">
-                                <h3 class="text-xl text-gray-200 font-bold mb-2"><?php echo htmlspecialchars($post['title']); ?></h3>
-                                <p class="category text-gray-400 mb-2"><strong>Category: <?php echo htmlspecialchars($post['category_name']); ?></strong></p>
-                                <p class="post-autor text-gray-400 mb-2"><strong>By: <?php echo htmlspecialchars($post['author_username']); ?></strong></p>
-                                <p class="text-gray-300 mb-4"><?php echo $post['content']; ?></p>
-                                <p class="post-date text-gray-400"><strong>Date: </strong><?php echo htmlspecialchars($post['created_at']); ?></p>
-                            </div>
-                        </div>
-                    </a>
-                <?php endwhile; ?>
-            </div>
-        <?php else: ?>
-            <p class="text-gray-400">No posts yet. Start creating posts!</p>
-        <?php endif; ?>
-    </div>
-    <div id="likes-container" class="container likes-container mt-6 mx-auto bg-gray-600 p-6 rounded-lg shadow-lg" style="display: none;">
-<h2 class="text-2xl font-bold text-white mb-4">Your Likes
-    <hr class="border-t-4 w-32 border-orange-500 mb-6 mt-1">
+ <div id="post-container" class="container mx-auto mt-6 bg-gray-800 p-6 rounded-lg shadow-lg">
+    <h2 class="text-3xl font-bold text-white mb-6">
+        <?php echo $isLoggedIn && $userId == $profileUserId ? "Your Posts" : htmlspecialchars($user['username']) . "'s Posts"; ?>
+        <hr class="border-t-4 w-32 border-orange-500 mt-3">
     </h2>
+    
+    <?php $result_posts = getUserPosts($conn, $profileUserId); ?>
+    <?php if ($result_posts->num_rows > 0): ?>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <?php while ($post = $result_posts->fetch_assoc()): ?>
+                <a href="post.php?id=<?php echo $post['post_id']; ?>" class="post-link block bg-gray-700 hover:bg-gray-600 rounded-lg transition-all transform hover:scale-105">
+                    <div class="post p-4">
+                        <?php if (!empty($post['image'])): ?>
+                            <img src="data:image/jpeg;base64,<?php echo base64_encode($post['image']); ?>" alt="Post Image" class="post-image mb-4 rounded-lg shadow-md transition-shadow duration-300 hover:shadow-xl">
+                        <?php endif; ?>
+                        
+                        <div class="post-content">
+                            <h3 class="text-xl font-semibold text-white mb-2"><?php echo htmlspecialchars($post['title']); ?></h3>
+                            <p class="category text-gray-400 mb-2"><strong>Category:</strong> <?php echo htmlspecialchars($post['category_name']); ?></p>
+                            <p class="post-author text-gray-400 mb-2"><strong>By:</strong> <?php echo htmlspecialchars($post['author_username']); ?></p>
+                            <p class="text-gray-300 mb-4"><?php echo $post['content']; ?></p>
+                            <p class="post-date text-gray-400"><strong>Date:</strong> <?php echo htmlspecialchars($post['created_at']); ?></p>
+                        </div>
+                    </div>
+                </a>
+            <?php endwhile; ?>
+        </div>
+    <?php else: ?>
+        <p class="text-gray-400">No posts yet. Start creating posts!</p>
+    <?php endif; ?>
+</div>
+
+  <div id="likes-container" class="container likes-container mt-6 mx-auto bg-gray-800 p-6 rounded-lg shadow-lg" style="display: none;">
+    <h2 class="text-3xl font-bold text-white mb-6">
+        Your Likes
+        <hr class="border-t-4 w-32 border-orange-500 mt-3">
+    </h2>
+
     <?php
     $result_like = getLikedPosts($conn, $userId);
 
@@ -183,28 +185,30 @@
     }
 
     if ($result_like->num_rows > 0): ?>
-        <div class="posts space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <?php while ($like = $result_like->fetch_assoc()):
                 $isLiked = checkIfLiked($conn, $userId, $like['post_id']);
             ?>
-                <a href="post.php?id=<?php echo $like['post_id']; ?>" class="post-link block p-4 bg-gray-700 hover:bg-gray-600 rounded-lg transition">
-                    <div class="post">
+                <a href="post.php?id=<?php echo $like['post_id']; ?>" class="post-link block bg-gray-700 hover:bg-gray-600 rounded-lg transition-all transform hover:scale-105">
+                    <div class="post p-4">
                         <?php if (!empty($like['image'])): ?>
-                            <img src="data:image/jpeg;base64,<?php echo base64_encode($like['image']); ?>" alt="Post Image" class="post-image mb-4 rounded-lg">
+                            <img src="data:image/jpeg;base64,<?php echo base64_encode($like['image']); ?>" alt="Post Image" class="post-image mb-4 rounded-lg shadow-md transition-shadow duration-300 hover:shadow-xl">
                         <?php endif; ?>
                         <div class="post-content">
-                            <h3 class="text-xl text-white font-bold mb-2"><?php echo htmlspecialchars($like['title']); ?></h3>
-                            <p class="category text-gray-400 mb-2"><strong>Category: <?php echo htmlspecialchars($like['category_name']); ?></strong></p>
-                            <p class="post-autor text-gray-400 mb-2"><strong>By: <?php echo htmlspecialchars($like['author_username']); ?></strong></p>
+                            <h3 class="text-xl font-semibold text-white mb-2"><?php echo htmlspecialchars($like['title']); ?></h3>
+                            <p class="category text-gray-400 mb-2"><strong>Category:</strong> <?php echo htmlspecialchars($like['category_name']); ?></p>
+                            <p class="post-author text-gray-400 mb-2"><strong>By:</strong> <?php echo htmlspecialchars($like['author_username']); ?></p>
                             <p class="text-gray-300 mb-4"><?php echo $like['content']; ?></p>
-                            <p class="post-date text-gray-400"><strong>Date: </strong><?php echo htmlspecialchars($like['created_at']); ?></p>
-                            <form method="POST" action="" class="relative" id="like-form-<?php echo $row['post_id']; ?>">
-                                <input type="hidden" name="post_id" value="<?php echo $row['post_id']; ?>">
-                                <button type="submit" name="like" class="like-btn absolute bottom-10 right-10 bg-none border-none cursor-pointer">
+                            <p class="post-date text-gray-400"><strong>Date:</strong> <?php echo htmlspecialchars($like['created_at']); ?></p>
+                            
+                            <form method="POST" action="" class="relative mt-4" id="like-form-<?php echo $like['post_id']; ?>">
+                                <input type="hidden" name="post_id" value="<?php echo $like['post_id']; ?>">
+                                <button type="submit" name="like" class="like-btn absolute bottom-4 right-4 bg-none border-none cursor-pointer">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="<?php echo $isLiked ? 'red' : 'none'; ?>" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                                     </svg>
                                 </button>
+                            </form>
                         </div>
                     </div>
                 </a>
@@ -214,26 +218,28 @@
         <p class="text-gray-400">No posts liked yet.</p>
     <?php endif; ?>
 </div>
- 
-<div id="events-container" class="container events-container mt-6 mx-auto bg-gray-600 p-6 rounded-lg shadow-lg" style="display: none;">
-<h2 class="text-2xl font-bold text-white mb-4">Your Events
-    <hr class="border-t-4 w-32 border-orange-500 mb-6 mt-1">
+
+<div id="events-container" class="container events-container mt-6 mx-auto bg-gray-800 p-6 rounded-lg shadow-lg" style="display: none;">
+    <h2 class="text-3xl font-bold text-white mb-6">
+        Your Events
+        <hr class="border-t-4 w-32 border-orange-500 mt-3">
     </h2>
+
     <?php 
     $result_events = getUserEvents($conn, $profileUserId); 
 
     if ($result_events->num_rows > 0): ?>
-        <div class="events space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <?php while ($event = $result_events->fetch_assoc()): ?>
-                <a href="event.php?id=<?php echo $event['event_id']; ?>" class="event-link block p-4 bg-gray-700 hover:bg-gray-900 rounded-lg transition">
-                    <div class="event-card">
-                        <div class="event-header mb-2">
-                            <h3 class="text-xl font-bold text-white"><?php echo htmlspecialchars($event['event_name']); ?></h3>
+                <a href="event.php?id=<?php echo $event['event_id']; ?>" class="event-link block bg-gray-700 hover:bg-gray-800 rounded-lg shadow-lg transform hover:scale-105 transition-all">
+                    <div class="event-card p-4">
+                        <div class="event-header mb-4">
+                            <h3 class="text-xl font-semibold text-white"><?php echo htmlspecialchars($event['event_name']); ?></h3>
                         </div>
-                        <div class="event-body">
-                            <p class="text-gray-400 mb-2"><strong class="text-white">Description:</strong> <?php echo htmlspecialchars($event['event_description']); ?></p>
-                            <p class="text-gray-400 text-white mb-2"><strong>Location:</strong> <?php echo htmlspecialchars($event['location']); ?></p>
-                            <p class="event-date text-gray-400 "><?php echo htmlspecialchars($event['event_date']); ?></p>
+                        <div class="event-body mb-4">
+                            <p class="text-gray-400"><strong class="text-white">Description:</strong> <?php echo htmlspecialchars($event['event_description']); ?></p>
+                            <p class="text-gray-400 mb-2"><strong class="text-white">Location:</strong> <?php echo htmlspecialchars($event['location']); ?></p>
+                            <p class="event-date text-gray-400"><?php echo htmlspecialchars($event['event_date']); ?></p>
                         </div>
                     </div>
                 </a>
@@ -251,38 +257,44 @@
         </p>
     <?php endif; ?>
 </div>
- 
-<div id="items-container" class="container items-container mt-6 mx-auto bg-gray-600 p-6 rounded-lg shadow-lg" style="display: none;">
-    <h2 class="text-2xl font-bold text-white ">
+
+<div id="items-container" class="container items-container mt-6 mx-auto bg-gray-800 p-6 rounded-lg shadow-lg" style="display: none;">
+    <h2 class="text-3xl font-bold text-white mb-6">
         <?php echo $isLoggedIn && $userId == $profileUserId ? "Your Items" : htmlspecialchars($user['username']) . "'s Items"; ?>
     </h2>
     <hr class="border-t-4 w-32 border-orange-500 mb-6 mt-1">
+    
     <?php 
     $result_items = getUserItems($conn, $profileUserId);
 
     if ($result_items->num_rows > 0): ?>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <?php while ($item = $result_items->fetch_assoc()): ?>
-                <a href="item_details.php?item_id=<?php echo $item['item_id']; ?>">
-                <div class="item-card p-4 bg-gray-700 hover:bg-gray-600 rounded-lg transition shadow-md">
-                    <?php if (!empty($item['image'])): ?>
-                        <img src="data:image/jpeg;base64,<?php echo base64_encode($item['image']); ?>" alt="Item Image" class="w-full h-48 object-cover rounded-lg mb-4">
-                    <?php else: ?>
-                        <img src="public/image/default-item.png" alt="Default Item Image" class="w-full h-48 object-cover rounded-lg mb-4">
-                    <?php endif; ?>
-                    <div class="item-details">
-                        <h3 class="text-xl font-bold text-white mb-2"><?php echo htmlspecialchars($item['name']); ?></h3>
-                        <p class="text-gray-400 mb-2"><strong>Price:</strong> <?php echo number_format($item['price'], 2); ?> zł</p>
-                        <p class="text-gray-400 mb-2"><strong>Description:</strong> <?php echo htmlspecialchars($item['description']); ?></p>
-                        <p class="text-gray-400"><strong>Added on:</strong> <?php echo htmlspecialchars($item['created_at']); ?></p>
+                <a href="item_details.php?item_id=<?php echo $item['item_id']; ?>" class="item-card block bg-gray-700 hover:bg-gray-600 rounded-lg shadow-md transition-all transform hover:scale-105">
+                    <div class="p-4">
+                        <!-- Item Image -->
+                        <?php if (!empty($item['image'])): ?>
+                            <img src="data:image/jpeg;base64,<?php echo base64_encode($item['image']); ?>" alt="Item Image" class="w-full h-48 object-cover rounded-lg mb-4">
+                        <?php else: ?>
+                            <img src="public/image/default-item.png" alt="Default Item Image" class="w-full h-48 object-cover rounded-lg mb-4">
+                        <?php endif; ?>
+
+                        <!-- Item Details -->
+                        <div class="item-details">
+                            <h3 class="text-xl font-semibold text-white mb-2"><?php echo htmlspecialchars($item['name']); ?></h3>
+                            <p class="text-gray-400 mb-2"><strong class="text-white">Price:</strong> <?php echo number_format($item['price'], 2); ?> zł</p>
+                            <p class="text-gray-400 mb-2"><strong class="text-white">Description:</strong> <?php echo htmlspecialchars($item['description']); ?></p>
+                            <p class="text-gray-400"><strong class="text-white">Added on:</strong> <?php echo htmlspecialchars($item['created_at']); ?></p>
+                        </div>
                     </div>
-                </div>
                 </a>
             <?php endwhile; ?>
         </div>
     <?php else: ?>
         <p class="text-gray-400">No items to display.</p>
     <?php endif; ?>
+</div>
+
 </div>
 </main>
 </body>

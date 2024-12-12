@@ -29,7 +29,7 @@
     <div id="form_login">
         <form id="loginForm" method="POST" action="login.php">
             <div class="mb-4">
-                <input type="text" id="username" name="username" placeholder="Email" value="<?php echo isset($_POST['username']) ? $_POST['username'] : ''; ?>" class="w-full p-3 rounded bg-gray-700 border border-gray-600 focus:border-blue-400 focus:ring-blue-400">
+                <input type="text" id="username" name="username" placeholder="Email" value="<?php echo isset($_POST['username']) ? $_POST['username'] : ''; ?>" class="w-full p-3 rounded bg-gray-700 bg-opacity-50 border border-gray-600 focus:border-blue-400 focus:ring-blue-400">
                 <?php if ($fieldsError && empty($username)): ?>
                     <p class="text-red-400 mt-2">Email is required.</p>
                 <?php elseif ($emailError): ?>
@@ -38,7 +38,7 @@
             </div>
             
             <div class="mb-4">
-                <input type="password" id="password" name="password" placeholder="Password" class="w-full p-3 rounded bg-gray-700 border border-gray-600 focus:border-blue-400 focus:ring-blue-400">
+                <input type="password" id="password" name="password" placeholder="Password" class="w-full p-3 rounded bg-gray-700 bg-opacity-50 border border-gray-600 focus:border-blue-400 focus:ring-blue-400">
                 <?php if ($fieldsError && empty($password)): ?>
                     <p class="text-red-400 mt-2">Password is required.</p>
                 <?php elseif ($passwordError): ?>
