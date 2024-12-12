@@ -39,6 +39,7 @@ include '../../function/index_function.php';
 </html>
 
 <?php
+include '../../Component/view/footer.php';
 $conn->close();
 ob_end_flush();
 ?>

@@ -43,6 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 $result_messages = getMessages($conn, $userId, $profileUserId); 
 include '../../Component/view/messages_view.php'; 
+include '../../Component/view/footer.php';
 $conn->close(); 
 ob_end_flush(); 
 ?>

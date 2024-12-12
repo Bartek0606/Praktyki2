@@ -52,6 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 include '../../Component/view/login_view.php';
+
 ob_start();
 ?>
 

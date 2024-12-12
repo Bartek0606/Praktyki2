@@ -47,5 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_post'])) {
 }
 
 include '../../Component/view/edit_post_view.php';
+include '../../Component/view/footer.php';
 ob_end_flush();
 ?>

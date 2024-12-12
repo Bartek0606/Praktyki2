@@ -32,6 +32,7 @@ $relatedItems = getRelatedItems($conn, $item['category_id'], $itemId);
 $userItems = getUserItems($conn, $item['user_id'], $itemId);
 
 include '../../Component/view/item_details_view.php'; // Ładowanie widoku
+include '../../Component/view/footer.php';
 $conn->close();
 ob_end_flush();
 ?>

@@ -36,5 +36,6 @@ $result_posts = getPosts($conn, $category_id);
 $result_blog_info = getCategoryBlogInfo($conn, $category_id); 
 
 include '../../Component/view/subpage_view.php';
+
 ob_end_flush();
 ?>

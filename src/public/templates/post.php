@@ -101,5 +101,6 @@ if ($isLoggedIn) {
 $likeCount = getLikeCountForPost($conn, $postId);
 
 include '../../Component/view/post_view.php';
+include '../../Component/view/footer.php';
 ob_end_flush();
 ?>
