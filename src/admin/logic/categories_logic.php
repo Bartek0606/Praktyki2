@@ -14,7 +14,7 @@ if (!$isLoggedIn) {
 }
 
 // Załaduj klasę Sidebar (zakładając, że ta klasa znajduje się w oddzielnym pliku)
-include __DIR__ . '/../sidebar_admin.php';
+include __DIR__ . '/../Views/sidebar_admin.php';
 $sidebar = new Sidebar($conn, $userId);
 
 // Pobierz kategorie z bazy danych
