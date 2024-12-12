@@ -5,6 +5,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="../..//public/js/user.js" defer></script>
     <title><?php echo htmlspecialchars($user['username']); ?>'s Profile • HobbyHub</title>
+    <link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css">
+    <link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css">
 </head>
 
 <body class="bg-gray-900">
@@ -12,119 +14,131 @@
     <?php echo $navbar->render(); ?>
 </header>
 <main>
-    <div class="container mx-auto p-6 bg-gray-700 rounded-lg shadow-xl transform transition-all duration-500 ">
-        <!-- Main section layout -->
-        <div class="flex items-center">
-            <!-- Left section (profile picture and button) -->
-            <?php
-            $image_src = '/src/public/image/default.png';  // Variable with full path to default.png
-            ?>
-            <div class="w-full flex flex-col items-center">
-                <div class="user-profile mb-4">
-                    <?php if ($user['profile_picture'] && $user['profile_picture'] !== 'default.png'): ?>
-                        <img class="w-36 h-36 rounded-full shadow-md hover:shadow-xl transition-shadow duration-300" src="data:image/jpeg;base64,<?php echo base64_encode($user['profile_picture']); ?>" alt="Profile Picture">
-                    <?php else: ?>
-                        <img class="w-36 h-36 rounded-full shadow-md hover:shadow-xl transition-shadow duration-300" src="<?php echo $image_src; ?>" alt="Default Profile Picture">
-                    <?php endif; ?>
-                </div>
-
-                <div>
-                    <?php if ($isLoggedIn && $userId == $profileUserId): ?>
-                        <a href="edit_profile.php" class="inline-block">
-                            <button class="px-4 py-2 bg-blue-500 hover:bg-blue-600 transform hover:scale-105 rounded-md text-white transition-all duration-300">Edit Profile</button>
-                        </a>
-                    <?php endif; ?>
-                </div>
-                <div class="flex gap-4">
-                    <?php if ($isLoggedIn && $userId != $profileUserId): ?>
-                        <!-- Follow button -->
-                        <form method="POST" action="">
-                            <button name="follow" 
-                                class="h-10 px-4 py-2 rounded-md text-white transition-all duration-300 
-                                <?php echo $isFollowing ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'; ?>">
-                                <?php echo $isFollowing ? 'Unfollow' : 'Follow'; ?>
-                            </button>
-                        </form>
-
-                        <!-- Message button -->
-                        <a href="message.php?id=<?php echo $profileUserId; ?>" 
-                            class="h-10 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-all duration-300">
-                            Message
-                        </a>
-                    <?php endif; ?>
-                </div>
-
-            </div>
-
-            <!-- Right section (user information) -->
-            <div class="w-3/4 ml-8">
-                <div class="user-details">
-                    <h2 class="text-3xl font-bold mb-2 text-white"><?php echo htmlspecialchars($user['username']); ?></h2>
-                    <p class="text-lg text-gray-300 mb-4"><?php echo htmlspecialchars($user['full_name']); ?></p>  
-                    <!-- ?? 'User Role' -->
-                    <!-- Bio section -->
-                    <div class="bio text-gray-300 mb-6">
-                        <h3 class="text-xl font-semibold text-white">Bio:</h3>
-                        <p><?php echo nl2br(htmlspecialchars($user['bio'])); ?></p>
+  <section class="relative block h-500-px">
+    <div class="absolute top-0 w-full h-full bg-center bg-cover" style="
+        background-image: url('https://images.unsplash.com/photo-1499336315816-097655dcfbda?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=2710&amp;q=80');
+    ">
+        <span id="blackOverlay" class="w-full h-full absolute opacity-50 bg-black"></span>
+    </div>
+</section>
+<div class="container mx-auto px-4">
+    <div class="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64">
+        <div class="px-6 bg-gray-800 shadow-xl">
+            <div class="flex flex-wrap justify-center">
+                <div class="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
+                    <div class="relative group">
+                        <?php
+                        $image_src = '/src/public/image/default.png';  // Variable with full path to default.png
+                        ?>
+                        <img alt="Profile Picture" 
+                             src="<?php echo $user['profile_picture'] && $user['profile_picture'] !== 'default.png' ? 'data:image/jpeg;base64,' . base64_encode($user['profile_picture']) : $image_src; ?>"
+                             class="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px transition-transform duration-300 group-hover:scale-110">
                     </div>
+                </div>
+                <div class="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
+                    <div class="py-6 px-3 mt-32 sm:mt-0">
+                        <?php if ($isLoggedIn): ?>
+                            <?php if ($userId == $profileUserId): ?>
+                                <!-- Edit Profile Button -->
+                                <a href="edit_profile.php">
+                                    <button class="bg-blue-500 text-white font-bold px-4 py-2 rounded-md hover:bg-blue-600 transition-transform transform hover:-translate-y-1">
+                                        Edit Profile
+                                    </button>
+                                </a>
+                            <?php else: ?>
+                                <!-- Follow and Message Buttons -->
+                                <div class="flex gap-4 justify-end">
+                                    <!-- Follow Button -->
+                                    <form method="POST" action="">
+                                        <button name="follow" 
+                                                class="h-10 px-4 py-2 rounded-md text-white transition-transform duration-300 transform hover:scale-105
+                                                <?php echo $isFollowing ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'; ?>">
+                                            <?php echo $isFollowing ? 'Unfollow' : 'Follow'; ?>
+                                        </button>
+                                    </form>
 
-                    <div class="follow-info flex space-x-8 text-white">
-                        <div>
-                            <p class="text-lg font-semibold"><?php echo $posts_count; ?></p>
-                            <p class="text-gray-300">Posts</p>
+                                    <!-- Message Button -->
+                                    <a href="message.php?id=<?php echo $profileUserId; ?>" 
+                                       class="h-10 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-transform transform hover:scale-105">
+                                        Message
+                                    </a>
+                                </div>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
 
+                <div class="w-full lg:w-4/12 px-4 lg:order-1">
+                    <div class="flex justify-center py-4 lg:pt-4 pt-8">
+                        <div class="mr-4 p-3 text-center">
+                            <span class="text-xl font-bold block uppercase tracking-wide text-white"><?php echo $posts_count; ?></span>
+                            <span class="text-sm text-gray-300">Posts</span>
                         </div>
-                        <div class="cursor-pointer" onclick="showModal('Followers', <?php echo $profileUserId; ?>)">
-                            <p class="text-lg font-semibold"><?php echo $followers_count; ?></p>
-                            <p class="text-gray-300">
-                                <button id="show-followers" class="hover:underline">Followers</button>
-                            </p>
+                        <div class="mr-4 p-3 text-center cursor-pointer hover:scale-110 transition-transform" onclick="showModal('Followers', <?php echo $profileUserId; ?>)">
+                            <span class="text-xl font-bold block uppercase tracking-wide text-white"><?php echo $followers_count; ?></span>
+                            <span class="text-sm text-gray-300">Followers</span>
                         </div>
-                        <div class="cursor-pointer" onclick="showModal('Following', <?php echo $profileUserId; ?>)">
-                            <p class="text-lg font-semibold"><?php echo $following_count; ?></p>
-                            <p class="text-gray-300">
-                                <button id="show-following" class="hover:underline">Following</button>
-                            </p>
+                        <div class="lg:mr-4 p-3 text-center cursor-pointer hover:scale-110 transition-transform" onclick="showModal('Following', <?php echo $profileUserId; ?>)">
+                            <span class="text-xl font-bold block uppercase tracking-wide text-white"><?php echo $following_count; ?></span>
+                            <span class="text-sm text-gray-300">Following</span>
                         </div>
                     </div>
+                </div>
+            </div>
 
+            <div class="text-center mt-12">
+                <!-- Display Username -->
+                   <h3 class="text-4xl font-semibold leading-normal mb-2 text-white">
+                    <?php echo htmlspecialchars($user['username'])?>
+                </h3>
+
+                <!-- Display Full Name -->
+                <p class="text-lg leading-normal text-gray-300">
+                    <?php echo htmlspecialchars($user['full_name']); ?>
+                </p>
+
+                <div class="mt-10 py-10 border-t border-gray-700 text-center">
+                    <div class="flex flex-wrap justify-center">
+                        <div class="w-full lg:w-9/12 px-4">
+                            <p class="mb-4 text-lg leading-relaxed text-gray-300">
+                                <?php echo nl2br(htmlspecialchars($user['bio'])); ?>
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
-        <div id="popup-container" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div class="bg-gray-700 w-11/12 md:w-2/3 lg:w-1/2 p-6 rounded-lg shadow-lg">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 id="popup-title" class="text-xl font-bold text-white"></h3>
-                    <button id="close-popup" class="text-gray-400 hover:text-gray-200 text-xl font-bold">&times;</button>
-                </div>
-                <div id="popup-content" class="text-gray-300 space-y-4">
-                    <!-- The list of followers/following will be dynamically loaded -->
-                </div>
-            </div>
-        </div>
 
-        <!-- Section buttons at the bottom -->
-        <div class="toggle-buttons flex justify-center mt-6 space-x-4">
-            <button id="show-posts" class="toggle-btn px-4 py-2 bg-gray-800 hover:bg-gray-900 transform hover:scale-105 rounded-md text-white transition-all duration-300">
-                <?php
-                echo $isLoggedIn && $userId == $profileUserId ? "Your Posts" : htmlspecialchars($user['username']) . "'s Posts";
-                ?>
-            </button>
-            <?php if ($isLoggedIn && $userId == $profileUserId): ?>
-                <button id="show-likes" class="toggle-btn px-4 py-2 bg-gray-800 hover:bg-gray-900 transform hover:scale-105 rounded-md text-white transition-all duration-300">Your Likes</button>
-            <?php endif; ?>
-            <button id="show-events" class="toggle-btn px-4 py-2 bg-gray-800 hover:bg-gray-900 transform hover:scale-105 rounded-md text-white transition-all duration-300">
-                <?php
-                echo $isLoggedIn && $userId == $profileUserId ? "Your Events" : htmlspecialchars($user['username']) . "'s Events";
-                ?>
-            </button>
-            <button id="show-items" class="toggle-btn px-4 py-2 bg-gray-800 hover:bg-gray-900 transform hover:scale-105 rounded-md text-white transition-all duration-300">
-                <?php
-                echo $isLoggedIn && $userId == $profileUserId ? "Your Items" : htmlspecialchars($user['username']) . "'s Items";
-                ?>
-            </button>
+    <!-- Popup Modal for Followers/Following -->
+    <div id="popup-container" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    <div class="bg-gray-700 w-11/12 md:w-2/3 lg:w-1/2 p-6 rounded-lg shadow-lg">
+        <div class="flex justify-between items-center mb-4">
+        <h3 id="popup-title" class="text-xl font-bold text-white"></h3>
+        <button id="close-popup" class="text-gray-400 hover:text-gray-200 text-xl font-bold">&times;</button>
         </div>
+        <div id="popup-content" class="text-gray-300 space-y-4">
+        <!-- The list of followers/following will be dynamically loaded -->
+        </div>
+    </div>
+    </div>
+
+    <!-- Section buttons at the bottom -->
+    <div class="toggle-buttons flex justify-center mt-6 space-x-4">
+    <button id="show-posts" class="toggle-btn px-4 py-2 bg-gray-800 hover:bg-gray-900 transform hover:scale-105 rounded-md text-white transition-all duration-300">
+        <?php echo $isLoggedIn && $userId == $profileUserId ? "Your Posts" : htmlspecialchars($user['username']) . "'s Posts"; ?>
+    </button>
+    <?php if ($isLoggedIn && $userId == $profileUserId): ?>
+        <button id="show-likes" class="toggle-btn px-4 py-2 bg-gray-800 hover:bg-gray-900 transform hover:scale-105 rounded-md text-white transition-all duration-300">Your Likes</button>
+    <?php endif; ?>
+    <button id="show-events" class="toggle-btn px-4 py-2 bg-gray-800 hover:bg-gray-900 transform hover:scale-105 rounded-md text-white transition-all duration-300">
+        <?php echo $isLoggedIn && $userId == $profileUserId ? "Your Events" : htmlspecialchars($user['username']) . "'s Events"; ?>
+    </button>
+    <button id="show-items" class="toggle-btn px-4 py-2 bg-gray-800 hover:bg-gray-900 transform hover:scale-105 rounded-md text-white transition-all duration-300">
+        <?php echo $isLoggedIn && $userId == $profileUserId ? "Your Items" : htmlspecialchars($user['username']) . "'s Items"; ?>
+    </button>
     </div>
     
     <!-- Modal -->
