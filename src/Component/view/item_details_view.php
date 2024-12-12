@@ -11,6 +11,12 @@
     <?php echo $navbar->render(); ?>
 </header>
 <main class="container mx-auto max-w-4xl px-6 py-12">
+<?php if (isset($_SESSION['purchase_success']) && $_SESSION['purchase_success']): ?>
+        <div class="bg-green-500 text-white text-center py-3 rounded-lg mb-6">
+            Purchase successful! Thank you for your order.
+        </div>
+        <?php unset($_SESSION['purchase_success']); ?>
+    <?php endif; ?>
     <div class="bg-gray-800 p-8 rounded-lg shadow-lg">
         <h1 class="text-3xl font-bold text-orange-400 mb-6"><?php echo htmlspecialchars($item['name']); ?></h1>
 
@@ -30,7 +36,7 @@
             <!-- Sekcja szczegółów -->
             <div class="flex-grow">
                 <p><strong class="text-orange-400">Owner:</strong> 
-                    <a href="user.php?id=<?php echo htmlspecialchars($item['user_id']); ?>" class="text-blue-400 hover:underline">
+                    <a class="text-white font-bold" href="user.php?id=<?php echo htmlspecialchars($item['user_id']); ?>" class="text-blue-400 hover:underline">
                         <?php echo htmlspecialchars($item['username']); ?>
                     </a>
                 </p>
@@ -39,7 +45,6 @@
                 <p><strong class="text-orange-400">Price:</strong> <?php echo htmlspecialchars($item['price']); ?> zł</p>
                 <p><strong class="text-orange-400">Posted on:</strong> <?php echo date("F j, Y, g:i a", strtotime($item['created_at'])); ?></p>
 
-                <!-- Przyciski akcji -->
                 <!-- Purchase, Message, and Edit Buttons -->
 <div class="mt-6 flex flex-col space-y-4">
     <!-- Message Button -->
