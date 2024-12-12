@@ -21,8 +21,8 @@
   }
 </style>
 </head>
-<body class="bg-gray-900 flex items-center justify-center h-screen">
-<div class="bg-gray-800 text-white p-10 rounded-lg shadow-lg animate-slideDown w-full max-w-md">
+<body class="bg-cover bg-center h-screen flex items-center justify-center" style="background-image: url('../image/tlo_register.png');">
+<div class="bg-gray-900 bg-opacity-75 text-white p-10 rounded-lg shadow-lg w-full max-w-md">
     <div id="logo" class="text-center mb-6">
         <h1 class="text-3xl font-bold"><a href="index.php" class="text-white hover:text-blue-400 transition">HobbyHub</a></h1>
     </div>
