@@ -13,7 +13,7 @@
 </header>
 
 <main class="container mx-auto p-6">
-   <article class="p-8 rounded-lg border-4 shadow-md bg-gray-600 border-yellow-400">
+   <article class="p-8 rounded-lg border-4 shadow-md bg-gray-600 <?php echo $post['is_question'] ? 'border-yellow-400' : 'border-gray-500'; ?>">
     <div class="flex justify-between items-center mb-5 text-white">
         <h2 class="mb-4 text-3xl font-bold tracking-tight text-white">
             <?php echo htmlspecialchars($post['title'], ENT_QUOTES, 'UTF-8'); ?>
@@ -29,7 +29,7 @@
         Category: <?php echo '<a href="subpage.php?id=' . urlencode($post['category_id']) . '" class="text-white hover:underline">' . htmlspecialchars($post['category_name'], ENT_QUOTES, 'UTF-8') . '</a>'; ?>
     </span>
     <?php if ($post['is_question']): ?>
-        <span class="block text-yellow-100 bg-yellow-400 p-4 rounded-md mb-4 font-bold text-lg mb-4">Question</span>
+        <span class="block text-yellow-100 bg-yellow-400 font-bold text-lg mb-4 p-4 rounded-md mb-4">Question</span>
     <?php endif; ?>
     <div class="flex justify-between items-center mb-4">
         <div class="flex items-center space-x-4">
