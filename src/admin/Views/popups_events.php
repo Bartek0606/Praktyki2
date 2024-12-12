@@ -56,7 +56,7 @@ class Event_Popups_Renderer {
         <div id="edit-popup" class="popup fixed inset-0 flex justify-center items-center hidden z-50">
             <div class="popup-content bg-white shadow-lg rounded-lg p-8 w-[40rem]">
                 <h3 class="text-xl font-semibold text-gray-700 mb-4">Edit Event</h3>
-                <form method="POST" id="edit-form" action="edit_event.php">
+                <form method="POST" id="edit-form" action='events.php'>
                     <input type="hidden" id="event-id" name="event_id">
 
                     <label class="block text-sm font-medium text-gray-700">Event name:</label>
