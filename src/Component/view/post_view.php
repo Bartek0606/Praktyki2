@@ -13,40 +13,47 @@
 </header>
 
 <main class="container mx-auto p-6">
-    <article class="bg-gray-600 p-8 rounded-lg border border-gray-200 shadow-md">
-        <div class="flex justify-between items-center mb-5 text-white">
-            <h2 class="mb-4 text-3xl font-bold tracking-tight text-white"><?php echo htmlspecialchars($post['title'], ENT_QUOTES, 'UTF-8'); ?></h2>
-            <span class="text-sm"><?php echo htmlspecialchars($post['created_at'], ENT_QUOTES, 'UTF-8'); ?></span>
-        </div>
-        <span class="bg-primary-100 text-white text-lg font-medium inline-flex items-center rounded dark:bg-primary-200 dark:text-primary-800 mb-4">
-            <svg class="mr-2 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"></path>
-            </svg>
-            Category: <?php echo '<a href="subpage.php?id=' . urlencode($post['category_id']) . '" class="text-white hover:underline">' . htmlspecialchars($post['category_name'], ENT_QUOTES, 'UTF-8') . '</a>'; ?>
+   <article class="p-8 rounded-lg border-4 shadow-md bg-gray-600 border-yellow-400">
+    <div class="flex justify-between items-center mb-5 text-white">
+        <h2 class="mb-4 text-3xl font-bold tracking-tight text-white">
+            <?php echo htmlspecialchars($post['title'], ENT_QUOTES, 'UTF-8'); ?>
+        </h2>
+        <span class="text-sm">
+            <?php echo htmlspecialchars($post['created_at'], ENT_QUOTES, 'UTF-8'); ?>
         </span>
-        <div class="flex justify-between items-center mb-4">
-            <div class="flex items-center space-x-4">
-                <img src="<?php echo getUserImage($post['user_id'], $conn); ?>" alt="Profile Image" class="w-10 h-10 rounded-full">
-                <span class="font-medium text-white">
-                    <?php echo '<a href="user.php?id=' . urlencode($post['user_id']) . '" class="text-white hover:underline">' . htmlspecialchars($post['username'], ENT_QUOTES, 'UTF-8') . '</a>'; ?>
-                </span>
-            </div>
+    </div>
+    <span class="text-lg font-medium inline-flex items-center rounded bg-primary-100 text-white mb-4">
+        <svg class="mr-2 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"></path>
+        </svg>
+        Category: <?php echo '<a href="subpage.php?id=' . urlencode($post['category_id']) . '" class="text-white hover:underline">' . htmlspecialchars($post['category_name'], ENT_QUOTES, 'UTF-8') . '</a>'; ?>
+    </span>
+    <?php if ($post['is_question']): ?>
+        <span class="block text-yellow-100 bg-yellow-400 p-4 rounded-md mb-4 font-bold text-lg mb-4">Question</span>
+    <?php endif; ?>
+    <div class="flex justify-between items-center mb-4">
+        <div class="flex items-center space-x-4">
+            <img src="<?php echo getUserImage($post['user_id'], $conn); ?>" alt="Profile Image" class="w-10 h-10 rounded-full">
+            <span class="font-medium text-white">
+                <?php echo '<a href="user.php?id=' . urlencode($post['user_id']) . '" class="text-white hover:underline">' . htmlspecialchars($post['username'], ENT_QUOTES, 'UTF-8') . '</a>'; ?>
+            </span>
         </div>
-        <div class="flex items-start mb-6">
-            <?php if (!empty($post['image'])): ?>
-                <?php $imageSrc = 'data:image/jpeg;base64,' . base64_encode($post['image']); ?>
-                <img src="<?php echo $imageSrc; ?>" alt="Post Image" class="w-1/2 h-auto rounded-lg shadow-md mr-6">
-            <?php endif; ?>
-            <p class="font-light text-xl leading-relaxed flex-1 text-white">
-                <?php echo htmlspecialchars($post['content'], ENT_QUOTES, 'UTF-8'); ?>
-            </p>
-        </div>
-        <?php if ($isLoggedIn && isOwner($userId, $post['user_id'])): ?>
-            <a href="edit_post.php?post_id=<?php echo $postId; ?>" class="mt-4 px-6 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition duration-200">
-                Edit Post
-            </a>
+    </div>
+    <div class="flex items-start mb-6">
+        <?php if (!empty($post['image'])): ?>
+            <?php $imageSrc = 'data:image/jpeg;base64,' . base64_encode($post['image']); ?>
+            <img src="<?php echo $imageSrc; ?>" alt="Post Image" class="w-1/2 h-auto rounded-lg shadow-md mr-6">
         <?php endif; ?>
-    </article>
+        <p class="font-light text-xl leading-relaxed flex-1 text-white">
+            <?php echo htmlspecialchars($post['content'], ENT_QUOTES, 'UTF-8'); ?>
+        </p>
+    </div>
+    <?php if ($isLoggedIn && isOwner($userId, $post['user_id'])): ?>
+        <a href="edit_post.php?post_id=<?php echo $postId; ?>" class="mt-4 px-6 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition duration-200">
+            Edit Post
+        </a>
+    <?php endif; ?>
+</article>
 
     <!-- Comment Section -->
 <div class="comments-section mt-12">
