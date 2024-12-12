@@ -1,6 +1,7 @@
 <?php
 include __DIR__ . '/../db_connection.php';
 
+//Edit_event
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['event_id'])) {
     $event_id = $_POST['event_id'];
     $event_name = $_POST['event_name'];
@@ -26,4 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['event_id'])) {
         echo "Błąd: Nie udało się przygotować zapytania.";
     }
 }
+
+
+
 ?>
