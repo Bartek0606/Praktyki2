@@ -1,14 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body>
-    
-<main class="dashboard p-8 bg-gray-50 ml-64 min-h-screen" style="padding-top: 6rem;">
+<?php
+
+class CommentRenderer {
+    public function renderComments($comments, $search_query) {
+        ob_start();
+        ?>
+        <main class="dashboard p-8 bg-gray-50 ml-64 min-h-screen" style="padding-top: 6rem;">
             <h2 class="text-xl font-semibold text-center text-gray-800 mt-3 mb-4">All Comments</h2>
 
             <div class="comments-container m-auto space-y-4 w-4/6 mt-3">
@@ -47,6 +43,7 @@
                 <?php endif; ?>
             </div>
         </main>
-  
-</body>
-</html>
+        <?php
+        return ob_get_clean();
+    }
+}
