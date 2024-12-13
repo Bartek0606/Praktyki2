@@ -2,8 +2,17 @@
 function render_event_slider($events_result) {
     echo '<div class="w-full mx-auto max-w-5xl px-4 mt-8">';
     echo '<div class="flex justify-between items-center mb-4">';
+    
+    // Tytuł sekcji
     echo '<div class="text-2xl font-bold text-white">Events Section';
     echo '<hr class="border-t-4 mx-auto w-full border-orange-500 mb-6 mt-1">';
+    echo '</div>';
+    
+    // Dodanie przycisku
+    echo '<div>';
+    echo '<a href="../templates/a.php" class="bg-gray-800 text-white px-4 py-2 rounded hover:bg-orange-600">';
+    echo 'Viev All events';
+    echo '</a>';
     echo '</div>';
     
     echo '<div class="flex space-x-2">';
