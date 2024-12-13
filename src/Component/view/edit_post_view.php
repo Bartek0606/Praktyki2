@@ -39,10 +39,10 @@
                 </select>
             </div>
 
-            <div class="space-y-2">
+            <!-- <div class="space-y-2">
                 <label for="image" class="block text-lg font-semibold">Upload New Image:</label>
                 <input type="file" name="image" id="image" accept="image/*" class="block w-full text-gray-400">
-            </div>
+            </div> -->
 
             <button type="submit" name="edit_post" 
                     class="w-full py-3 bg-orange-500 text-white font-bold rounded-lg hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-400">
