@@ -43,6 +43,14 @@
                     <span class="px-2 py-1 bg-yellow-400 text-yellow-900 rounded-full text-xs font-bold">Question</span>
                 <?php endif; ?>
             </div>
+
+            <?php if ($isLoggedIn && isOwner($userId, $post['user_id'])): ?>
+                <div class="mt-5">
+                    <a href="edit_post.php?post_id=<?= urlencode($post['post_id']); ?>" class="px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition duration-200">
+                        Edit Post
+                    </a>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
     <hr class="border-gray-600">
@@ -58,7 +66,10 @@
                 </button>
             </form>
         <?php endif; ?>
+
+        
     </div>
+
 </article>
 
 
