@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="../../public/js/fotografia.js"></script>
-    <title>Blog o fotografii</title>
+    <title>Hobbyhub Categories</title>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900">
 <header>
