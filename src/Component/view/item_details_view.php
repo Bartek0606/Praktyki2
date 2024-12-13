@@ -55,7 +55,7 @@
         </a>
     <?php endif; ?>
 
-    <!-- Purchase Button -->
+    <!-- Purchase Button
     <?php if ($isLoggedIn && $userId != $item['user_id'] && !$item['purchased']): ?>
         <form action="purchase.php" method="POST">
             <input type="hidden" name="item_id" value="<?php echo htmlspecialchars($item['item_id']); ?>">
@@ -67,7 +67,7 @@
         <div class="w-full py-2 px-6 bg-gray-600 text-white-400 rounded-lg text-center">
             Item already purchased
         </div>
-    <?php endif; ?>
+    <?php endif; ?> -->
 
     <!-- Edit Button (only if the item is owned by the logged-in user) -->
     <?php if ($isLoggedIn && $userId == $item['user_id']): ?>
