@@ -271,7 +271,7 @@
 </div>
 
 <div id="items-container" class="container items-container mt-6 mx-auto bg-gray-800 p-6 rounded-lg shadow-lg" style="display: none;">
-    <h2 class="text-3xl font-bold text-white mb-6">
+    <h2 class="text-3xl font-bold text-white mb-3">
         <?php echo $isLoggedIn && $userId == $profileUserId ? "Your Items" : htmlspecialchars($user['username']) . "'s Items"; ?>
     </h2>
     <hr class="border-t-4 w-32 border-orange-500 mb-6 mt-1">

@@ -40,6 +40,9 @@
                 <div class="w-full rounded-sm bg-cover bg-center bg-no-repeat items-center">
                     <div class="mx-auto flex justify-center w-[141px] h-[141px] bg-blue-300/20 rounded-full relative">
                         <!-- Wyświetlanie zdjęcia profilowego -->
+                        <?php
+                            $image_src = '/src/public/image/default.png';  // Zmienna z pełną ścieżką do default.png
+                            ?>
                         <div class="w-full h-full rounded-full overflow-hidden">
                             <?php if ($user['profile_picture'] && $user['profile_picture'] !== 'default.png'): ?>
                                 <img id="profile_picture" class="w-full h-full object-cover transform transition duration-300 ease-in-out hover:scale-105" src="data:image/jpeg;base64,<?php echo base64_encode($user['profile_picture']); ?>" alt="Profile Picture">
@@ -61,6 +64,12 @@
                         </div>
                     </div>
                 </div>
+                <div class="flex justify-center items-center mt-8">
+    <button type="submit" name="reset_picture" class="bg-blue-500 text-white font-bold px-4 py-2 rounded-md hover:bg-blue-600 transition-transform transform hover:-translate-y-1">
+        Reset Picture
+    </button>
+</div>
+
 
                 <!-- Pola edytowalne -->
                 <div class="flex gap-2 flex-wrap">
